@@ -2,6 +2,7 @@ package com.rms.mocket;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.RelativeLayout;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    String previous_fragment = "memory";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         v.setBackgroundResource(R.drawable.bottom_border);
 
         Fragment selectedFragment = null;
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         switch(v.getId()){
 
@@ -61,28 +65,84 @@ public class MainActivity extends AppCompatActivity {
                 imageView_memory.setImageResource(R.drawable.clicked_memory_icon);
                 selectedFragment = new MemoryFragment();
 
+                switch(previous_fragment){
+                    case "memory":
+                        break;
+                    default:
+                        transaction.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right);
+                        break;
+
+                }
+                previous_fragment="memory";
+
+
                 break;
 
             case R.id.MAIN_relativeLayout_quiz:
                 imageView_quiz.setImageResource(R.drawable.clicked_quiz_icon);
                 selectedFragment = new QuizFragment();
+
+                switch(previous_fragment){
+                    case "memory":
+                        transaction.setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left);
+                        break;
+                    case "quiz":
+                        break;
+                    case "graph":
+                        transaction.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right);
+                        break;
+                    case "more":
+                        transaction.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right);
+                        break;
+
+                }
+                previous_fragment="quiz";
+
                 break;
 
             case R.id.MAIN_relativeLayout_graph:
                 imageView_graph.setImageResource(R.drawable.clicked_graph_icon);
                 selectedFragment = new GraphFragment();
+
+                switch(previous_fragment){
+                    case "memory":
+                        transaction.setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left);
+                        break;
+                    case "quiz":
+                        transaction.setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left);
+                        break;
+                    case "graph":
+                        break;
+                    case "more":
+                        transaction.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right);
+                        break;
+
+                }
+                previous_fragment="graph";
+
                 break;
 
             case R.id.MAIN_relativeLayout_more:
                 imageView_more.setImageResource(R.drawable.clicked_more_icon);
                 selectedFragment = new MoreFragment();
+
+                switch(previous_fragment){
+
+                    case "more":
+                        break;
+                    default:
+                        transaction.setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left);
+                        break;
+
+                }
+                previous_fragment="more";
+
                 break;
 
 
         }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.MAIN_frameLayout_content,
-                selectedFragment).commit();
+        transaction.replace(R.id.MAIN_frameLayout_content, selectedFragment).commit();
 
     }
 

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/linearLayout_term_item">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="10"
+        android:orientation="horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bottom_gray_border">
+        <LinearLayout
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="8">
+
+            <TextView
+                android:id="@+id/TERMITEM_term"
+                android:layout_width="match_parent"
+                android:layout_height="27dp"
+                android:text="term"
+                android:textColor="#000000"
+                android:textSize="20dp"/>
+            <TextView
+                android:id="@+id/TERMITEM_definition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:layout_marginBottom="5dp"
+                android:text="definition"
+                android:textSize="15dp"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="2">
+            <ImageView
+                android:id="@+id/TERMITEM_edit_button"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/edit_icon"
+                android:clickable="true"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

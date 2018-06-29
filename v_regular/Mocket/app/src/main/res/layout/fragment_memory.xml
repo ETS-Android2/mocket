@@ -29,7 +29,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="25dp"
                     android:orientation="horizontal"
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="20dp"
@@ -44,7 +44,7 @@
                         android:text="Add to Memory"
                         android:textStyle="bold"
                         android:textColor="@color/mocket_dark_purple"
-                        android:textSize="20dp"/>
+                        android:textSize="17dp"/>
 
 
                 </LinearLayout>
@@ -60,11 +60,11 @@
                     >
 
                     <EditText
-                        android:id="@+id/MEMORY_editText_word"
+                        android:id="@+id/MEMORY_editText_term"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:paddingLeft="20dp"
-                        android:hint="Word"
+                        android:hint="Term"
                         android:layout_weight="6.5"/>
 
                     <LinearLayout
@@ -145,22 +145,23 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:id="@+id/MEMORY_linearLayout_todaysMemory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/border_shadow"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="25dp"
                     android:orientation="horizontal"
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
                     android:weightSum="10"
                     android:background="@drawable/title_bottom_border">
 
@@ -171,10 +172,58 @@
                         android:text="Today's Memory"
                         android:textStyle="bold"
                         android:textColor="@color/mocket_dark_purple"
-                        android:textSize="20dp"/>
+                        android:textSize="17dp"/>
 
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    >
+
+                    <SearchView
+                        android:id="@+id/MEMORY_searchView_term"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="40dp"
+                        android:background="@drawable/all_border">
+
+                    </SearchView>
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/MEMORY_listView_termList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone">
+
+                </ListView>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    >
+
+                    <ImageView
+                        android:id="@+id/MEMORY_imageView_expand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/expand_button"
+                        android:clickable="true"/>
+
+                </LinearLayout>
+
+
+
             </LinearLayout>
 
         </LinearLayout>
