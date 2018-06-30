@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MemoryFragment"
+    tools:context=".GraphFragment"
     android:background="#efefef">
 
     <ScrollView
@@ -21,36 +21,181 @@
 
 
             <LinearLayout
-                android:id="@+id/MEMORY_linearLayout_todaysMemory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/border_shadow"
                 android:layout_marginTop="0dp">
+                <!--android:id="@+id/GRAPH_linearLayout_graph"-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:orientation="horizontal"
+                    android:layout_height="275dp"
+                    android:orientation="vertical"
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:weightSum="10"
-                    android:background="@drawable/title_bottom_border">
+                    android:layout_marginBottom="20dp">
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="25dp"
                         android:paddingLeft="20dp"
-                        android:text="Graph"
+                        android:text="Statistics"
                         android:textStyle="bold"
                         android:textColor="@color/mocket_dark_purple"
-                        android:textSize="17dp"/>
+                        android:textSize="17dp"
+                        android:background="@drawable/title_bottom_border"/>
+
+
+
+                    <com.jjoe64.graphview.GraphView
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:id="@+id/GRAPH_graphView_graph" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:weightSum="50"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3.5"/>
+                        <Button
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="13"
+                            android:text="1 Week"
+                            android:textSize="12dp"/>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2" />
+                        <Button
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="13"
+                            android:text="1 Month"
+                            android:textSize="12dp"/>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"/>
+                        <Button
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="13"
+                            android:text="1 Year"
+                            android:textSize="12dp"/>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3.5"/>
+
+                    </LinearLayout>
 
 
                 </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/GRAPH_linearLayout_allTerms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/border_shadow"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp">
+
+                    <TextView
+                        android:id="@+id/GRAPH_textView_allTermsTitle"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="20dp"
+                        android:layout_height="25dp"
+                        android:paddingLeft="20dp"
+                        android:text="All Terms in Memory"
+                        android:textStyle="bold"
+                        android:textColor="@color/mocket_dark_purple"
+                        android:textSize="17dp"
+                        android:background="@drawable/title_bottom_border" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    >
+                    <SearchView
+                        android:id="@+id/GRAPH_searchView_term"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="40dp"
+                        android:background="@drawable/all_border">
+
+                    </SearchView>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/GRAPH_linearLayout_termList"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent">
+                    <ListView
+                        android:id="@+id/GRAPH_listView_termList"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:listSelector="@android:color/transparent"
+                        android:visibility="gone">
+                    </ListView>
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    >
+
+                    <ImageView
+                        android:id="@+id/GRAPH_imageView_expand"
+                        android:layout_below="@+id/GRAPH_listView_termList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/expand_button"
+                        android:clickable="true"/>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
 
 
         </LinearLayout>

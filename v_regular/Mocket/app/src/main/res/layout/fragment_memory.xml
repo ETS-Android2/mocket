@@ -6,6 +6,7 @@
     tools:context=".MemoryFragment"
     android:background="#efefef">
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -157,22 +158,34 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
+                    android:layout_height="45dp"
                     android:orientation="horizontal"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:weightSum="10"
-                    android:background="@drawable/title_bottom_border">
+                    android:weightSum="10">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:id="@+id/MEMORY_textView_todaysMemoryTitle"
+                        android:layout_width="0dp"
+                        android:layout_weight="8"
+                        android:layout_marginTop="20dp"
+                        android:layout_height="25dp"
                         android:paddingLeft="20dp"
                         android:text="Today's Memory"
                         android:textStyle="bold"
                         android:textColor="@color/mocket_dark_purple"
-                        android:textSize="17dp"/>
+                        android:textSize="17dp"
+                        android:background="@drawable/title_bottom_border" />
+                    <ImageView
+                        android:id="@+id/MEMORY_imageView_quizButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="0dp"
+                        android:layout_weight="2"
+                        android:src="@drawable/quiz_button"
+                        android:clickable="true">
+
+                    </ImageView>
 
 
                 </LinearLayout>
@@ -185,7 +198,6 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     >
-
                     <SearchView
                         android:id="@+id/MEMORY_searchView_term"
                         android:layout_width="match_parent"
@@ -197,13 +209,22 @@
                     </SearchView>
                 </LinearLayout>
 
-                <ListView
-                    android:id="@+id/MEMORY_listView_termList"
+                <LinearLayout
+                    android:id="@+id/MEMORY_linearLayout_termList"
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone">
+                    android:layout_height="fill_parent">
+                    <ListView
+                        android:id="@+id/MEMORY_listView_termList"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:listSelector="@android:color/transparent"
+                        android:visibility="gone">
+                    </ListView>
+                </LinearLayout>
 
-                </ListView>
 
 
                 <LinearLayout
@@ -215,6 +236,7 @@
 
                     <ImageView
                         android:id="@+id/MEMORY_imageView_expand"
+                        android:layout_below="@+id/MEMORY_listView_termList"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/expand_button"
@@ -227,8 +249,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-
     </ScrollView>
 
 

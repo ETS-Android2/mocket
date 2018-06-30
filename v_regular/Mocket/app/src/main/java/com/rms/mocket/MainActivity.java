@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.MAIN_frameLayout_content,
                 selectedFragment).commit();
 
-
     }
 
 

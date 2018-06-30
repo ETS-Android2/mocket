@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MemoryFragment"
+    tools:context=".QuizFragment"
     android:background="#efefef">
 
     <ScrollView
@@ -20,7 +20,7 @@
             android:layout_marginBottom="10dp">
 
             <LinearLayout
-                android:id="@+id/MEMORY_linearLayout_todaysMemory"
+                android:id="@+id/QUIZ_linearLayout_todaysQuiz"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -43,6 +43,38 @@
                         android:layout_height="match_parent"
                         android:paddingLeft="20dp"
                         android:text="Today's Quiz"
+                        android:textStyle="bold"
+                        android:textColor="@color/mocket_dark_purple"
+                        android:textSize="17dp"/>
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/QUIZ_linearLayout_game"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/border_shadow"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:weightSum="10"
+                    android:background="@drawable/title_bottom_border">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="20dp"
+                        android:text="GAME"
                         android:textStyle="bold"
                         android:textColor="@color/mocket_dark_purple"
                         android:textSize="17dp"/>
