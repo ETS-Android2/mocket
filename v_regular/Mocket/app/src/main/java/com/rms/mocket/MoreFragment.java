@@ -1,5 +1,6 @@
 package com.rms.mocket;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,22 +9,55 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Spinner;
+
+import com.bumptech.glide.Glide;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MoreFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MoreFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MoreFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_more, container, false);
+
+        final View rootView = inflater.inflate(R.layout.fragment_more, container, false);
+        final ImageView imageView_editProfile = (ImageView) rootView.findViewById(R.id.MORE_imageView_editProfile);
+
+        imageView_editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(rootView.getContext(), EditProfileActivity.class);
+                startActivity(i);
+            }
+        });
+
+        /* Image optimizer */
+        Glide.with(rootView.getContext())  // Activity or Fragment
+                .load(R.drawable.edit_icon)
+                .into(imageView_editProfile);
+
+        final Spinner spinner_notification = (Spinner) rootView.findViewById(R.id.MORE_spinner_notification);
+        final Spinner spinner_gesture = (Spinner) rootView.findViewById(R.id.MORE_spinner_gesture);
+
+        ArrayAdapter<CharSequence> arrayAdapter_notification = ArrayAdapter.createFromResource(rootView.getContext(), R.array.notification_duration, R.layout.support_simple_spinner_dropdown_item);
+        spinner_notification.setAdapter(arrayAdapter_notification);
+
+        ArrayAdapter<CharSequence> arrayAdapter_gesture = ArrayAdapter.createFromResource(rootView.getContext(), R.array.gesture_option, R.layout.support_simple_spinner_dropdown_item);
+        spinner_gesture.setAdapter(arrayAdapter_gesture);
+
+        final Button button_save = (Button) rootView.findViewById(R.id.MORE_button_save);
+        button_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: Save all settings selected.
+            }
+        });
+
+
+        return rootView;
     }
 
     /**

@@ -34,12 +34,13 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="5dp"
                     android:weightSum="10"
                     android:background="@drawable/title_bottom_border">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_weight="5"
                         android:layout_height="match_parent"
                         android:paddingLeft="20dp"
                         android:text="Today's Quiz"
@@ -47,8 +48,40 @@
                         android:textColor="@color/mocket_dark_purple"
                         android:textSize="17dp"/>
 
+                    <TextView
+                        android:id="@+id/QUIZ_textView_leftTotal"
+                        android:layout_width="0dp"
+                        android:layout_weight="5"
+                        android:paddingTop="5dp"
+                        android:paddingRight="10dp"
+                        android:layout_height="match_parent"
+                        android:text="243/897 (Left/Total)"
+                        android:textStyle="bold"
+                        android:textAlignment="viewEnd"
+                        android:textColor="#000000"
+                        android:textSize="14dp"/>
+
 
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="35dp"
+                    android:text="It contains all terms that should be tested today."
+                    android:textColor="#000000"
+                    android:textSize="15dp"/>
+
+                <ImageView
+                    android:id="@+id/QUIZ_imageView_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/start_button"
+                    android:clickable="true"/>
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -66,7 +99,6 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
                     android:weightSum="10"
                     android:background="@drawable/title_bottom_border">
 
@@ -81,6 +113,25 @@
 
 
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="35dp"
+                    android:text="Play with what you have learend so far."
+                    android:textColor="#000000"
+                    android:textSize="15dp"/>
+
+                <ImageView
+                    android:id="@+id/QUIZ_imageView_playnow"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/playnow_button"
+                    android:clickable="true"/>
+
+
             </LinearLayout>
 
         </LinearLayout>

@@ -22,6 +22,8 @@
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
         <activity android:name=".SignUpActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
+        <activity android:name=".EditProfileActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
         <activity android:name=".ChangePasswordActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
         <activity android:name=".MainActivity"

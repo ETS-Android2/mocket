@@ -8,22 +8,41 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link QuizFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link QuizFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class QuizFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_quiz, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_quiz, container, false);
+
+        final ImageView imageView_start = (ImageView) rootView.findViewById(R.id.QUIZ_imageView_start);
+        final ImageView imageView_playnow = (ImageView) rootView.findViewById(R.id.QUIZ_imageView_playnow);
+        final TextView textView_leftTotal = (TextView) rootView.findViewById(R.id.QUIZ_textView_leftTotal);
+
+        // TODO: Dynamically cahnge the left/total count.
+        // textView_leftTotal.setText();
+
+
+        imageView_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: When start QUIZ button is clicked!
+            }
+        });
+
+        imageView_playnow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: When play GAME button is clicked!
+            }
+        });
+
+
+        return rootView;
     }
 
     /**

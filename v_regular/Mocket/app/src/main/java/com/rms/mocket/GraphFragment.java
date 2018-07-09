@@ -104,11 +104,17 @@ public class GraphFragment extends Fragment {
         });
         /////////////////////////////////////////////////////////////////////////////////
         series1.setTitle("Memorized");
-        series1.setColor(Color.GREEN);
         series2.setTitle("Quiz");
-        series2.setColor(Color.RED);
         series3.setTitle("Game");
+
+        series1.setColor(Color.GREEN);
+        series2.setColor(Color.RED);
         series3.setColor(Color.BLUE);
+
+        series1.setThickness(12);
+        series2.setThickness(12);
+        series3.setThickness(12);
+
         graph.addSeries(series1);
         graph.addSeries(series2);
         graph.addSeries(series3);
