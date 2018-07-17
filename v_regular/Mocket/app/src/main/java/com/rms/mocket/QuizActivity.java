@@ -58,9 +58,9 @@ public class QuizActivity extends AppCompatActivity {
 
         if(thumbSelected){
             ImageView imageView_thumbDown = (ImageView) findViewById(R.id.QUIZGAME_imageView_thumbsDown);
-            imageView_thumbDown.setImageResource(R.drawable.thumbs_down);
+            imageView_thumbDown.setImageResource(R.drawable.unhappy);
         }
-        ((ImageView)v).setImageResource(R.drawable.thumbs_up_checked);
+        ((ImageView)v).setImageResource(R.drawable.happy_checked);
         thumbSelected  = true;
     }
 
@@ -71,9 +71,9 @@ public class QuizActivity extends AppCompatActivity {
 
         if(thumbSelected){
             ImageView imageView_thumbUp = (ImageView) findViewById(R.id.QUIZGAME_imageView_thumbsUp);
-            imageView_thumbUp.setImageResource(R.drawable.thumbs_up);
+            imageView_thumbUp.setImageResource(R.drawable.happy);
         }
-        ((ImageView)v).setImageResource(R.drawable.thumbs_down_checked);
+        ((ImageView)v).setImageResource(R.drawable.unhappy_checked);
         thumbSelected  = true;
     }
 }

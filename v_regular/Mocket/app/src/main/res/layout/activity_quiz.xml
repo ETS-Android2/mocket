@@ -157,7 +157,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="4"
                         android:layout_gravity="center"
-                        android:src="@drawable/thumbs_down"
+                        android:src="@drawable/unhappy"
                         android:background="@android:color/transparent"
                         android:clickable="true"
                         android:onClick="thumbsDown"/>
@@ -174,7 +174,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="4"
                         android:layout_gravity="center"
-                        android:src="@drawable/thumbs_up"
+                        android:src="@drawable/happy"
                         android:background="@android:color/transparent"
                         android:clickable="true"
                         android:onClick="thumbsUp"/>

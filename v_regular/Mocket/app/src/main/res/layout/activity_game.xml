@@ -67,7 +67,8 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
-                android:layout_weight="14"
+                android:layout_weight="12"
+                android:paddingTop="10dp"
                 android:background="@android:color/transparent"
                 android:text="Cumbersome"
                 android:textStyle="bold"
@@ -80,6 +81,33 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
+                android:weightSum="20"
+                android:orientation="horizontal"
+                android:background="@android:color/transparent">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="15"
+                    android:background="@android:color/transparent"/>
+
+                <ImageView
+                    android:id="@+id/GAME_imageView_correct_incorrect"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:background="@android:color/transparent"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
                 android:background="@android:color/transparent" />
 
         </LinearLayout>

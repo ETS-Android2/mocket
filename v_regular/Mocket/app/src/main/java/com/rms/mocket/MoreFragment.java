@@ -41,12 +41,16 @@ public class MoreFragment extends Fragment {
 
         final Spinner spinner_notification = (Spinner) rootView.findViewById(R.id.MORE_spinner_notification);
         final Spinner spinner_gesture = (Spinner) rootView.findViewById(R.id.MORE_spinner_gesture);
+        final Spinner spinner_vibration = (Spinner) rootView.findViewById(R.id.MORE_spinner_vibration);
 
         ArrayAdapter<CharSequence> arrayAdapter_notification = ArrayAdapter.createFromResource(rootView.getContext(), R.array.notification_duration, R.layout.support_simple_spinner_dropdown_item);
         spinner_notification.setAdapter(arrayAdapter_notification);
 
         ArrayAdapter<CharSequence> arrayAdapter_gesture = ArrayAdapter.createFromResource(rootView.getContext(), R.array.gesture_option, R.layout.support_simple_spinner_dropdown_item);
         spinner_gesture.setAdapter(arrayAdapter_gesture);
+
+        ArrayAdapter<CharSequence> arrayAdapter_vibration = ArrayAdapter.createFromResource(rootView.getContext(), R.array.vibration, R.layout.support_simple_spinner_dropdown_item);
+        spinner_vibration.setAdapter(arrayAdapter_vibration);
 
         final Button button_save = (Button) rootView.findViewById(R.id.MORE_button_save);
         button_save.setOnClickListener(new View.OnClickListener() {

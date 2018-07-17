@@ -2,19 +2,26 @@ package com.rms.mocket;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Vibrator;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wajahatkarim3.easyflipview.EasyFlipView;
 
 public class GameActivity extends AppCompatActivity {
 
+    boolean answerPicked = false;
+    Vibrator vibrator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
         final EasyFlipView easyFlipView1 = (EasyFlipView) findViewById(R.id.GAME_easyFlipView_answer1);
         easyFlipView1.setFlipDuration(500);
@@ -120,16 +127,42 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void markCorrect(TextView v){
-        v.setText("Correct :)");
+
+        if(!answerPicked) {
+            ImageView imageView_correctIncorrect = (ImageView) findViewById(R.id.GAME_imageView_correct_incorrect);
+            imageView_correctIncorrect.setImageResource(R.drawable.correct);
+
+            try{
+                vibrator.vibrate(50);
+                Thread.sleep(150);
+                vibrator.vibrate(50);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+
+
+        }
+
+        answerPicked = true;
+        v.setText("Correct");
         v.setTextSize(20);
-        v.setTextColor(Color.GREEN);
+        v.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.correct_green));
         Button button_next = findViewById(R.id.GAME_button_next);
         button_next.setVisibility(View.VISIBLE);
 
     }
 
     public void markIncorrect(TextView v){
-        v.setText("Incorrect :(");
+
+        if(!answerPicked) {
+            ImageView imageView_correctIncorrect = (ImageView) findViewById(R.id.GAME_imageView_correct_incorrect);
+            imageView_correctIncorrect.setImageResource(R.drawable.incorrect);
+            vibrator.vibrate(200);
+        }
+
+        answerPicked = true;
+        v.setText("Incorrect");
         v.setTextSize(20);
         v.setTextColor(Color.RED);
     }
