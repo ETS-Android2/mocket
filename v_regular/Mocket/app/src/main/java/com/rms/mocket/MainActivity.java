@@ -1,10 +1,14 @@
 package com.rms.mocket;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -26,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         Fragment selectedFragment = new MemoryFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.MAIN_frameLayout_content,
                 selectedFragment).commit();
+
+        Log.d("Mocket",getAndroidId(this));
 
     }
 
@@ -143,6 +149,25 @@ public class MainActivity extends AppCompatActivity {
 
         transaction.replace(R.id.MAIN_frameLayout_content, selectedFragment).commit();
 
+    }
+
+    private static final Uri URI = Uri
+            .parse("content://com.google.android.gsf.gservices");
+    private static final String ID_KEY = "android_id";
+
+    String getAndroidId(Context ctx) {
+        String[] params = { ID_KEY };
+        Cursor c = ctx.getContentResolver()
+                .query(URI, null, null, params, null);
+
+        if (!c.moveToFirst() || c.getColumnCount() < 2)
+            return null;
+
+        try {
+            return Long.toHexString(Long.parseLong(c.getString(1)));
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
 

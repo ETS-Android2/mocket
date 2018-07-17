@@ -2,6 +2,7 @@ package com.rms.mocket;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -143,7 +144,9 @@ public class MemoryFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //TODO: When Quiz Button is clicked, show quiz activity
-                Toast.makeText(getContext(), "Quiz button clicked.", Toast.LENGTH_LONG).show();
+                Intent i = new Intent(rootView.getContext(), QuizActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(i);
             }
         });
 

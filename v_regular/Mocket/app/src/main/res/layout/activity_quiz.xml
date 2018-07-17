@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".QuizActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="20">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:background="#00ffffff"/>
+
+
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:orientation="vertical"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:id="@+id/QUIZGAME_easyFlipView_card"
+            android:background="@android:color/transparent"
+            app:flipOnTouch="true"
+            app:flipDuration="500"
+            app:flipEnabled="true">
+
+
+            <!-- Back -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="20"
+                android:id="@+id/QUIZGAME_linearLayout_card_back"
+                android:background="@drawable/border_shadow_game"
+                android:clickable="false"
+                >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent" />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:orientation="horizontal"
+                    android:weightSum="20"
+                    android:background="@android:color/transparent">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:text="Added: "
+                        android:textAlignment="textEnd"
+                        android:textStyle="bold"
+                        android:textSize="13dp"
+                        android:background="@android:color/transparent"
+                        android:textColor="#000000"/>
+                    <TextView
+                        android:id="@+id/QUIZGAME_textView_added"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:text="07/04/18"
+                        android:textAlignment="textStart"
+                        android:textSize="13dp"
+                        android:background="@android:color/transparent"
+                        android:textColor="@color/mocket_dark_purple"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@android:color/transparent" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:text="Last Memory: "
+                        android:textAlignment="textEnd"
+                        android:textStyle="bold"
+                        android:textSize="13dp"
+                        android:background="@android:color/transparent"
+                        android:textColor="#000000"/>
+
+                    <TextView
+                        android:id="@+id/QUIZGAME_textView_lastMemory"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:text="07/15/18"
+                        android:textAlignment="textStart"
+                        android:textSize="13dp"
+                        android:background="@android:color/transparent"
+                        android:textColor="@color/mocket_dark_purple"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/QUIZGAME_textView_definition"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="12"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:background="@android:color/transparent"
+                    android:text="adj. large or heavy and therefore difficult to carry or use"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:clickable="true"
+                    />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal"
+                    android:weightSum="20">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@android:color/transparent" />
+
+                    <ImageView
+                        android:id="@+id/QUIZGAME_imageView_thumbsDown"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:layout_gravity="center"
+                        android:src="@drawable/thumbs_down"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:onClick="thumbsDown"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8"
+                        android:background="@android:color/transparent" />
+
+                    <ImageView
+                        android:id="@+id/QUIZGAME_imageView_thumbsUp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:layout_gravity="center"
+                        android:src="@drawable/thumbs_up"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:onClick="thumbsUp"/>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@android:color/transparent" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:background="@android:color/transparent" />
+
+            </LinearLayout>
+
+
+            <!-- Front -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="20"
+                android:id="@+id/QUIZGAME_linearLayout_card_front"
+                android:background="@drawable/border_shadow_game"
+                >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent" />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:orientation="horizontal"
+                    android:weightSum="20"
+                    android:background="@android:color/transparent">
+
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:layout_gravity="center"
+                        android:src="@drawable/flip"
+                        android:background="@android:color/transparent" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="11"
+                        android:background="@android:color/transparent" />
+
+                    <TextView
+                        android:id="@+id/QUIZGAME_textView_total"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:text="13/8407"
+                        android:textSize="13dp"
+                        android:background="@drawable/game_title_bottom_border"
+                        android:textAlignment="center"
+                        android:textColor="@color/mocket_dark_purple"
+                        android:paddingTop="3dp"/>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@android:color/transparent" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/QUIZGAME_textView_term"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="14"
+                    android:background="@android:color/transparent"
+                    android:text="Cumbersome"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textSize="25dp"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:background="@android:color/transparent" />
+
+            </LinearLayout>
+
+
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:background="#00ffffff" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:background="#00ffffff"
+            android:weightSum="10"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:layout_weight="1" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:background="@android:color/transparent"
+                android:textColor="#FDFEFE"
+                android:text="Quit"
+                android:onClick="goPreviousActivity"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:layout_weight="2"/>
+
+            <Button
+                android:id="@+id/QUIZGAME_button_next"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:textColor="#FDFEFE"
+                android:layout_weight="3"
+                android:text="Next"
+                android:visibility="invisible"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:layout_weight="1.5"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:background="#00ffffff" />
+
+    </LinearLayout>
+
+</LinearLayout>

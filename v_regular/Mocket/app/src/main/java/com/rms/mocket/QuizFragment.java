@@ -1,5 +1,6 @@
 package com.rms.mocket;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,12 +32,19 @@ public class QuizFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // TODO: When start QUIZ button is clicked!
+                Intent intent = new Intent(rootView.getContext(), QuizActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
             }
         });
 
         imageView_playnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(rootView.getContext(), GameActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
+
                 // TODO: When play GAME button is clicked!
             }
         });
