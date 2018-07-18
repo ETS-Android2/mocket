@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.rms.mocket.LoginActivity"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    tools:context="com.rms.mocket.activities.LoginActivity">
 
 
     <ScrollView
@@ -21,25 +20,24 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:layout_weight="2">
-            </LinearLayout>
+                android:layout_weight="2"
+                android:orientation="horizontal"></LinearLayout>
 
 
             <!-- Logo Layout -->
             <LinearLayout
+                android:id="@+id/logoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:id="@+id/logoLayout"
-                android:layout_weight="2">
+                android:layout_weight="2"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/logoImageView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/start_logo"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:src="@drawable/start_logo" />
 
             </LinearLayout>
 
@@ -51,55 +49,55 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
-                    android:orientation="horizontal"
                     android:layout_below="@+id/logoLayout"
-                    android:weightSum="10"
-                    >
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="2">
-                    </LinearLayout>
+                        android:layout_weight="2"
+                        android:orientation="horizontal"></LinearLayout>
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:layout_weight="6">
+                        android:layout_weight="6"
+                        android:orientation="vertical">
 
                         <!-- Email Address-->
                         <EditText
+                            android:id="@+id/LOGIN_editText_emailAddress"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:id="@+id/LOGIN_editText_emailAddress"
                             android:hint="Email address"
-                            android:paddingLeft="20dp"
-                            android:inputType="textEmailAddress"/>
+                            android:inputType="textEmailAddress"
+                            android:paddingLeft="20dp" />
 
                         <!-- Password -->
                         <EditText
+                            android:id="@+id/LOGIN_editText_password"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:hint="Password"
-                            android:paddingLeft="20dp"
-                            android:id="@+id/LOGIN_editText_password"
                             android:layout_below="@+id/emailAddress"
-                            android:inputType="textPassword"/>
+                            android:hint="Password"
+                            android:inputType="textPassword"
+                            android:paddingLeft="20dp" />
 
                         <!-- Forgot password? -->
                         <TextView
                             android:id="@+id/forgotPwd"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
+                            android:layout_below="@+id/LOGIN_textView_password"
                             android:layout_marginRight="10dp"
                             android:layout_marginTop="5dp"
-                            android:textSize="15dp"
                             android:clickable="true"
-                            android:textAlignment="textEnd"
-                            android:layout_below="@+id/LOGIN_textView_password"
-                            android:text="Forgot password?"
                             android:onClick="moveToForgotPasswordActivity"
-                            android:textColor="#000000"/>
+                            android:text="Forgot password?"
+                            android:textAlignment="textEnd"
+                            android:textColor="#000000"
+                            android:textSize="15dp" />
 
 
                         <!-- Buttons -->
@@ -113,24 +111,24 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:orientation="horizontal"
                                 android:layout_weight="4.5"
-                                >
+                                android:orientation="horizontal">
+
                                 <Button
+                                    android:id="@+id/LOGIN_button_signIn"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/LOGIN_button_signIn"
+                                    android:onClick="checkAccount"
                                     android:text="Sign In"
-                                    android:textColor="@color/mocket_dark_purple"
-                                    android:onClick="checkAccount" />
+                                    android:textColor="@color/mocket_dark_purple" />
 
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:orientation="horizontal"
                                 android:layout_weight="1"
-                                >
+                                android:orientation="horizontal">
 
                             </LinearLayout>
 
@@ -138,35 +136,34 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:orientation="horizontal"
                                 android:layout_weight="4.5"
-                                >
+                                android:orientation="horizontal">
+
                                 <Button
+                                    android:id="@+id/button_signUp"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/button_signUp"
+                                    android:onClick="moveToRegisterActivity"
                                     android:text="Sign Up"
-                                    android:textColor="@color/mocket_dark_purple"
-                                    android:onClick="moveToRegisterActivity"/>
+                                    android:textColor="@color/mocket_dark_purple" />
 
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="2">
-                    </LinearLayout>
+                        android:layout_weight="2"
+                        android:orientation="horizontal"></LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:layout_weight="1">
-            </LinearLayout>
+                android:layout_weight="1"
+                android:orientation="horizontal"></LinearLayout>
 
         </LinearLayout>
     </ScrollView>

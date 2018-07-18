@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".GameActivity">
+    tools:context=".activities.GameActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,90 +17,95 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
-            android:background="#00ffffff"/>
+            android:background="#00ffffff" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5"
-            android:orientation="vertical"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
+            android:layout_weight="5"
             android:background="@drawable/border_shadow_game"
-            android:weightSum="20"
-            >
+            android:orientation="vertical"
+            android:weightSum="20">
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
+                android:background="@android:color/transparent"
                 android:orientation="horizontal"
-                android:weightSum="10"
-                android:background="@android:color/transparent">
+                android:weightSum="10">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="7"
                     android:background="@android:color/transparent" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:text="13/8407"
-                    android:textColor="#000000"
-                    android:textSize="11dp"
                     android:background="@drawable/game_title_bottom_border"
+                    android:paddingTop="3dp"
+                    android:text="13/8407"
                     android:textAlignment="center"
-                    android:paddingTop="3dp"/>
+                    android:textColor="#000000"
+                    android:textSize="11dp" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent" />
             </LinearLayout>
+
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="12"
-                android:paddingTop="10dp"
                 android:background="@android:color/transparent"
-                android:text="Cumbersome"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:textSize="25dp"
                 android:gravity="center"
+                android:paddingTop="10dp"
+                android:text="Cumbersome"
+                android:textAlignment="center"
                 android:textColor="#000000"
-                />
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
-                android:weightSum="20"
+                android:background="@android:color/transparent"
                 android:orientation="horizontal"
-                android:background="@android:color/transparent">
+                android:weightSum="20">
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="15"
-                    android:background="@android:color/transparent"/>
+                    android:background="@android:color/transparent" />
 
                 <ImageView
                     android:id="@+id/GAME_imageView_correct_incorrect"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
-                    android:background="@android:color/transparent"/>
+                    android:background="@android:color/transparent" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@android:color/transparent"/>
+                    android:background="@android:color/transparent" />
 
             </LinearLayout>
 
@@ -116,30 +121,29 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#00ffffff"
-            />
+            android:background="#00ffffff" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="6"
-            android:orientation="horizontal"
             android:background="#00ffffff"
-            android:weightSum="10" >
+            android:orientation="horizontal"
+            android:weightSum="10">
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:background="@android:color/transparent"
-                />
+                android:background="@android:color/transparent" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="6"
-                android:orientation="vertical"
                 android:background="@android:color/transparent"
-                android:weightSum="19" >
+                android:orientation="vertical"
+                android:weightSum="19">
 
                 <com.wajahatkarim3.easyflipview.EasyFlipView
                     android:id="@+id/GAME_easyFlipView_answer1"
@@ -147,31 +151,31 @@
                     android:layout_height="0dp"
                     android:layout_weight="4"
                     android:background="@android:color/transparent"
-                    app:flipOnTouch="true"
                     app:flipDuration="500"
-                    app:flipEnabled="true">
+                    app:flipEnabled="true"
+                    app:flipOnTouch="true">
 
                     <TextView
                         android:id="@+id/GAME_textView_answer1_back"
-                        android:gravity="center"
-                        android:background="@drawable/border_shadow_game_answer_back"
-                        android:textStyle="bold"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_shadow_game_answer_back"
+                        android:gravity="center"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/GAME_textView_answer1_front"
-                        android:gravity="center"
-                        android:background="@drawable/border_shadow_game_answer1"
-                        android:text="adj. too long, slow, or dull"
-                        android:textSize="15dp"
-                        android:textColor="#ffffff"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_shadow_game_answer1"
+                        android:gravity="center"
+                        android:text="adj. too long, slow, or dull"
+                        android:textColor="#ffffff"
+                        android:textSize="15dp" />
 
 
                 </com.wajahatkarim3.easyflipview.EasyFlipView>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -184,31 +188,32 @@
                     android:layout_height="0dp"
                     android:layout_weight="4"
                     android:background="@android:color/transparent"
-                    app:flipOnTouch="true"
                     app:flipDuration="500"
-                    app:flipEnabled="true">
+                    app:flipEnabled="true"
+                    app:flipOnTouch="true">
 
 
                     <TextView
                         android:id="@+id/GAME_textView_answer2_back"
-                        android:gravity="center"
-                        android:background="@drawable/border_shadow_game_answer_back"
-                        android:textStyle="bold"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_shadow_game_answer_back"
+                        android:gravity="center"
+                        android:textStyle="bold" />
+
                     <TextView
                         android:id="@+id/GAME_textView_answer2_front"
-                        android:gravity="center"
-                        android:background="@drawable/border_shadow_game_answer2"
                         android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_shadow_game_answer2"
+                        android:gravity="center"
                         android:text="adj. large or heavy and therefore difficult to carry or use"
-                        android:textSize="15dp"
                         android:textColor="#ffffff"
-                        android:layout_height="match_parent" />
-
+                        android:textSize="15dp" />
 
 
                 </com.wajahatkarim3.easyflipview.EasyFlipView>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -221,31 +226,31 @@
                     android:layout_height="0dp"
                     android:layout_weight="4"
                     android:background="@android:color/transparent"
-                    app:flipOnTouch="true"
                     app:flipDuration="500"
-                    app:flipEnabled="true">
+                    app:flipEnabled="true"
+                    app:flipOnTouch="true">
 
                     <TextView
                         android:id="@+id/GAME_textView_answer3_back"
-                        android:gravity="center"
-                        android:background="@drawable/border_shadow_game_answer_back"
-                        android:textStyle="bold"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_shadow_game_answer_back"
+                        android:gravity="center"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/GAME_textView_answer3_front"
-                        android:gravity="center"
-                        android:background="@drawable/border_shadow_game_answer3"
-                        android:text="adj. strong, healthy, and full of energy."
-                        android:textSize="15dp"
-                        android:textColor="#ffffff"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_shadow_game_answer3"
+                        android:gravity="center"
+                        android:text="adj. strong, healthy, and full of energy."
+                        android:textColor="#ffffff"
+                        android:textSize="15dp" />
 
 
                 </com.wajahatkarim3.easyflipview.EasyFlipView>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -258,38 +263,38 @@
                     android:layout_height="0dp"
                     android:layout_weight="4"
                     android:background="@android:color/transparent"
-                    app:flipOnTouch="true"
                     app:flipDuration="500"
-                    app:flipEnabled="true">
+                    app:flipEnabled="true"
+                    app:flipOnTouch="true">
 
                     <TextView
                         android:id="@+id/GAME_textView_answer4_back"
-                        android:gravity="center"
-                        android:background="@drawable/border_shadow_game_answer_back"
-                        android:textStyle="bold"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_shadow_game_answer_back"
+                        android:gravity="center"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/GAME_textView_answer4_front"
-                        android:gravity="center"
-                        android:background="@drawable/border_shadow_game_answer4"
-                        android:text="adj. feeling or showing pleasure or contentment"
-                        android:textSize="15dp"
-                        android:textColor="#ffffff"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_shadow_game_answer4"
+                        android:gravity="center"
+                        android:text="adj. feeling or showing pleasure or contentment"
+                        android:textColor="#ffffff"
+                        android:textSize="15dp" />
 
 
                 </com.wajahatkarim3.easyflipview.EasyFlipView>
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:background="@android:color/transparent"/>
+                android:background="@android:color/transparent" />
 
         </LinearLayout>
 
@@ -304,45 +309,45 @@
             android:layout_height="0dp"
             android:layout_weight="1.5"
             android:background="#00ffffff"
-            android:weightSum="10"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="10">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:background="@android:color/transparent" />
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:background="@android:color/transparent"
-                android:textColor="#FDFEFE"
+                android:onClick="goPreviousActivity"
                 android:text="Quit"
-                android:onClick="goPreviousActivity"/>
+                android:textColor="#FDFEFE" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:layout_weight="2"/>
+                android:layout_weight="2"
+                android:background="@android:color/transparent" />
 
             <Button
                 android:id="@+id/GAME_button_next"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:textColor="#FDFEFE"
                 android:layout_weight="3"
+                android:background="@android:color/transparent"
                 android:text="Next"
-                android:visibility="invisible"/>
+                android:textColor="#FDFEFE"
+                android:visibility="invisible" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:layout_weight="1.5"/>
+                android:layout_weight="1.5"
+                android:background="@android:color/transparent" />
         </LinearLayout>
 
 

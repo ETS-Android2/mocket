@@ -1,4 +1,4 @@
-package com.rms.mocket;
+package com.rms.mocket.activities;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -13,9 +13,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.rms.mocket.R;
+import com.rms.mocket.fragments.GraphFragment;
+import com.rms.mocket.fragments.MemoryFragment;
+import com.rms.mocket.fragments.MoreFragment;
+import com.rms.mocket.fragments.QuizFragment;
+
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final Uri URI = Uri
+            .parse("content://com.google.android.gsf.gservices");
+    private static final String ID_KEY = "android_id";
     String previous_fragment = "memory";
 
     @Override
@@ -31,18 +40,16 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.MAIN_frameLayout_content,
                 selectedFragment).commit();
 
-        Log.d("Mocket",getAndroidId(this));
+        Log.d("Mocket", getAndroidId(this));
 
     }
 
-
-
     /* OnClick: when a category is clicked. */
-    public void categoryClicked(View v){
-        ImageView imageView_memory= (ImageView) findViewById(R.id.MAIN_imageView_memory);
-        ImageView imageView_quiz= (ImageView) findViewById(R.id.MAIN_imageView_quiz);
-        ImageView imageView_graph= (ImageView) findViewById(R.id.MAIN_imageView_graph);
-        ImageView imageView_more= (ImageView) findViewById(R.id.MAIN_imageView_more);
+    public void categoryClicked(View v) {
+        ImageView imageView_memory = (ImageView) findViewById(R.id.MAIN_imageView_memory);
+        ImageView imageView_quiz = (ImageView) findViewById(R.id.MAIN_imageView_quiz);
+        ImageView imageView_graph = (ImageView) findViewById(R.id.MAIN_imageView_graph);
+        ImageView imageView_more = (ImageView) findViewById(R.id.MAIN_imageView_more);
 
         imageView_memory.setImageResource(R.drawable.memory_icon);
         imageView_quiz.setImageResource(R.drawable.quiz_icon);
@@ -64,21 +71,21 @@ public class MainActivity extends AppCompatActivity {
         Fragment selectedFragment = null;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        switch(v.getId()){
+        switch (v.getId()) {
 
             case R.id.MAIN_relativeLayout_memory:
                 imageView_memory.setImageResource(R.drawable.clicked_memory_icon);
                 selectedFragment = new MemoryFragment();
 
-                switch(previous_fragment){
+                switch (previous_fragment) {
                     case "memory":
                         break;
                     default:
-                        transaction.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right);
+                        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
                         break;
 
                 }
-                previous_fragment="memory";
+                previous_fragment = "memory";
 
 
                 break;
@@ -87,21 +94,21 @@ public class MainActivity extends AppCompatActivity {
                 imageView_quiz.setImageResource(R.drawable.clicked_quiz_icon);
                 selectedFragment = new QuizFragment();
 
-                switch(previous_fragment){
+                switch (previous_fragment) {
                     case "memory":
-                        transaction.setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left);
+                        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
                         break;
                     case "quiz":
                         break;
                     case "graph":
-                        transaction.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right);
+                        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
                         break;
                     case "more":
-                        transaction.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right);
+                        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
                         break;
 
                 }
-                previous_fragment="quiz";
+                previous_fragment = "quiz";
 
                 break;
 
@@ -109,21 +116,21 @@ public class MainActivity extends AppCompatActivity {
                 imageView_graph.setImageResource(R.drawable.clicked_graph_icon);
                 selectedFragment = new GraphFragment();
 
-                switch(previous_fragment){
+                switch (previous_fragment) {
                     case "memory":
-                        transaction.setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left);
+                        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
                         break;
                     case "quiz":
-                        transaction.setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left);
+                        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
                         break;
                     case "graph":
                         break;
                     case "more":
-                        transaction.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right);
+                        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
                         break;
 
                 }
-                previous_fragment="graph";
+                previous_fragment = "graph";
 
                 break;
 
@@ -131,16 +138,16 @@ public class MainActivity extends AppCompatActivity {
                 imageView_more.setImageResource(R.drawable.clicked_more_icon);
                 selectedFragment = new MoreFragment();
 
-                switch(previous_fragment){
+                switch (previous_fragment) {
 
                     case "more":
                         break;
                     default:
-                        transaction.setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left);
+                        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
                         break;
 
                 }
-                previous_fragment="more";
+                previous_fragment = "more";
 
                 break;
 
@@ -151,12 +158,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private static final Uri URI = Uri
-            .parse("content://com.google.android.gsf.gservices");
-    private static final String ID_KEY = "android_id";
-
     String getAndroidId(Context ctx) {
-        String[] params = { ID_KEY };
+        String[] params = {ID_KEY};
         Cursor c = ctx.getContentResolver()
                 .query(URI, null, null, params, null);
 

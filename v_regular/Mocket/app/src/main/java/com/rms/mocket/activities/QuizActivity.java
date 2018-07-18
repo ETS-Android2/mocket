@@ -1,4 +1,4 @@
-package com.rms.mocket;
+package com.rms.mocket.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.rms.mocket.R;
 import com.wajahatkarim3.easyflipview.EasyFlipView;
 
 public class QuizActivity extends AppCompatActivity {
@@ -34,7 +35,6 @@ public class QuizActivity extends AppCompatActivity {
         });
 
 
-
         card_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,34 +46,33 @@ public class QuizActivity extends AppCompatActivity {
     }
 
 
-
-    public void goPreviousActivity(View v){
+    public void goPreviousActivity(View v) {
         this.finish();
     }
 
-    public void thumbsUp(View v){
+    public void thumbsUp(View v) {
         /* Show Next button */
         Button button_next = (Button) findViewById(R.id.QUIZGAME_button_next);
         button_next.setVisibility(View.VISIBLE);
 
-        if(thumbSelected){
+        if (thumbSelected) {
             ImageView imageView_thumbDown = (ImageView) findViewById(R.id.QUIZGAME_imageView_thumbsDown);
             imageView_thumbDown.setImageResource(R.drawable.unhappy);
         }
-        ((ImageView)v).setImageResource(R.drawable.happy_checked);
-        thumbSelected  = true;
+        ((ImageView) v).setImageResource(R.drawable.happy_checked);
+        thumbSelected = true;
     }
 
-    public void thumbsDown(View v){
+    public void thumbsDown(View v) {
         /* Show Next button */
         Button button_next = (Button) findViewById(R.id.QUIZGAME_button_next);
         button_next.setVisibility(View.VISIBLE);
 
-        if(thumbSelected){
+        if (thumbSelected) {
             ImageView imageView_thumbUp = (ImageView) findViewById(R.id.QUIZGAME_imageView_thumbsUp);
             imageView_thumbUp.setImageResource(R.drawable.happy);
         }
-        ((ImageView)v).setImageResource(R.drawable.unhappy_checked);
-        thumbSelected  = true;
+        ((ImageView) v).setImageResource(R.drawable.unhappy_checked);
+        thumbSelected = true;
     }
 }

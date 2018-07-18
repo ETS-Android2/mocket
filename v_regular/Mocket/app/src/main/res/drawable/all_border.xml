@@ -35,13 +35,13 @@
 
             <!-- CONTENT LAYER -->
 
-                <item android:bottom="2dp" android:left="2dp" android:right="2dp" android:top="2dp">
+            <item android:bottom="2dp" android:left="2dp" android:right="2dp" android:top="2dp">
 
-                    <shape>
-                        <solid android:color="#ffffff" />
-                        <corners android:radius="2dp" />
-                    </shape>
-                </item>
+                <shape>
+                    <solid android:color="#ffffff" />
+                    <corners android:radius="2dp" />
+                </shape>
+            </item>
 
         </layer-list>
     </item>

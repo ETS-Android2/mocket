@@ -1,4 +1,4 @@
-package com.rms.mocket;
+package com.rms.mocket.activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -10,12 +10,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.rms.mocket.R;
+import com.rms.mocket.common.Checker;
+import com.rms.mocket.common.Utils;
+
 public class SignUpActivity extends AppCompatActivity {
 
     public int verificationNumber = 0;
+    public boolean verified = false;
     String email;
     String password;
-    public boolean verified = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,24 +32,24 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     /* Load profile image from local device and set on the ImageView. */
-    public void addProfileImage(View v){
+    public void addProfileImage(View v) {
         //TODO: load image from local device and set it on the ImageView.
         Toast.makeText(this, "Add image clicked!!", Toast.LENGTH_LONG).show();
     }
 
 
     /* Send verification code. */
-    public void send(View v){
+    public void send(View v) {
         /* Generate random 6 digits number */
         verificationNumber = Utils.generateVerificationCode();
         email = ((EditText) findViewById(R.id.SIGNUP_editText_email)).getText().toString();
 
-        if(Checker.checkEmailValidation(email)){
+        if (Checker.checkEmailValidation(email)) {
             //TODO: Hide verification code after debugging.
             String message = "Verification code has been sent." + verificationNumber;
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             Utils.sendEmail(email, message);
-        }else{
+        } else {
             String temp_message = "Invalid Email address.";
             Toast.makeText(this, temp_message, Toast.LENGTH_LONG).show();
         }
@@ -53,12 +57,12 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     /* Verify if the given code is correct. */
-    public void verify(View v){
+    public void verify(View v) {
 
         EditText editText_verify = (EditText) findViewById(R.id.SIGNUP_editText_verificationCode);
         String str_verificationNumberGiven = editText_verify.getText().toString();
 
-        if (!Checker.checkIfNumber(str_verificationNumberGiven)){
+        if (!Checker.checkIfNumber(str_verificationNumberGiven)) {
             String message = "Invalid verification code.";
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             return;
@@ -66,11 +70,11 @@ public class SignUpActivity extends AppCompatActivity {
 
         int verificationNumberGiven = Integer.parseInt(str_verificationNumberGiven);
 
-        if(verificationNumberGiven != verificationNumber){
+        if (verificationNumberGiven != verificationNumber) {
             String message = "Invalid verification code.";
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             return;
-        }else{
+        } else {
             /* Code has been verified */
             verified = true;
 
@@ -103,17 +107,17 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     /* SignUp with the given information and update to database. */
-    public void signUp(View v){
+    public void signUp(View v) {
         String firstName = ((EditText) findViewById(R.id.SIGNUP_editText_firstName)).getText().toString();
         String lastName = ((EditText) findViewById(R.id.SIGNUP_editText_lastName)).getText().toString();
 
-        if( (!Checker.checkName(firstName)) || (!Checker.checkName(lastName))){
+        if ((!Checker.checkName(firstName)) || (!Checker.checkName(lastName))) {
             String message = "The given name contains non-letter.";
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             return;
         }
 
-        if(firstName.equals("") || lastName.equals("")){
+        if (firstName.equals("") || lastName.equals("")) {
             String message = "The given name is empty.";
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             return;
@@ -122,11 +126,11 @@ public class SignUpActivity extends AppCompatActivity {
         String password1 = ((EditText) findViewById(R.id.SIGNUP_editText_password1)).getText().toString();
         String password2 = ((EditText) findViewById(R.id.SIGNUP_editText_password2)).getText().toString();
 
-        if(!password1.equals(password2)) {
+        if (!password1.equals(password2)) {
             String message = "Passwords are not matched.";
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             return;
-        }else {
+        } else {
             password = password1;
             if (Checker.checkWeakPassword(password)) {
                 String message = "Passwords are too weak.";
@@ -141,7 +145,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    public boolean signUp(String email, String password, String firstName, String lastName){
+    public boolean signUp(String email, String password, String firstName, String lastName) {
         //TODO: Signup to Database
         return true;
     }

@@ -1,4 +1,4 @@
-package com.rms.mocket;
+package com.rms.mocket.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.rms.mocket.R;
+import com.rms.mocket.common.Checker;
+import com.rms.mocket.database.DatabaseHandler;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -29,12 +33,13 @@ public class LoginActivity extends AppCompatActivity {
         editText_password = (EditText) findViewById(R.id.LOGIN_editText_password);
         button_register = (Button) findViewById(R.id.button_signUp);
 
-        new CountDownTimer(2000,1000){
+        new CountDownTimer(2000, 1000) {
             @Override
-            public void onTick(long millisUntilFinished){}
+            public void onTick(long millisUntilFinished) {
+            }
 
             @Override
-            public void onFinish(){
+            public void onFinish() {
                 //set the new Content of your activity
                 LoginActivity.this.setContentView(R.layout.activity_login);
                 button_signIn = (Button) findViewById(R.id.LOGIN_button_signIn);
@@ -43,13 +48,11 @@ public class LoginActivity extends AppCompatActivity {
         }.start();
 
 
-
-
     }
 
 
     /* Check if email address and password are correct */
-    public void checkAccount(View v){
+    public void checkAccount(View v) {
         editText_emailAddress = (EditText) findViewById(R.id.LOGIN_editText_emailAddress);
         editText_password = (EditText) findViewById(R.id.LOGIN_editText_password);
         String emailAddress = editText_emailAddress.getText().toString();
@@ -57,10 +60,10 @@ public class LoginActivity extends AppCompatActivity {
         String message = "Invalid email address or password.";
 
         /* Check if email address or password is empty */
-        if(!Checker.checkEmailValidation(emailAddress) || password.equals("")) {
+        if (!Checker.checkEmailValidation(emailAddress) || password.equals("")) {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        }else{
-            if(DatabaseHandler.checkEmailAndPassword(emailAddress,password)){
+        } else {
+            if (DatabaseHandler.checkEmailAndPassword(emailAddress, password)) {
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("email", emailAddress);
@@ -68,18 +71,18 @@ public class LoginActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
 
-            }else Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            } else Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
     }
 
 
-    public void moveToForgotPasswordActivity(View v){
+    public void moveToForgotPasswordActivity(View v) {
         Intent i = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
         startActivity(i);
     }
 
 
-    public void moveToRegisterActivity(View v){
+    public void moveToRegisterActivity(View v) {
         Intent i = new Intent(getApplicationContext(), SignUpActivity.class);
         startActivity(i);
     }

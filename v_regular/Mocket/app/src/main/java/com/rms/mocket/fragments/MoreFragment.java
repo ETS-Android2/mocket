@@ -1,4 +1,4 @@
-package com.rms.mocket;
+package com.rms.mocket.fragments;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.bumptech.glide.Glide;
+import com.rms.mocket.R;
+import com.rms.mocket.activities.EditProfileActivity;
 
 
 public class MoreFragment extends Fragment {

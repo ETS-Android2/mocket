@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight">
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
@@ -23,33 +23,33 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ForgotPasswordActivity"
+            android:name=".activities.ForgotPasswordActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".activities.SignUpActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".EditProfileActivity"
+            android:name=".activities.EditProfileActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ChangePasswordActivity"
+            android:name=".activities.ChangePasswordActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".QuizActivity"
+            android:name=".activities.QuizActivity"
             android:theme="@style/Theme.AppCompat.Translucent"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".GameActivity"
+            android:name=".activities.GameActivity"
             android:theme="@style/Theme.AppCompat.Translucent"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

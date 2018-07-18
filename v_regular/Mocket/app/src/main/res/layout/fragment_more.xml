@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MoreFragment"
-    android:background="#efefef">
+    android:background="#efefef"
+    tools:context=".fragments.MoreFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,92 +13,92 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/MORE_linearLayout_profile"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginBottom="10dp"
-                android:orientation="horizontal"
-                android:background="@drawable/border_shadow"
                 android:layout_marginTop="0dp"
+                android:background="@drawable/border_shadow"
+                android:orientation="horizontal"
                 android:weightSum="10">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/MORE_imageView_profile"
                     android:layout_width="0dp"
                     android:layout_height="70dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="15dp"
                     android:layout_weight="2"
                     android:orientation="horizontal"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="15dp"
-                    android:src="@drawable/empty_profile"/>
+                    android:src="@drawable/empty_profile" />
 
                 <LinearLayout
-                    android:layout_weight="6"
                     android:layout_width="0dp"
                     android:layout_height="70dp"
-                    android:orientation="vertical"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginBottom="15dp"
-                    android:weightSum="10"
-                    >
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="6"
+                    android:orientation="vertical"
+                    android:weightSum="10">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="2"/>
+                        android:layout_weight="2" />
+
                     <TextView
                         android:id="@+id/MORE_textView_name"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="4"
                         android:gravity="center_vertical"
-                        android:textStyle="bold"
                         android:text="Chang Min Park"
+                        android:textColor="#000000"
                         android:textSize="20dp"
-                        android:textColor="#000000"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/MORE_textView_email"
                         android:layout_width="match_parent"
-                        android:gravity="center_vertical"
                         android:layout_height="0dp"
                         android:layout_weight="3"
+                        android:gravity="center_vertical"
                         android:paddingLeft="10dp"
                         android:text="cpark22@buffalo.edu"
-                        android:textSize="12dp"
-                        android:textColor="#000000"/>
+                        android:textColor="#000000"
+                        android:textSize="12dp" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1" />
 
                 </LinearLayout>
 
 
                 <ImageView
                     android:id="@+id/MORE_imageView_editProfile"
-                    android:layout_weight="2"
                     android:layout_width="0dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginBottom="15dp"
-                    android:clickable="true"/>
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="2"
+                    android:clickable="true"
+                    android:orientation="horizontal" />
 
             </LinearLayout>
 
@@ -106,29 +106,29 @@
                 android:id="@+id/MORE_linearLayout_setting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginTop="0dp"
                 android:background="@drawable/border_shadow"
-                android:layout_marginTop="0dp">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:weightSum="10"
-                    android:background="@drawable/title_bottom_border">
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/title_bottom_border"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="25dp"
                         android:paddingLeft="20dp"
                         android:text="Settings"
-                        android:textStyle="bold"
                         android:textColor="@color/mocket_dark_purple"
-                        android:textSize="17dp"/>
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
 
 
                 </LinearLayout>
@@ -136,9 +136,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
-                    android:orientation="horizontal"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:orientation="horizontal"
                     android:weightSum="10">
 
                     <TextView
@@ -148,14 +148,15 @@
                         android:paddingLeft="30dp"
                         android:text="Quiz notification duration"
                         android:textColor="#000000"
-                        android:textStyle="bold"
-                        android:textSize="17dp"/>
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+
                     <Spinner
                         android:id="@+id/MORE_spinner_notification"
                         android:layout_width="0dp"
-                        android:paddingRight="30dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="3" />
+                        android:layout_weight="3"
+                        android:paddingRight="30dp" />
 
                 </LinearLayout>
 
@@ -164,16 +165,16 @@
                     android:layout_height="25dp"
                     android:layout_marginLeft="60dp"
                     android:text="(between 9am-9pm)"
-                    android:textSize="13dp"
-                    android:textColor="#000000"/>
+                    android:textColor="#000000"
+                    android:textSize="13dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
-                    android:orientation="horizontal"
-                    android:layout_marginLeft="20dp"
                     android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:orientation="horizontal"
                     android:weightSum="10">
 
                     <TextView
@@ -183,24 +184,25 @@
                         android:paddingLeft="30dp"
                         android:text="Direct open gesture"
                         android:textColor="#000000"
-                        android:textStyle="bold"
-                        android:textSize="17dp"/>
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+
                     <Spinner
                         android:id="@+id/MORE_spinner_gesture"
                         android:layout_width="0dp"
-                        android:paddingRight="30dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="3" />
+                        android:layout_weight="3"
+                        android:paddingRight="30dp" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
-                    android:orientation="horizontal"
-                    android:layout_marginLeft="20dp"
                     android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:orientation="horizontal"
                     android:weightSum="10">
 
                     <TextView
@@ -210,24 +212,25 @@
                         android:paddingLeft="30dp"
                         android:text="Vibration"
                         android:textColor="#000000"
-                        android:textStyle="bold"
-                        android:textSize="17dp"/>
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+
                     <Spinner
                         android:id="@+id/MORE_spinner_vibration"
                         android:layout_width="0dp"
-                        android:paddingRight="30dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="3" />
+                        android:layout_weight="3"
+                        android:paddingRight="30dp" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="20dp"
                     android:layout_marginTop="10dp"
-                    android:weightSum="10"
-                    android:layout_marginBottom="20dp">
+                    android:orientation="horizontal"
+                    android:weightSum="10">
 
                     <LinearLayout
                         android:layout_width="0dp"

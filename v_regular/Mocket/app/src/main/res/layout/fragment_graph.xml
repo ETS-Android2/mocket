@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GraphFragment"
-    android:background="#efefef">
+    android:background="#efefef"
+    tools:context=".fragments.GraphFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,92 +13,97 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginTop="0dp"
                 android:background="@drawable/border_shadow"
-                android:layout_marginTop="0dp">
+                android:orientation="vertical">
                 <!--android:id="@+id/GRAPH_linearLayout_graph"-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="275dp"
-                    android:orientation="vertical"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp">
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="25dp"
+                        android:background="@drawable/title_bottom_border"
                         android:paddingLeft="20dp"
                         android:text="Statistics"
-                        android:textStyle="bold"
                         android:textColor="@color/mocket_dark_purple"
                         android:textSize="17dp"
-                        android:background="@drawable/title_bottom_border"/>
-
+                        android:textStyle="bold" />
 
 
                     <com.jjoe64.graphview.GraphView
+                        android:id="@+id/GRAPH_graphView_graph"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:id="@+id/GRAPH_graphView_graph" />
+                        android:layout_marginTop="10dp" />
 
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="35dp"
-                        android:weightSum="50"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:weightSum="50">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="3.5"/>
+                            android:layout_weight="3.5" />
+
                         <Button
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="13"
                             android:text="1 Week"
-                            android:textSize="12dp"/>
+                            android:textSize="12dp" />
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2" />
+
                         <Button
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="13"
                             android:text="1 Month"
-                            android:textSize="12dp"/>
+                            android:textSize="12dp" />
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="2"/>
+                            android:layout_weight="2" />
+
                         <Button
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="13"
                             android:text="1 Year"
-                            android:textSize="12dp"/>
+                            android:textSize="12dp" />
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="3.5"/>
+                            android:layout_weight="3.5" />
 
                     </LinearLayout>
 
@@ -110,29 +115,29 @@
                 android:id="@+id/GRAPH_linearLayout_allTerms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/border_shadow"
+                android:layout_marginBottom="20dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp">
+                android:background="@drawable/border_shadow"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:orientation="horizontal"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp">
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/GRAPH_textView_allTermsTitle"
                         android:layout_width="match_parent"
-                        android:layout_marginTop="20dp"
                         android:layout_height="25dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/title_bottom_border"
                         android:paddingLeft="20dp"
                         android:text="All Terms in Memory"
-                        android:textStyle="bold"
                         android:textColor="@color/mocket_dark_purple"
                         android:textSize="17dp"
-                        android:background="@drawable/title_bottom_border" />
+                        android:textStyle="bold" />
 
 
                 </LinearLayout>
@@ -140,11 +145,11 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    >
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
                     <SearchView
                         android:id="@+id/GRAPH_searchView_term"
                         android:layout_width="match_parent"
@@ -159,9 +164,10 @@
 
                 <LinearLayout
                     android:id="@+id/GRAPH_linearLayout_termList"
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_height="fill_parent"
+                    android:layout_marginTop="10dp">
+
                     <ListView
                         android:id="@+id/GRAPH_listView_termList"
                         android:layout_width="match_parent"
@@ -169,33 +175,28 @@
                         android:layout_marginLeft="30dp"
                         android:layout_marginRight="30dp"
                         android:listSelector="@android:color/transparent"
-                        android:visibility="gone">
-                    </ListView>
+                        android:visibility="gone"></ListView>
                 </LinearLayout>
-
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    >
+                    android:layout_marginTop="10dp">
 
                     <ImageView
                         android:id="@+id/GRAPH_imageView_expand"
-                        android:layout_below="@+id/GRAPH_listView_termList"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/expand_button"
-                        android:clickable="true"/>
+                        android:layout_below="@+id/GRAPH_listView_termList"
+                        android:clickable="true"
+                        android:src="@drawable/expand_button" />
 
                 </LinearLayout>
 
 
-
             </LinearLayout>
-
 
 
         </LinearLayout>

@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MemoryFragment"
-    android:background="#efefef">
+    android:background="#efefef"
+    tools:context=".fragments.MemoryFragment">
 
 
     <ScrollView
@@ -15,37 +15,37 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/MEMORY_linearLayout_addToMemory"
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
-                android:orientation="vertical"
-                android:background="@drawable/border_shadow">
+                android:background="@drawable/border_shadow"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:weightSum="10"
-                    android:background="@drawable/title_bottom_border">
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/title_bottom_border"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:paddingLeft="20dp"
                         android:text="Add to Memory"
-                        android:textStyle="bold"
                         android:textColor="@color/mocket_dark_purple"
-                        android:textSize="17dp"/>
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
 
 
                 </LinearLayout>
@@ -53,33 +53,32 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:weightSum="10"
-                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
-                    >
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
 
                     <EditText
                         android:id="@+id/MEMORY_editText_term"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:paddingLeft="20dp"
+                        android:layout_weight="6.5"
                         android:hint="Term"
-                        android:layout_weight="6.5"/>
+                        android:paddingLeft="20dp" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.5"/>
+                        android:layout_weight="0.5" />
 
                     <Button
                         android:id="@+id/MEMORY_button_lookUp"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:textColor="@color/mocket_dark_purple"
                         android:layout_weight="3"
-                        android:text="Look Up"/>
+                        android:text="Look Up"
+                        android:textColor="@color/mocket_dark_purple" />
 
 
                 </LinearLayout>
@@ -87,61 +86,57 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="0dp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
-                    >
+                    android:layout_marginTop="0dp"
+                    android:orientation="horizontal">
 
                     <EditText
                         android:id="@+id/MEMORY_editText_definition"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="20dp"
                         android:hint="Definition"
-                        android:lines="2" />
+                        android:lines="2"
+                        android:paddingLeft="20dp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="0dp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
-                    android:weightSum="10"
-                    >
+                    android:layout_marginTop="0dp"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
 
 
                     <TextView
                         android:id="@+id/MEMORY_textView_clear"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
+                        android:layout_weight="2"
+                        android:clickable="true"
                         android:paddingLeft="20dp"
                         android:text="Clear"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
-                        android:layout_weight="2"
                         android:textColor="@color/mocket_dark_purple"
-                        android:clickable="true" />
-
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
 
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"/>
+                        android:layout_weight="4" />
 
                     <Button
                         android:id="@+id/MEMORY_button_memorize"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:textColor="@color/mocket_dark_purple"
                         android:layout_weight="4"
-                        android:text="Memorize !" />
+                        android:text="Memorize !"
+                        android:textColor="@color/mocket_dark_purple" />
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -151,39 +146,40 @@
                 android:id="@+id/MEMORY_linearLayout_todaysMemory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/border_shadow"
+                android:layout_marginBottom="20dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp">
+                android:background="@drawable/border_shadow"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:orientation="horizontal"
                     android:layout_marginLeft="20dp"
+                    android:orientation="horizontal"
                     android:weightSum="10">
 
                     <TextView
                         android:id="@+id/MEMORY_textView_todaysMemoryTitle"
                         android:layout_width="0dp"
-                        android:layout_weight="8"
-                        android:layout_marginTop="20dp"
                         android:layout_height="25dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_weight="8"
+                        android:background="@drawable/title_bottom_border"
                         android:paddingLeft="20dp"
                         android:text="Today's Memory"
-                        android:textStyle="bold"
                         android:textColor="@color/mocket_dark_purple"
                         android:textSize="17dp"
-                        android:background="@drawable/title_bottom_border" />
+                        android:textStyle="bold" />
+
                     <ImageView
                         android:id="@+id/MEMORY_imageView_quizButton"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="10dp"
                         android:layout_marginRight="0dp"
+                        android:layout_marginTop="10dp"
                         android:layout_weight="2"
-                        android:src="@drawable/quiz_button"
-                        android:clickable="true">
+                        android:clickable="true"
+                        android:src="@drawable/quiz_button">
 
                     </ImageView>
 
@@ -193,11 +189,11 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    >
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
                     <SearchView
                         android:id="@+id/MEMORY_searchView_term"
                         android:layout_width="match_parent"
@@ -211,9 +207,10 @@
 
                 <LinearLayout
                     android:id="@+id/MEMORY_linearLayout_termList"
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_height="fill_parent"
+                    android:layout_marginTop="10dp">
+
                     <ListView
                         android:id="@+id/MEMORY_listView_termList"
                         android:layout_width="match_parent"
@@ -221,29 +218,25 @@
                         android:layout_marginLeft="30dp"
                         android:layout_marginRight="30dp"
                         android:listSelector="@android:color/transparent"
-                        android:visibility="gone">
-                    </ListView>
+                        android:visibility="gone"></ListView>
                 </LinearLayout>
-
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    >
+                    android:layout_marginTop="10dp">
 
                     <ImageView
                         android:id="@+id/MEMORY_imageView_expand"
-                        android:layout_below="@+id/MEMORY_listView_termList"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/expand_button"
-                        android:clickable="true"/>
+                        android:layout_below="@+id/MEMORY_listView_termList"
+                        android:clickable="true"
+                        android:src="@drawable/expand_button" />
 
                 </LinearLayout>
-
 
 
             </LinearLayout>

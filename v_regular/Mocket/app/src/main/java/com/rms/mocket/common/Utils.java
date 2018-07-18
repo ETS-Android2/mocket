@@ -1,4 +1,4 @@
-package com.rms.mocket;
+package com.rms.mocket.common;
 
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -7,7 +7,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.Random;
-
 
 
 public class Utils {
@@ -59,12 +58,12 @@ public class Utils {
     }
 
     /* Generates six digits verification code. */
-    public static int generateVerificationCode(){
+    public static int generateVerificationCode() {
         Random rnd = new Random();
         return 100000 + rnd.nextInt(900000);
     }
 
-    public static void sendEmail(String email, String message){
+    public static void sendEmail(String email, String message) {
 
     }
 

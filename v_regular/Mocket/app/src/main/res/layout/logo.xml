@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="10"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:weightSum="10">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"/>
+        android:layout_weight="0.5" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="7.5"
-        android:src="@drawable/start_logo"/>
+        android:src="@drawable/start_logo" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"/>
+        android:layout_weight="2" />
 
 </LinearLayout>

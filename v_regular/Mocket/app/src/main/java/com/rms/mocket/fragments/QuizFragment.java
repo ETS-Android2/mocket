@@ -1,4 +1,4 @@
-package com.rms.mocket;
+package com.rms.mocket.fragments;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.rms.mocket.R;
+import com.rms.mocket.activities.GameActivity;
+import com.rms.mocket.activities.QuizActivity;
 
 
 public class QuizFragment extends Fragment {

@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout_term_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/linearLayout_term_item">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="10"
-        android:orientation="horizontal"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp">
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
         <LinearLayout
 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="8">
+            android:layout_weight="8"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/TERMITEM_term"
@@ -25,24 +26,26 @@
                 android:layout_height="27dp"
                 android:text="term"
                 android:textColor="#000000"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
+
             <TextView
                 android:id="@+id/TERMITEM_definition"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
                 android:layout_marginBottom="5dp"
+                android:paddingLeft="10dp"
                 android:text="definition"
-                android:textSize="15dp"/>
+                android:textSize="15dp" />
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/TERMITEM_layout_editButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_weight="2"
-            android:clickable="true">
+            android:clickable="true"
+            android:orientation="vertical">
+
             <ImageView
                 android:id="@+id/TERMITEM_editButton"
                 android:layout_width="17dp"

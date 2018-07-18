@@ -1,4 +1,4 @@
-package com.rms.mocket;
+package com.rms.mocket.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.rms.mocket.R;
+import com.rms.mocket.common.Checker;
+import com.rms.mocket.common.Utils;
 
 
 public class ForgotPasswordActivity extends AppCompatActivity {
@@ -38,6 +42,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 timerCount = (int) (millisUntilFinished / 1000);
                 textView_verify.setText("Time remaining: " + millisUntilFinished / 1000 + " sec");
             }
+
             public void onFinish() {
                 timerCount = 0;
                 textView_verify.setText("Verification code has been expired.");
@@ -48,14 +53,14 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
 
     /* OnClick: Send button is clicked. */
-    public void sendVerificationCode(View v){
+    public void sendVerificationCode(View v) {
         EditText editText_verifyEmail = (EditText) findViewById(R.id.FORGOTPASSWORD_editText_verifyEmail);
         EditText editText_verify = (EditText) findViewById(R.id.FORGOTPASSWORD_editText_verificationCode);
         Button button_verify = (Button) findViewById(R.id.FORGOTPASSWORD_button_verificationCode);
         email = editText_verifyEmail.getText().toString();
         final TextView textView_verify = (TextView) findViewById(R.id.FORGOTPASSWORD_textView_timeLeft);
 
-        if(Checker.checkEmailValidation(email)){
+        if (Checker.checkEmailValidation(email)) {
             LinearLayout sendLayout = (LinearLayout) findViewById(R.id.FORGOTPASSWORD_verifyLayout);
             sendLayout.setVisibility(LinearLayout.VISIBLE);
 
@@ -65,7 +70,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             timer.cancel();
             timer.start();
 
-        }else{
+        } else {
             String message = "Invalid Email address.";
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
@@ -74,7 +79,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
 
     /* Send the verification code to email */
-    public void sendVerficationCodeToEmail(String email){
+    public void sendVerficationCodeToEmail(String email) {
         /* Generate random 6 digits number */
         verificationNumber = Utils.generateVerificationCode();
 
@@ -83,25 +88,25 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
         //TODO: Set what to send on the mail.
-        String messageToEmail="";
+        String messageToEmail = "";
 
-        Utils.sendEmail(email,messageToEmail);
+        Utils.sendEmail(email, messageToEmail);
 
     }
 
 
     /* OnClick: Verify button is clicked.  */
-    public void verifyCode(View v){
+    public void verifyCode(View v) {
         /* When timer is over, invalid. */
-        if(!(timerCount > 0)) {
+        if (!(timerCount > 0)) {
             String message = "Expired verification code.";
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        }else {
+        } else {
 
             EditText editText_verify = (EditText) findViewById(R.id.FORGOTPASSWORD_editText_verificationCode);
             String str_verificationNumberGiven = editText_verify.getText().toString();
 
-            if (!Checker.checkIfNumber(str_verificationNumberGiven)){
+            if (!Checker.checkIfNumber(str_verificationNumberGiven)) {
                 String message = "Invalid verification code.";
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
                 return;
@@ -109,11 +114,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
             int verificationNumberGiven = Integer.parseInt(str_verificationNumberGiven);
 
-            if(verificationNumberGiven != verificationNumber){
+            if (verificationNumberGiven != verificationNumber) {
                 String message = "Invalid verification code.";
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
                 return;
-            }else{
+            } else {
                 /* Move to ChangePasswordActivity */
                 Intent intent = new Intent(getApplicationContext(), ChangePasswordActivity.class);
                 intent.putExtra("email", email);

@@ -4,32 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#efefef"
     android:orientation="vertical"
-    tools:context=".SignUpActivity"
-    android:background="#efefef">
+    tools:context=".activities.SignUpActivity">
 
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/SIGNUP_toolbar"
-        android:minHeight="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        app:titleTextColor="@color/mocket_dark_purple"
         android:background="?attr/colorPrimary"
-        >
+        android:minHeight="?attr/actionBarSize"
+        app:titleTextColor="@color/mocket_dark_purple">
 
         <ImageView
             android:layout_width="35dp"
             android:layout_height="match_parent"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/logo" />
+
         <TextView
             android:layout_width="90dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textSize="22dp"
             android:text="Sign Up"
-            android:textStyle="bold"
-            android:textColor="@color/mocket_dark_purple"/>
+            android:textColor="@color/mocket_dark_purple"
+            android:textSize="22dp"
+            android:textStyle="bold" />
 
     </android.support.v7.widget.Toolbar>
 
@@ -41,27 +41,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@drawable/border_shadow">
+                android:background="@drawable/border_shadow"
+                android:orientation="vertical">
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
                     android:weightSum="10">
 
                     <LinearLayout
@@ -76,30 +76,29 @@
                             android:orientation="horizontal">
 
                             <!-- Profile Image -->
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                                 android:id="@+id/SIGNUP_imageView_profile"
                                 android:layout_width="100dp"
                                 android:layout_height="100dp"
                                 android:layout_centerHorizontal="true"
                                 android:layout_centerVertical="true"
+                                android:onClick="addProfileImage"
                                 android:src="@drawable/add_image"
                                 app:civ_border_color="@color/mocket_dark_purple"
-                                app:civ_border_width="2dp"
-                                android:onClick="addProfileImage"/>
+                                app:civ_border_width="2dp" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="120dp"
-                                android:paddingLeft="20dp"
-                                android:orientation="vertical">
+                                android:orientation="vertical"
+                                android:paddingLeft="20dp">
 
                                 <EditText
                                     android:id="@+id/SIGNUP_editText_firstName"
                                     android:layout_width="match_parent"
                                     android:layout_height="50dp"
                                     android:hint="First Name"
-                                    android:textAlignment="center"/>
+                                    android:textAlignment="center" />
 
 
                                 <EditText
@@ -107,7 +106,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="50dp"
                                     android:hint="Last Name"
-                                    android:textAlignment="center"/>
+                                    android:textAlignment="center" />
 
                             </LinearLayout>
 
@@ -128,24 +127,24 @@
                                     android:id="@+id/SIGNUP_editText_email"
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
-                                    android:paddingLeft="20dp"
+                                    android:layout_weight="6.5"
                                     android:hint="Email address"
                                     android:inputType="textEmailAddress"
-                                    android:layout_weight="6.5"/>
+                                    android:paddingLeft="20dp" />
 
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
-                                    android:layout_weight="0.5"/>
+                                    android:layout_weight="0.5" />
 
                                 <Button
                                     android:id="@+id/SIGNUP_button_send"
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
-                                    android:text="Send"
                                     android:layout_weight="3"
                                     android:onClick="send"
-                                    android:textColor="@color/mocket_dark_purple"/>
+                                    android:text="Send"
+                                    android:textColor="@color/mocket_dark_purple" />
 
                             </LinearLayout>
 
@@ -154,7 +153,7 @@
                                 android:layout_height="30dp"
                                 android:paddingLeft="10dp"
                                 android:text="Verification code will be sent to this Email address."
-                                android:textColor="#000000"/>
+                                android:textColor="#000000" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -171,29 +170,29 @@
                                     <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_weight="1"/>
+                                        android:layout_weight="1" />
 
                                     <EditText
                                         android:id="@+id/SIGNUP_editText_verificationCode"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
+                                        android:layout_weight="5"
                                         android:hint="Verification Code"
-                                        android:textAlignment="center"
-                                        android:layout_weight="5"/>
+                                        android:textAlignment="center" />
 
                                     <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_weight="1"/>
+                                        android:layout_weight="1" />
 
                                     <Button
                                         android:id="@+id/SIGNUP_button_verify"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:text="Verify"
                                         android:layout_weight="3"
                                         android:onClick="verify"
-                                        android:textColor="@color/mocket_dark_purple"/>
+                                        android:text="Verify"
+                                        android:textColor="@color/mocket_dark_purple" />
 
                                 </LinearLayout>
 
@@ -203,13 +202,13 @@
 
                         <TextView
                             android:id="@+id/SIGNUP_textView_passwordRule"
-                            android:paddingLeft="20dp"
-                            android:paddingBottom="10dp"
-                            android:text="Password should \n- be at least 8 digits long.\n- contain at least 1 uppercase."
-                            android:textSize="15dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#000000"/>
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="20dp"
+                            android:text="Password should \n- be at least 8 digits long.\n- contain at least 1 uppercase."
+                            android:textColor="#000000"
+                            android:textSize="15dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -231,21 +230,21 @@
                                     <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_weight="0.5"/>
+                                        android:layout_weight="0.5" />
 
                                     <EditText
                                         android:id="@+id/SIGNUP_editText_password1"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:paddingLeft="20dp"
+                                        android:layout_weight="9"
                                         android:hint="Password"
                                         android:inputType="textPassword"
-                                        android:layout_weight="9"/>
+                                        android:paddingLeft="20dp" />
 
                                     <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_weight="0.5"/>
+                                        android:layout_weight="0.5" />
 
                                 </LinearLayout>
 
@@ -266,21 +265,21 @@
                                     <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_weight="0.5"/>
+                                        android:layout_weight="0.5" />
 
                                     <EditText
                                         android:id="@+id/SIGNUP_editText_password2"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:paddingLeft="20dp"
+                                        android:layout_weight="9"
                                         android:hint="Confirm Password"
                                         android:inputType="textPassword"
-                                        android:layout_weight="9"/>
+                                        android:paddingLeft="20dp" />
 
                                     <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_weight="0.5"/>
+                                        android:layout_weight="0.5" />
 
                                 </LinearLayout>
 
@@ -301,15 +300,15 @@
                                     <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_weight="7"/>
+                                        android:layout_weight="7" />
 
                                     <Button
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:text="Sign Up"
                                         android:layout_weight="3"
                                         android:onClick="signUp"
-                                        android:textColor="@color/mocket_dark_purple"/>
+                                        android:text="Sign Up"
+                                        android:textColor="@color/mocket_dark_purple" />
 
                                 </LinearLayout>
 
