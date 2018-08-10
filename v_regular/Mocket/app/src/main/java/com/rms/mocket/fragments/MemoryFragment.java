@@ -3,11 +3,14 @@ package com.rms.mocket.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,75 +18,75 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.rms.mocket.R;
 import com.rms.mocket.activities.QuizActivity;
+import com.rms.mocket.common.DateUtils;
+import com.rms.mocket.common.TermUtils;
+import com.rms.mocket.database.DatabaseHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static android.content.Context.VIBRATOR_SERVICE;
 
 
 public class MemoryFragment extends Fragment {
 
     boolean visibility_termList = false;
-    ArrayList<HashMap<String, String>> exampleTerm = new ArrayList<>();
+    DatabaseHandler db;
+
+    EditText editText_term;
+    EditText editText_definition;
+    TextView textView_todaysMemoryTitle;
+    View rootView;
+    LinearLayout linearLayout_addMemory;
+
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ////////////////////////////////////////////////////////
-        /* This is a temporary code. */
 
-        HashMap<String, String> exampleHash1 = new HashMap<>();
-        exampleHash1.put("term", "vigorous");
-        exampleHash1.put("definition", "adj: strong, healthy, and full of energy.");
+        rootView = inflater.inflate(R.layout.fragment_memory, container, false);
+        db = new DatabaseHandler(rootView.getContext());
 
-        HashMap<String, String> exampleHash2 = new HashMap<>();
-        exampleHash2.put("term", "doctor");
-        exampleHash2.put("definition", "a person who is skilled in the science of medicine");
-
-        HashMap<String, String> exampleHash3 = new HashMap<>();
-        exampleHash3.put("term", "deep learning");
-        exampleHash3.put("definition", "Deep learning is part of a broader family of machine learning methods based on learning data representations, as opposed to task-specific algorithms.");
-
-        HashMap<String, String> exampleHash4 = new HashMap<>();
-        exampleHash4.put("term", "blockchain");
-        exampleHash4.put("definition", "continuously growing list of records, called blocks, which are linked and secured using cryptography");
-
-        exampleTerm.add(exampleHash1);
-        exampleTerm.add(exampleHash2);
-        exampleTerm.add(exampleHash3);
-        exampleTerm.add(exampleHash4);
-
-        ////////////////////////////////////////////////////////
-
-        final View rootView = inflater.inflate(R.layout.fragment_memory, container, false);
-
-        final EditText editText_term = (EditText) rootView.findViewById(R.id.MEMORY_editText_term);
-        final EditText editText_definition = (EditText) rootView.findViewById(R.id.MEMORY_editText_definition);
-
-        final TextView textView_todaysMemoryTitle =
+        editText_term = (EditText) rootView.findViewById(R.id.MEMORY_editText_term);
+        editText_definition = (EditText) rootView.findViewById(R.id.MEMORY_editText_definition);
+        textView_todaysMemoryTitle =
                 (TextView) rootView.findViewById(R.id.MEMORY_textView_todaysMemoryTitle);
-        textView_todaysMemoryTitle.setText("Today's Memory (" + exampleTerm.size() + ")");
+        linearLayout_addMemory = (LinearLayout) rootView.findViewById(R.id.MEMORY_linearLayout_addToMemory);
 
+        this.setClearButtonListener();
+        this.setLookUpButtonListener();
+        this.setMemorizeButtonListener();
+        this.setQuizButtonListener();
 
+        this.updateTermList("");
+        this.setSearchViewListener();
+
+        return rootView;
+    }
+
+    public void setClearButtonListener(){
         TextView textView_clear = (TextView) rootView.findViewById(R.id.MEMORY_textView_clear);
         textView_clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                editText_term.setText("");
-                editText_term.clearFocus();
-                editText_definition.setText("");
-                editText_definition.clearFocus();
+                clearTexts();
             }
         });
+    }
 
+    public void setLookUpButtonListener(){
         Button button_lookup = (Button) rootView.findViewById(R.id.MEMORY_button_lookUp);
         button_lookup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,64 +98,126 @@ public class MemoryFragment extends Fragment {
 
             }
         });
+    }
 
+    public void setMemorizeButtonListener(){
         Button button_memorize = (Button) rootView.findViewById(R.id.MEMORY_button_memorize);
         button_memorize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: Add to word lists and update database.
-                Toast.makeText(getContext(), "Successfully Added to Memory.", Toast.LENGTH_LONG).show();
-                editText_term.setText("");
-                editText_term.clearFocus();
-                editText_definition.setText("");
-                editText_definition.clearFocus();
-            }
-        });
 
+                if( editText_term.getText().toString().isEmpty()
+                    || editText_definition.getText().toString().isEmpty()){
 
-        /**
-         * OnClick: expand arrow on [Today's Memory] section.
-         *  @ Shrink:
-         *  @ Expand: Show ListView of [Today's Memory].
-         * */
-        final ImageView imageView_expand = (ImageView) rootView.findViewById(R.id.MEMORY_imageView_expand);
-        imageView_expand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final ListView listView_termList = (ListView) rootView.findViewById(R.id.MEMORY_listView_termList);
-                TermListAdapter adapter = new TermListAdapter(getActivity(), R.layout.term_item, exampleTerm, rootView);
-                if (visibility_termList) {
-                    /* Reset the terms */
-                    listView_termList.setAdapter(null);
-
-                    imageView_expand.setImageResource(R.drawable.expand_button);
-                    listView_termList.setVisibility(View.GONE);
-                    visibility_termList = false;
-                } else {
-                    /* Display Today's terms */
-                    listView_termList.setAdapter(adapter);
-
-                    imageView_expand.setImageResource(R.drawable.shrink_button);
-                    listView_termList.setVisibility(View.VISIBLE);
-                    visibility_termList = true;
-
+                    Toast.makeText(getContext(), "Some blank is empty.", Toast.LENGTH_LONG).show();
+                    return;
                 }
 
+                /* Add it to database */
+                String term = editText_term.getText().toString();
+                String definition = editText_definition.getText().toString();
+                if (!db.addTerm(term, definition))
+                    Toast.makeText(getContext(), "Failed to add into database.", Toast.LENGTH_LONG).show();
+                else {
+                    Vibrator vibrator = (Vibrator) rootView.getContext().getSystemService(VIBRATOR_SERVICE);
+                    try {
+                        vibrator.vibrate(50);
+                        Thread.sleep(150);
+                        vibrator.vibrate(50);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                clearTexts();
+                updateTermList("");
             }
         });
+    }
 
+    public void setQuizButtonListener(){
         final ImageView imageView_quizButton = (ImageView) rootView.findViewById(R.id.MEMORY_imageView_quizButton);
         imageView_quizButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: When Quiz Button is clicked, show quiz activity
                 Intent i = new Intent(rootView.getContext(), QuizActivity.class);
+                i.putExtra("type", "quiz");
                 i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                Log.d("Mocket","before startActivity");
                 startActivity(i);
             }
         });
+    }
 
-        return rootView;
+    public void setSearchViewListener(){
+        SearchView searchView = (SearchView) rootView.findViewById(R.id.MEMORY_searchView_term);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                updateTermList(s);
+                return false;
+            }
+        });
+
+        searchView.setOnQueryTextFocusChangeListener( new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if(hasFocus){
+                    linearLayout_addMemory.setVisibility(View.GONE);
+                }else{
+                    linearLayout_addMemory.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    public void clearTexts(){
+        editText_term.setText("");
+        editText_term.clearFocus();
+        editText_definition.setText("");
+        editText_definition.clearFocus();
+    }
+
+    public void updateTermList(String filter){
+
+        Cursor cursor_terms = db.getAllTerms();
+        if(cursor_terms.getCount() == 0){
+            textView_todaysMemoryTitle.setText("Today's Memory (0)");
+            return;
+        }
+
+        ArrayList<HashMap<String, String>> terms = new ArrayList<>();
+        while(cursor_terms.moveToNext()){
+            String id = cursor_terms.getString(0);
+            String term = cursor_terms.getString(1);
+            String definition = cursor_terms.getString(2);
+            String date_add = cursor_terms.getString(3);
+
+            if(!date_add.equals(DateUtils.getDateToday())) continue;
+            if(!term.toLowerCase().contains(filter.toLowerCase())) continue;
+
+            HashMap<String, String> temp_hash = new HashMap<>();
+            temp_hash.put(DatabaseHandler.COLUMN_ID, id);
+            temp_hash.put(DatabaseHandler.COLUMN_TERM, term);
+            temp_hash.put(DatabaseHandler.COLUMN_DEFINITION, definition);
+
+            terms.add(temp_hash);
+        }
+
+        ArrayList<HashMap<String, String>> sorted_terms = TermUtils.sortTerms(terms);
+
+        /* Update the title name */
+        textView_todaysMemoryTitle.setText("Today's Memory (" + sorted_terms.size() + ")");
+
+        /* Display Today's terms */
+        ListView listView_termList = (ListView) rootView.findViewById(R.id.MEMORY_listView_termList);
+        ListAdapter adapter = new TermListAdapter(getActivity(), R.layout.term_item, sorted_terms, rootView);
+        listView_termList.setAdapter(adapter);
     }
 
     /**
@@ -213,8 +278,8 @@ public class MemoryFragment extends Fragment {
 
             TextView textView_term = (TextView) view.findViewById(R.id.TERMITEM_term);
             TextView textView_definition = (TextView) view.findViewById(R.id.TERMITEM_definition);
-            textView_term.setText(exampleTerm.get(i).get("term"));
-            textView_definition.setText(exampleTerm.get(i).get("definition"));
+            textView_term.setText(data.get(i).get(DatabaseHandler.COLUMN_TERM));
+            textView_definition.setText(data.get(i).get(DatabaseHandler.COLUMN_DEFINITION));
 
             ImageView imageView_edit = (ImageView) view.findViewById(R.id.TERMITEM_editButton);
 
@@ -234,5 +299,4 @@ public class MemoryFragment extends Fragment {
             return view;
         }
     }
-
 }

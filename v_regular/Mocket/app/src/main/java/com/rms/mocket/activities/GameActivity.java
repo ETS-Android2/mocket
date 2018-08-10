@@ -148,7 +148,7 @@ public class GameActivity extends AppCompatActivity {
         v.setText("Correct");
         v.setTextSize(20);
         v.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.correct_green));
-        Button button_next = findViewById(R.id.GAME_button_next);
+        Button button_next = (Button) findViewById(R.id.GAME_button_next);
         button_next.setVisibility(View.VISIBLE);
 
     }

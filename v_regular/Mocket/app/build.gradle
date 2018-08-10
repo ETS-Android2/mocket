@@ -2,6 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "com.rms.mocket"
         minSdkVersion 23
@@ -21,6 +25,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:+'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'

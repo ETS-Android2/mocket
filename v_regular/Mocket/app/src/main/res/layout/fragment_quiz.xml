@@ -43,7 +43,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="5"
                         android:paddingLeft="20dp"
-                        android:text="Today's Quiz"
+                        android:text="Daily Test"
                         android:textColor="@color/mocket_dark_purple"
                         android:textSize="17dp"
                         android:textStyle="bold" />

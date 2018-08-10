@@ -27,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String ID_KEY = "android_id";
     String previous_fragment = "memory";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(myToolbar);
@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment).commit();
 
         Log.d("Mocket", getAndroidId(this));
-
     }
 
     /* OnClick: when a category is clicked. */
@@ -169,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             return Long.toHexString(Long.parseLong(c.getString(1)));
         } catch (NumberFormatException e) {
+            e.printStackTrace();
             return null;
         }
     }

@@ -51,6 +51,7 @@
                     android:background="@android:color/transparent" />
 
                 <LinearLayout
+                    android:id="@+id/QUIZGAME_linearLayout_back_header"
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
@@ -91,15 +92,15 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="2"
+                        android:layout_weight="1"
                         android:background="@android:color/transparent" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="5"
+                        android:layout_weight="6"
                         android:background="@android:color/transparent"
-                        android:text="Last Memory: "
+                        android:text="Last Memorized: "
                         android:textAlignment="textEnd"
                         android:textColor="#000000"
                         android:textSize="13dp"
@@ -214,6 +215,7 @@
                     android:background="@android:color/transparent" />
 
                 <LinearLayout
+                    android:id="@+id/QUIZGAME_linearLayout_front_header"
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
@@ -233,20 +235,41 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="11"
+                        android:layout_weight="8"
                         android:background="@android:color/transparent" />
 
-                    <TextView
-                        android:id="@+id/QUIZGAME_textView_total"
+                    <LinearLayout
                         android:layout_width="0dp"
+                        android:layout_weight="7"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"
-                        android:background="@drawable/game_title_bottom_border"
+                        android:weightSum="10"
                         android:paddingTop="3dp"
-                        android:text="13/8407"
-                        android:textAlignment="center"
-                        android:textColor="@color/mocket_dark_purple"
-                        android:textSize="13dp" />
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:text="Total Left:  "
+                            android:background="@android:color/transparent"
+                            android:textAlignment="textEnd"
+                            android:textStyle="bold"
+                            android:textColor="@color/mocket_dark_purple"
+                            android:textSize="13dp" />
+
+                        <TextView
+                            android:id="@+id/QUIZGAME_textView_total"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:background="@android:color/transparent"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/mocket_dark_purple"
+                            android:textSize="13dp" />
+
+                    </LinearLayout>
+
 
 
                     <LinearLayout
