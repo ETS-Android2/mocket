@@ -28,7 +28,7 @@
             <!-- SHADOW LAYER -->
             <item>
                 <shape>
-                    <solid android:color="@color/clicked_category" />
+                    <solid android:color="@color/mocket_category_selected" />
                     <corners android:radius="0dp" />
                 </shape>
             </item>
@@ -38,7 +38,7 @@
             <item android:bottom="2dp" android:left="0dp" android:right="0dp" android:top="0dp">
 
                 <shape>
-                    <solid android:color="@color/background_category" />
+                    <solid android:color="@color/mocket_category" />
                     <corners android:radius="0dp" />
                 </shape>
             </item>

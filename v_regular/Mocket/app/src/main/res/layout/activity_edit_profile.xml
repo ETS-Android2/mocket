@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#efefef"
+    android:background="@color/mocket_fragment_background"
     android:orientation="vertical"
     tools:context=".activities.EditProfileActivity">
 
@@ -13,21 +13,23 @@
         android:id="@+id/EDITPROFILE_toolbar"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="?attr/colorPrimary"
+        android:background="@color/mocket_actionBar"
         android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="@color/mocket_dark_purple">
+        app:titleTextColor="@color/mocket_font_dark">
 
         <ImageView
             android:layout_width="35dp"
             android:layout_height="match_parent"
-            android:src="@drawable/logo" />
+            android:src="@drawable/back_button"
+            android:clickable="true"
+            android:onClick="goPreviousActivity"/>
 
         <TextView
             android:layout_width="150dp"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="Edit Profile"
-            android:textColor="@color/mocket_dark_purple"
+            android:textColor="@color/mocket_font_dark"
             android:textSize="22dp"
             android:textStyle="bold" />
 
@@ -89,7 +91,7 @@
                                     android:layout_centerVertical="true"
                                     android:onClick="addProfileImage"
                                     android:src="@drawable/add_image"
-                                    app:civ_border_color="@color/mocket_dark_purple"
+                                    app:civ_border_color="@color/mocket_font"
                                     app:civ_border_width="2dp" />
 
                                 <LinearLayout
@@ -103,6 +105,9 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="50dp"
                                         android:hint="First Name"
+                                        android:textColor="@color/mocket_font"
+                                        android:textCursorDrawable="@drawable/cursor_color"
+                                        android:backgroundTint="@color/mocket_cursor"
                                         android:textAlignment="center" />
 
 
@@ -111,6 +116,9 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="50dp"
                                         android:hint="Last Name"
+                                        android:textColor="@color/mocket_font"
+                                        android:textCursorDrawable="@drawable/cursor_color"
+                                        android:backgroundTint="@color/mocket_cursor"
                                         android:textAlignment="center" />
 
                                 </LinearLayout>
@@ -134,9 +142,13 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:hint="Email address"
-                                        android:inputType="textEmailAddress"
+                                        android:inputType="none"
+                                        android:textColor="@color/mocket_font"
+                                        android:textCursorDrawable="@drawable/cursor_color"
+                                        android:backgroundTint="@color/mocket_cursor"
                                         android:paddingLeft="30dp"
-                                        android:paddingRight="30dp" />
+                                        android:paddingRight="30dp"
+                                        tools:ignore="Deprecated" />
 
                                 </LinearLayout>
 
@@ -145,7 +157,7 @@
                                     android:layout_height="30dp"
                                     android:paddingLeft="10dp"
                                     android:text="Email address cannot be changed."
-                                    android:textColor="#000000" />
+                                    android:textColor="@color/mocket_font_dark" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -165,7 +177,8 @@
                                         android:layout_weight="3"
                                         android:onClick="saveProfile"
                                         android:text="Save"
-                                        android:textColor="@color/mocket_dark_purple" />
+                                        android:textColor="#ffffff"
+                                        android:backgroundTint="@color/mocket_button" />
 
                                 </LinearLayout>
 
@@ -178,7 +191,7 @@
                                 android:paddingBottom="10dp"
                                 android:paddingLeft="20dp"
                                 android:text="Password should \n- be at least 8 digits long.\n- contain at least 1 uppercase."
-                                android:textColor="#000000"
+                                android:textColor="@color/mocket_font_dark"
                                 android:textSize="15dp" />
 
                             <LinearLayout
@@ -212,6 +225,9 @@
                                             android:layout_weight="9"
                                             android:hint="Current Password"
                                             android:inputType="textPassword"
+                                            android:textColor="@color/mocket_font"
+                                            android:textCursorDrawable="@drawable/cursor_color"
+                                            android:backgroundTint="@color/mocket_cursor"
                                             android:paddingLeft="20dp" />
 
                                         <LinearLayout
@@ -241,6 +257,9 @@
                                         android:layout_weight="9"
                                         android:hint="New Password"
                                         android:inputType="textPassword"
+                                        android:textColor="@color/mocket_font"
+                                        android:textCursorDrawable="@drawable/cursor_color"
+                                        android:backgroundTint="@color/mocket_cursor"
                                         android:paddingLeft="20dp" />
 
                                     <LinearLayout
@@ -268,6 +287,9 @@
                                         android:layout_weight="9"
                                         android:hint="Confirm New Password"
                                         android:inputType="textPassword"
+                                        android:textColor="@color/mocket_font"
+                                        android:textCursorDrawable="@drawable/cursor_color"
+                                        android:backgroundTint="@color/mocket_cursor"
                                         android:paddingLeft="20dp" />
 
                                     <LinearLayout
@@ -295,7 +317,8 @@
                                         android:layout_weight="3"
                                         android:onClick="changePassword"
                                         android:text="Change"
-                                        android:textColor="@color/mocket_dark_purple" />
+                                        android:textColor="#ffffff"
+                                        android:backgroundTint="@color/mocket_button" />
 
                                 </LinearLayout>
 
@@ -314,7 +337,9 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:text="Log Out" />
+                android:text="Log Out"
+                android:textColor="#ffffff"
+                android:backgroundTint="@color/mocket_button"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -322,8 +347,9 @@
                 android:layout_marginBottom="30dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:backgroundTint="@android:color/holo_red_light"
-                android:text="Delete Account" />
+                android:backgroundTint="@color/mocket_red"
+                android:text="Delete Account"
+                android:textColor="#ffffff"/>
 
         </LinearLayout>
     </ScrollView>

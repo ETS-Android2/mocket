@@ -149,4 +149,7 @@ public class SignUpActivity extends AppCompatActivity {
         //TODO: Signup to Database
         return true;
     }
+    public void goPreviousActivity(View v){
+        onBackPressed();
+    }
 }

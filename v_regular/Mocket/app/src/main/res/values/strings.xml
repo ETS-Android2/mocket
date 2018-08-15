@@ -3,9 +3,11 @@
     <string-array name="notification_duration">
         <item>3 hours</item>
         <item>6 hours</item>
+        <item>12 hours</item>
     </string-array>
 
     <string-array name="gesture_option">
+        <item>None</item>
         <item>Shake</item>
     </string-array>
     <string-array name="vibration">

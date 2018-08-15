@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/MEMORY_linearLayout_addToMemory"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_shadow"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="27dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/title_bottom_border"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:text="Edit Term"
+            android:textColor="@color/mocket_font_dark"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <EditText
+            android:id="@+id/EDITTERM_editText_term"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:textSize="20dp"
+            android:textColor="@color/mocket_font"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:backgroundTint="@color/mocket_cursor"
+            android:paddingLeft="20dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/EDITTERM_editText_definition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="3"
+            android:textColor="@color/mocket_font"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:backgroundTint="@color/mocket_cursor"
+            android:textSize="15dp"
+            android:paddingLeft="20dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical"
+        android:weightSum="10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text = "Added: "
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="@color/mocket_font_dark"
+                />
+
+            <TextView
+                android:id="@+id/EDITTERM_textView_addedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/mocket_font"
+                android:text = "08/09/2018"
+                android:textSize="15dp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text = "Last Memorized: "
+                android:textSize="15dp"
+                android:textColor="@color/mocket_font_dark"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/EDITTERM_textView_lastMemorizedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/mocket_font"
+                android:text = "08/09/2018"
+                android:textSize="15dp"
+                />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        android:weightSum="28">
+
+
+        <Button
+            android:id="@+id/EDITTERM_button_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:text="Cancel"
+            android:textColor="#ffffff"
+            android:backgroundTint="@color/mocket_button"/>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5" />
+
+
+        <Button
+            android:id="@+id/EDITTERM_button_delete"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8.5"
+            android:text="Delete"
+            android:textColor="#ffffff"
+            android:backgroundTint="@color/mocket_red"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5" />
+
+        <Button
+            android:id="@+id/EDITTERM_button_save"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8.5"
+            android:text="Save"
+            android:textColor="#ffffff"
+            android:backgroundTint="@color/mocket_button" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+

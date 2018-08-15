@@ -9,9 +9,9 @@
     </style>
 
     <style name="PurpleButton" parent="ThemeOverlay.AppCompat">
-        <item name="colorPrimary">@color/mocket_dark_purple</item>
-        <item name="colorPrimaryDark">@color/mocket_dark_purple</item>
-        <item name="colorAccent">@color/mocket_dark_purple</item>
+        <item name="colorPrimary">@color/mocket_font</item>
+        <item name="colorPrimaryDark">@color/mocket_font</item>
+        <item name="colorAccent">@color/mocket_font</item>
     </style>
 
     <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.NoActionBar">
@@ -23,5 +23,19 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
+
+    <style name="searchView" parent="Widget.AppCompat.SearchView">
+        ...
+        <item name="iconifiedByDefault">false</item>
+        <item name="colorControlActivated">#6596BE</item>
+        <item name="android:textColor">@color/mocket_font</item>
+    </style>
+
+    <style name="spinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/mocket_font_light</item>
+        <item name="android:state_activated">true</item>
+        <item name="android:color">@color/mocket_font_light</item>
+    </style>
+
 
 </resources>

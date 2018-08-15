@@ -28,7 +28,7 @@
             <!-- SHADOW LAYER -->
             <item>
                 <shape>
-                    <solid android:color="@color/background_category" />
+                    <solid android:color="@color/mocket_searchbar" />
                     <corners android:radius="2dp" />
                 </shape>
             </item>

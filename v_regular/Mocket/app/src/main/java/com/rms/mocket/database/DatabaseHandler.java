@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.rms.mocket.common.DateUtils;
 
+import java.util.HashMap;
+
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mocket.db";
@@ -74,5 +76,49 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase term_db = this.getWritableDatabase();
         Cursor terms = term_db.rawQuery("select * from "+TABLE_TERMS, null);
         return terms;
+    }
+
+
+    public HashMap<String, String> getTermAt(String index){
+        HashMap<String, String> termHashMap = new HashMap<>();
+
+        SQLiteDatabase term_db = this.getWritableDatabase();
+        Cursor cursor_terms = term_db.rawQuery("select * from "+TABLE_TERMS, null);
+
+        while(cursor_terms.moveToNext()){
+            String id = cursor_terms.getString(0);
+            String term = cursor_terms.getString(1);
+            String definition = cursor_terms.getString(2);
+            String date_added = cursor_terms.getString(3);
+            String date_lastMemorized = cursor_terms.getString(4);
+
+            if (id.equals(index)){
+                termHashMap.put(DatabaseHandler.COLUMN_ID, id);
+                termHashMap.put(DatabaseHandler.COLUMN_TERM, term);
+                termHashMap.put(DatabaseHandler.COLUMN_DEFINITION, definition);
+                termHashMap.put(DatabaseHandler.COLUMN_DATE_ADD, date_added);
+                termHashMap.put(DatabaseHandler.COLUMN_DATE_LATEST, date_lastMemorized);
+                break;
+            }
+        }
+        return termHashMap;
+    }
+
+    public boolean updateTerm(HashMap<String, String> term){
+        /*
+        SQLiteDatabase term_db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_TERM, term);
+        contentValues.put(COLUMN_DEFINITION, definition);
+        contentValues.put(COLUMN_DATE_ADD, date_today);
+        contentValues.put(COLUMN_DATE_LATEST, date_today);
+        contentValues.put(COLUMN_MEMORY_LEVEL, memory_level);
+        long result = term_db.insert(TABLE_TERMS, null, contentValues);
+
+        if(result == -1) return false;
+
+        else return true;
+        */
+        return true;
     }
 }

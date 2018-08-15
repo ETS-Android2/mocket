@@ -72,4 +72,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void goPreviousActivity(View v){
+        onBackPressed();
+    }
 }

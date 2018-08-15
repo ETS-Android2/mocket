@@ -128,5 +128,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         }
     }
+    public void goPreviousActivity(View v){
+        onBackPressed();
+    }
 
 }

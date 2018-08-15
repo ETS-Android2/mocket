@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rms.mocket.R;
+import com.rms.mocket.common.VibratorUtils;
 import com.wajahatkarim3.easyflipview.EasyFlipView;
 
 public class GameActivity extends AppCompatActivity {
@@ -132,15 +133,7 @@ public class GameActivity extends AppCompatActivity {
         if (!answerPicked) {
             ImageView imageView_correctIncorrect = (ImageView) findViewById(R.id.GAME_imageView_correct_incorrect);
             imageView_correctIncorrect.setImageResource(R.drawable.correct);
-
-            try {
-                vibrator.vibrate(50);
-                Thread.sleep(150);
-                vibrator.vibrate(50);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+            VibratorUtils.vibrateCorrect(this);
 
         }
 
@@ -158,7 +151,7 @@ public class GameActivity extends AppCompatActivity {
         if (!answerPicked) {
             ImageView imageView_correctIncorrect = (ImageView) findViewById(R.id.GAME_imageView_correct_incorrect);
             imageView_correctIncorrect.setImageResource(R.drawable.incorrect);
-            vibrator.vibrate(200);
+            VibratorUtils.vibrateIncorrect(this);
         }
 
         answerPicked = true;

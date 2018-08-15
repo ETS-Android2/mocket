@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/mocket_fragment_background"
     tools:context="com.rms.mocket.activities.LoginActivity">
 
 
@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
-                android:orientation="horizontal"></LinearLayout>
+                android:orientation="horizontal"/>
 
 
             <!-- Logo Layout -->
@@ -72,6 +72,9 @@
                             android:layout_height="60dp"
                             android:hint="Email address"
                             android:inputType="textEmailAddress"
+                            android:textColor="@color/mocket_font"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:backgroundTint="@color/mocket_cursor"
                             android:paddingLeft="20dp" />
 
                         <!-- Password -->
@@ -81,6 +84,9 @@
                             android:layout_height="60dp"
                             android:layout_below="@+id/emailAddress"
                             android:hint="Password"
+                            android:textColor="@color/mocket_font"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:backgroundTint="@color/mocket_cursor"
                             android:inputType="textPassword"
                             android:paddingLeft="20dp" />
 
@@ -96,7 +102,7 @@
                             android:onClick="moveToForgotPasswordActivity"
                             android:text="Forgot password?"
                             android:textAlignment="textEnd"
-                            android:textColor="#000000"
+                            android:textColor="@color/mocket_font_dark"
                             android:textSize="15dp" />
 
 
@@ -120,7 +126,8 @@
                                     android:layout_height="match_parent"
                                     android:onClick="checkAccount"
                                     android:text="Sign In"
-                                    android:textColor="@color/mocket_dark_purple" />
+                                    android:textColor="#ffffff"
+                                    android:backgroundTint="@color/mocket_button"/>
 
                             </LinearLayout>
 
@@ -145,7 +152,9 @@
                                     android:layout_height="match_parent"
                                     android:onClick="moveToRegisterActivity"
                                     android:text="Sign Up"
-                                    android:textColor="@color/mocket_dark_purple" />
+                                    android:textColor="#ffffff"
+                                    android:backgroundTint="@color/mocket_button"
+                                    />
 
                             </LinearLayout>
                         </LinearLayout>

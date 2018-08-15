@@ -82,4 +82,7 @@ public class EditProfileActivity extends AppCompatActivity {
         // TODO: Change password
 
     }
+    public void goPreviousActivity(View v){
+        onBackPressed();
+    }
 }

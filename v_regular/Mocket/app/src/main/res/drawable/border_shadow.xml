@@ -35,7 +35,7 @@
             <!-- CONTENT LAYER -->
             <item android:bottom="2dp" android:left="0dp" android:right="2dp" android:top="0dp">
                 <shape>
-                    <solid android:color="#ffffff" />
+                    <solid android:color="@color/mocket_background" />
                     <corners android:radius="3dp" />
                 </shape>
             </item>

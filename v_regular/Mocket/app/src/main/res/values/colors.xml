@@ -3,8 +3,25 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="mocket_dark_purple">#230744</color>
     <color name="clicked_category">#8e7cc3</color>
-    <color name="background_category">#ededed</color>
     <color name="correct_green">#499a25</color>
+
+    <color name="mocket_actionBar">#c1c0b9</color>
+    <color name="mocket_font">#31495d</color>
+    <color name="mocket_font_dark">#283C4C</color>
+    <color name="mocket_font_light">#6596BE</color>
+    <color name="mocket_category">#e7e6e1</color>
+    <color name="mocket_button">#5883A5</color>
+    <color name="mocket_background">#ffffff</color>
+    <color name="mocket_searchbar">#E2E4E0</color>
+    <color name="mocket_cursor">#6596BE</color>
+    <color name="mocket_hint">#c1c0b9</color>
+    <color name="mocket_red">#aa2a23</color>
+    <color name="mocket_fragment_background">#efefef</color>
+
+    <!--<color name="mocket_category_selected">#6596BE</color>-->
+    <color name="mocket_category_selected">#5883A5</color>
+
+
+
 </resources>

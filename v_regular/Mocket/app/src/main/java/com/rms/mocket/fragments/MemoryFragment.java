@@ -1,12 +1,12 @@
 package com.rms.mocket.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,12 +31,11 @@ import com.rms.mocket.R;
 import com.rms.mocket.activities.QuizActivity;
 import com.rms.mocket.common.DateUtils;
 import com.rms.mocket.common.TermUtils;
+import com.rms.mocket.common.VibratorUtils;
 import com.rms.mocket.database.DatabaseHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import static android.content.Context.VIBRATOR_SERVICE;
 
 
 public class MemoryFragment extends Fragment {
@@ -49,6 +48,8 @@ public class MemoryFragment extends Fragment {
     TextView textView_todaysMemoryTitle;
     View rootView;
     LinearLayout linearLayout_addMemory;
+
+    String currentFilter = "";
 
 
 
@@ -70,7 +71,7 @@ public class MemoryFragment extends Fragment {
         this.setMemorizeButtonListener();
         this.setQuizButtonListener();
 
-        this.updateTermList("");
+        this.updateTermList();
         this.setSearchViewListener();
 
         return rootView;
@@ -119,18 +120,11 @@ public class MemoryFragment extends Fragment {
                 if (!db.addTerm(term, definition))
                     Toast.makeText(getContext(), "Failed to add into database.", Toast.LENGTH_LONG).show();
                 else {
-                    Vibrator vibrator = (Vibrator) rootView.getContext().getSystemService(VIBRATOR_SERVICE);
-                    try {
-                        vibrator.vibrate(50);
-                        Thread.sleep(150);
-                        vibrator.vibrate(50);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    VibratorUtils.vibrateAlert(rootView.getContext());
                 }
 
                 clearTexts();
-                updateTermList("");
+                updateTermList();
             }
         });
     }
@@ -159,7 +153,8 @@ public class MemoryFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                updateTermList(s);
+                currentFilter = s;
+                updateTermList();
                 return false;
             }
         });
@@ -174,6 +169,14 @@ public class MemoryFragment extends Fragment {
                 }
             }
         });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                currentFilter="";
+                return false;
+            }
+        });
     }
 
     public void clearTexts(){
@@ -183,7 +186,7 @@ public class MemoryFragment extends Fragment {
         editText_definition.clearFocus();
     }
 
-    public void updateTermList(String filter){
+    public void updateTermList(){
 
         Cursor cursor_terms = db.getAllTerms();
         if(cursor_terms.getCount() == 0){
@@ -192,6 +195,7 @@ public class MemoryFragment extends Fragment {
         }
 
         ArrayList<HashMap<String, String>> terms = new ArrayList<>();
+        int today_term_total = 0;
         while(cursor_terms.moveToNext()){
             String id = cursor_terms.getString(0);
             String term = cursor_terms.getString(1);
@@ -199,7 +203,8 @@ public class MemoryFragment extends Fragment {
             String date_add = cursor_terms.getString(3);
 
             if(!date_add.equals(DateUtils.getDateToday())) continue;
-            if(!term.toLowerCase().contains(filter.toLowerCase())) continue;
+            today_term_total += 1;
+            if(!term.toLowerCase().contains(currentFilter.toLowerCase())) continue;
 
             HashMap<String, String> temp_hash = new HashMap<>();
             temp_hash.put(DatabaseHandler.COLUMN_ID, id);
@@ -209,10 +214,11 @@ public class MemoryFragment extends Fragment {
             terms.add(temp_hash);
         }
 
+
         ArrayList<HashMap<String, String>> sorted_terms = TermUtils.sortTerms(terms);
 
         /* Update the title name */
-        textView_todaysMemoryTitle.setText("Today's Memory (" + sorted_terms.size() + ")");
+        textView_todaysMemoryTitle.setText("Today's Memory (" + today_term_total + ")");
 
         /* Display Today's terms */
         ListView listView_termList = (ListView) rootView.findViewById(R.id.MEMORY_listView_termList);
@@ -281,6 +287,8 @@ public class MemoryFragment extends Fragment {
             textView_term.setText(data.get(i).get(DatabaseHandler.COLUMN_TERM));
             textView_definition.setText(data.get(i).get(DatabaseHandler.COLUMN_DEFINITION));
 
+            String term_id = data.get(i).get(DatabaseHandler.COLUMN_ID);
+
             ImageView imageView_edit = (ImageView) view.findViewById(R.id.TERMITEM_editButton);
 
             /* Image optimizer */
@@ -292,7 +300,74 @@ public class MemoryFragment extends Fragment {
             layout_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getContext(), "Edit button clicked.", Toast.LENGTH_LONG).show();
+
+                    AlertDialog.Builder mBuilder = new AlertDialog.Builder(rootView.getContext());
+                    View mView = getLayoutInflater().inflate(R.layout.edit_term_dialogue, null);
+
+                    HashMap<String, String> term = db.getTermAt(term_id);
+
+                    /* Initialize the blanks. */
+                    EditText editText_term = (EditText) mView.findViewById(R.id.EDITTERM_editText_term);
+                    EditText editText_definition = (EditText) mView.findViewById(R.id.EDITTERM_editText_definition);
+                    TextView textView_addedDate = (TextView) mView.findViewById(R.id.EDITTERM_textView_addedDate);
+                    TextView textView_lastMemorizedDate = (TextView) mView.findViewById(R.id.EDITTERM_textView_lastMemorizedDate);
+                    editText_term.setText(term.get(DatabaseHandler.COLUMN_TERM));
+                    editText_definition.setText(term.get(DatabaseHandler.COLUMN_DEFINITION));
+                    textView_addedDate.setText(term.get(DatabaseHandler.COLUMN_DATE_ADD));
+                    textView_lastMemorizedDate.setText(term.get(DatabaseHandler.COLUMN_DATE_LATEST));
+
+                    Button button_save = (Button) mView.findViewById(R.id.EDITTERM_button_save);
+                    Button button_cancel = (Button) mView.findViewById(R.id.EDITTERM_button_cancel);
+                    Button button_delete = (Button) mView.findViewById(R.id.EDITTERM_button_delete);
+
+                    mBuilder.setView(mView);
+                    AlertDialog dialog = mBuilder.create();
+
+                    button_save.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            /* When one of the blanks is empty. */
+                            if(editText_term.getText().toString().isEmpty()
+                                    || editText_definition.getText().toString().isEmpty()){
+                                Toast.makeText(getContext(), "Some blank is empty.", Toast.LENGTH_LONG).show();
+                            }else{
+                                term.put(DatabaseHandler.COLUMN_TERM, editText_term.getText().toString());
+                                term.put(DatabaseHandler.COLUMN_DEFINITION, editText_definition.getText().toString());
+                                //TODO: Save to database.
+
+                                dialog.dismiss();
+                                VibratorUtils.vibrateAlert(rootView.getContext());
+                                updateTermList();
+                                Toast.makeText(getContext(), "Saved.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+
+                    button_cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    button_delete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(button_delete.getText().toString().equals("Delete")){
+                                button_delete.setText("Confirm");
+                            }else {
+                                //TODO: Delete from the database.
+                                dialog.dismiss();
+                                VibratorUtils.vibrateAlert(rootView.getContext());
+                                updateTermList();
+                                Toast.makeText(getContext(), "Deleted.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+
+
+                    dialog.show();
+
                 }
             });
 
