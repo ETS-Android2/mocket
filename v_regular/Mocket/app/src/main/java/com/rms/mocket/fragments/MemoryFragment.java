@@ -30,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.rms.mocket.R;
 import com.rms.mocket.activities.QuizActivity;
 import com.rms.mocket.common.DateUtils;
+import com.rms.mocket.common.DictionaryUtils;
 import com.rms.mocket.common.TermUtils;
 import com.rms.mocket.common.VibratorUtils;
 import com.rms.mocket.database.DatabaseHandler;
@@ -50,6 +51,10 @@ public class MemoryFragment extends Fragment {
     LinearLayout linearLayout_addMemory;
 
     String currentFilter = "";
+    ArrayList<HashMap<String, String>> dictItems = new ArrayList<>();
+    int page_num=0;
+
+    AlertDialog lookUp_dialog;
 
 
 
@@ -93,9 +98,132 @@ public class MemoryFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String term = editText_term.getText().toString();
+                Log.d("Mocket", "1");
 
-                //TODO: look up the term from dictionary.
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(rootView.getContext());
+                View mView = getLayoutInflater().inflate(R.layout.lookup_dialogue, null);
 
+                Log.d("Mocket", "2");
+
+                /* Initialize the blanks. */
+                EditText editText_term = (EditText) mView.findViewById(R.id.LOOKUP_editText_term);
+                editText_term.setText(term);
+
+                Log.d("Mocket", "3");
+                TextView textView_prev = (TextView) mView.findViewById(R.id.LOOKUP_textView_prev);
+                textView_prev.setTextColor(getResources().getColor(R.color.mocket_hint));
+                TextView textView_next = (TextView) mView.findViewById(R.id.LOOKUP_textView_next);
+                textView_next.setTextColor(getResources().getColor(R.color.mocket_hint));
+
+                Log.d("Mocket", "4");
+                Button button_cancel = (Button) mView.findViewById(R.id.LOOKUP_button_cancel);
+                Button button_lookup = (Button) mView.findViewById(R.id.LOOKUP_button_lookUp);
+
+                Log.d("Mocket", "5");
+                dictItems = DictionaryUtils.getTermList(rootView.getContext(), term);
+                Log.d("Mocket", "5.5");
+                if(dictItems.size() > 10) textView_next.setTextColor(getResources().getColor(R.color.mocket_font_light));
+
+                Log.d("Mocket", "6");
+                ArrayList<HashMap<String, String>> temp_dictItems = new ArrayList<>();
+                for(int i=0; i < dictItems.size() && i < 10; i++){
+                    temp_dictItems.add(dictItems.get(i));
+                }
+
+                Log.d("Mocket", "7");
+                ListView listView_lookUpList = (ListView) mView.findViewById(R.id.LOOKUP_listView_termList);
+                ListAdapter adapter = new LookupListAdapter(getActivity(), R.layout.dict_item, temp_dictItems, mView);
+                listView_lookUpList.setAdapter(adapter);
+
+                Log.d("Mocket", "8");
+                mBuilder.setView(mView);
+                lookUp_dialog = mBuilder.create();
+
+                Log.d("Mocket", "9");
+                button_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        lookUp_dialog.dismiss();
+                        page_num = 0;
+                    }
+                });
+
+                Log.d("Mocket", "10");
+                button_lookup.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        textView_prev.setTextColor(getResources().getColor(R.color.mocket_hint));
+                        textView_next.setTextColor(getResources().getColor(R.color.mocket_hint));
+                        dictItems = DictionaryUtils.getTermList(rootView.getContext(), editText_term.getText().toString());
+                        if(dictItems.size() > 10) textView_next.setTextColor(getResources().getColor(R.color.mocket_font_light));
+
+                        ArrayList<HashMap<String, String>> temp_dictItems = new ArrayList<>();
+                        for(int i=0; i < dictItems.size() && i < 10; i++){
+                            temp_dictItems.add(dictItems.get(i));
+                        }
+
+                        ListAdapter adapter = new LookupListAdapter(getActivity(), R.layout.dict_item, temp_dictItems, mView);
+                        listView_lookUpList.setAdapter(adapter);
+
+                        page_num = 0;
+                    }
+                });
+
+                Log.d("Mocket", "11");
+                textView_prev.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(page_num==0){
+                            return;
+                        }
+                        else{
+                            textView_next.setTextColor(getResources().getColor(R.color.mocket_font_light));
+                            page_num--;
+                            ArrayList<HashMap<String, String>> temp_dictItems = new ArrayList<>();
+                            int count = 0;
+                            for(int i=page_num*10; i < dictItems.size() && count < 10; i++){
+                                temp_dictItems.add(dictItems.get(i));
+                                count++;
+                            }
+
+                            ListAdapter adapter = new LookupListAdapter(getActivity(), R.layout.dict_item, temp_dictItems, mView);
+                            listView_lookUpList.setAdapter(adapter);
+
+                            if(page_num == 0) textView_prev.setTextColor(getResources().getColor(R.color.mocket_hint));
+
+                        }
+
+                    }
+                });
+
+                Log.d("Mocket", "12");
+                textView_next.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(page_num*10+10 >= dictItems.size()){
+                            return;
+                        }else{
+                            textView_prev.setTextColor(getResources().getColor(R.color.mocket_font_light));
+                            page_num++;
+                            ArrayList<HashMap<String, String>> temp_dictItems = new ArrayList<>();
+                            int count = 0;
+                            for(int i=page_num*10; i < dictItems.size() && count <10; i++){
+                                temp_dictItems.add(dictItems.get(i));
+                                count++;
+                            }
+
+                            ListAdapter adapter = new LookupListAdapter(getActivity(), R.layout.dict_item, temp_dictItems, mView);
+                            listView_lookUpList.setAdapter(adapter);
+
+                            if(page_num*10+10 >= dictItems.size()) textView_next.setTextColor(getResources().getColor(R.color.mocket_hint));
+                        }
+                    }
+                });
+                Log.d("Mocket", "13");
+
+                lookUp_dialog.setCanceledOnTouchOutside(false);
+                lookUp_dialog.show();
+                Log.d("Mocket", "14");
 
             }
         });
@@ -368,6 +496,63 @@ public class MemoryFragment extends Fragment {
 
                     dialog.show();
 
+                }
+            });
+
+            return view;
+        }
+    }
+
+    class LookupListAdapter extends ArrayAdapter {
+        Context context;
+        int layoutResourceId;
+        ArrayList<HashMap<String, String>> data = null;
+        View rootView;
+
+        public LookupListAdapter(Context context,
+                               int layoutResourceId,
+                               ArrayList<HashMap<String, String>> data, View rootView) {
+            super(context, layoutResourceId, data);
+            this.layoutResourceId = layoutResourceId;
+            this.context = context;
+            this.data = data;
+            this.rootView = rootView;
+        }
+
+        @Override
+        public int getCount() {
+            return data.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+            view = inflater.inflate(layoutResourceId, viewGroup, false);
+
+            String dictItem_term = data.get(i).get(DatabaseHandler.COLUMN_TERM);
+            String dictItem_definition = data.get(i).get(DatabaseHandler.COLUMN_DEFINITION);
+
+            TextView textView_term = (TextView) view.findViewById(R.id.DICTITEM_term);
+            TextView textView_definition = (TextView) view.findViewById(R.id.DICTITEM_definition);
+            textView_term.setText(dictItem_term);
+            textView_definition.setText(dictItem_definition);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    editText_term.setText(dictItem_term);
+                    editText_definition.setText(dictItem_definition);
+                    lookUp_dialog.dismiss();
                 }
             });
 

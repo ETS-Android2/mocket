@@ -59,6 +59,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="6.5"
                     android:hint="Term"
+                    android:textSize="17dp"
                     android:textColor="@color/mocket_font"
                     android:textCursorDrawable="@drawable/cursor_color"
                     android:backgroundTint="@color/mocket_cursor"
@@ -74,7 +75,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
-                    android:text="Look Up"
+                    android:text="Find"
                     android:textColor="#ffffff"
                     android:backgroundTint="@color/mocket_button"/>
 
@@ -83,7 +84,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="80dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="0dp"
@@ -94,7 +95,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Definition"
-                    android:lines="2"
+                    android:lines="3"
+                    android:textSize="15dp"
                     android:textColor="@color/mocket_font"
                     android:textCursorDrawable="@drawable/cursor_color"
                     android:backgroundTint="@color/mocket_cursor"

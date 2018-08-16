@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/MEMORY_linearLayout_addToMemory"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_shadow"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="27dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/title_bottom_border"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:text="Look Up"
+            android:textColor="@color/mocket_font_dark"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <EditText
+            android:id="@+id/LOOKUP_editText_term"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6.5"
+            android:textSize="20dp"
+            android:textColor="@color/mocket_font"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:backgroundTint="@color/mocket_cursor"
+            android:paddingLeft="20dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5" />
+
+        <Button
+            android:id="@+id/LOOKUP_button_lookUp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:text="Find"
+            android:textColor="#ffffff"
+            android:backgroundTint="@color/mocket_button"/>
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/LOOKUP_linearLayout_termList"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+        <ListView
+            android:id="@+id/LOOKUP_listView_termList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:listSelector="@android:color/transparent"
+            android:visibility="visible" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="7" >
+
+            <LinearLayout
+                android:layout_width="100dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/LOOKUP_textView_prev"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:text = "Prev"
+                    android:textSize="15dp"
+                    android:textColor="@color/mocket_hint"
+                    android:textStyle="bold"
+                    android:gravity="center|start"
+                    android:clickable="true"
+                    />
+
+                <TextView
+                    android:id="@+id/LOOKUP_textView_next"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:text = "Next"
+                    android:textSize="15dp"
+                    android:textColor="@color/mocket_font_dark"
+                    android:textStyle="bold"
+                    android:gravity="center|end"
+                    android:clickable="true"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/LOOKUP_button_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:text="Cancel"
+            android:textColor="#ffffff"
+            android:backgroundTint="@color/mocket_button" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
