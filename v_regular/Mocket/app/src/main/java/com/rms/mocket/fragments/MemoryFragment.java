@@ -31,6 +31,7 @@ import com.rms.mocket.R;
 import com.rms.mocket.activities.QuizActivity;
 import com.rms.mocket.common.DateUtils;
 import com.rms.mocket.common.DictionaryUtils;
+import com.rms.mocket.common.KeyboardUtils;
 import com.rms.mocket.common.TermUtils;
 import com.rms.mocket.common.VibratorUtils;
 import com.rms.mocket.database.DatabaseHandler;
@@ -98,48 +99,39 @@ public class MemoryFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String term = editText_term.getText().toString();
-                Log.d("Mocket", "1");
 
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(rootView.getContext());
                 View mView = getLayoutInflater().inflate(R.layout.lookup_dialogue, null);
 
-                Log.d("Mocket", "2");
 
                 /* Initialize the blanks. */
                 EditText editText_term = (EditText) mView.findViewById(R.id.LOOKUP_editText_term);
                 editText_term.setText(term);
 
-                Log.d("Mocket", "3");
                 TextView textView_prev = (TextView) mView.findViewById(R.id.LOOKUP_textView_prev);
                 textView_prev.setTextColor(getResources().getColor(R.color.mocket_hint));
                 TextView textView_next = (TextView) mView.findViewById(R.id.LOOKUP_textView_next);
                 textView_next.setTextColor(getResources().getColor(R.color.mocket_hint));
 
-                Log.d("Mocket", "4");
                 Button button_cancel = (Button) mView.findViewById(R.id.LOOKUP_button_cancel);
                 Button button_lookup = (Button) mView.findViewById(R.id.LOOKUP_button_lookUp);
 
-                Log.d("Mocket", "5");
                 dictItems = DictionaryUtils.getTermList(rootView.getContext(), term);
-                Log.d("Mocket", "5.5");
                 if(dictItems.size() > 10) textView_next.setTextColor(getResources().getColor(R.color.mocket_font_light));
 
-                Log.d("Mocket", "6");
                 ArrayList<HashMap<String, String>> temp_dictItems = new ArrayList<>();
                 for(int i=0; i < dictItems.size() && i < 10; i++){
                     temp_dictItems.add(dictItems.get(i));
                 }
 
-                Log.d("Mocket", "7");
+
                 ListView listView_lookUpList = (ListView) mView.findViewById(R.id.LOOKUP_listView_termList);
                 ListAdapter adapter = new LookupListAdapter(getActivity(), R.layout.dict_item, temp_dictItems, mView);
                 listView_lookUpList.setAdapter(adapter);
 
-                Log.d("Mocket", "8");
                 mBuilder.setView(mView);
                 lookUp_dialog = mBuilder.create();
 
-                Log.d("Mocket", "9");
                 button_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -148,7 +140,6 @@ public class MemoryFragment extends Fragment {
                     }
                 });
 
-                Log.d("Mocket", "10");
                 button_lookup.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -169,7 +160,7 @@ public class MemoryFragment extends Fragment {
                     }
                 });
 
-                Log.d("Mocket", "11");
+
                 textView_prev.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -196,7 +187,7 @@ public class MemoryFragment extends Fragment {
                     }
                 });
 
-                Log.d("Mocket", "12");
+
                 textView_next.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -219,11 +210,9 @@ public class MemoryFragment extends Fragment {
                         }
                     }
                 });
-                Log.d("Mocket", "13");
 
                 lookUp_dialog.setCanceledOnTouchOutside(false);
                 lookUp_dialog.show();
-                Log.d("Mocket", "14");
 
             }
         });
@@ -461,9 +450,11 @@ public class MemoryFragment extends Fragment {
                             }else{
                                 term.put(DatabaseHandler.COLUMN_TERM, editText_term.getText().toString());
                                 term.put(DatabaseHandler.COLUMN_DEFINITION, editText_definition.getText().toString());
-                                //TODO: Save to database.
+
+                                db.updateTerm(term);
 
                                 dialog.dismiss();
+
                                 VibratorUtils.vibrateAlert(rootView.getContext());
                                 updateTermList();
                                 Toast.makeText(getContext(), "Saved.", Toast.LENGTH_LONG).show();
@@ -484,7 +475,10 @@ public class MemoryFragment extends Fragment {
                             if(button_delete.getText().toString().equals("Delete")){
                                 button_delete.setText("Confirm");
                             }else {
-                                //TODO: Delete from the database.
+
+                                db.deleteTerm(term_id);
+
+                                KeyboardUtils.hideKeyboard(getActivity());
                                 dialog.dismiss();
                                 VibratorUtils.vibrateAlert(rootView.getContext());
                                 updateTermList();
@@ -558,5 +552,10 @@ public class MemoryFragment extends Fragment {
 
             return view;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

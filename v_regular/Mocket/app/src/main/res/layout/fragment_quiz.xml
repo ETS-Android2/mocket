@@ -67,7 +67,8 @@
                         android:text="243"
                         android:textAlignment="viewStart"
                         android:textColor="@color/mocket_font"
-                        android:textSize="14dp" />
+                        android:textSize="14dp"
+                        android:textStyle="bold"/>
 
 
                 </LinearLayout>

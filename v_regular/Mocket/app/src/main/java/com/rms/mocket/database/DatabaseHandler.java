@@ -104,21 +104,42 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return termHashMap;
     }
 
-    public boolean updateTerm(HashMap<String, String> term){
-        /*
+    public boolean updateTerm(String id, String term, String definition, String date_add,
+                              String date_latest, String memory_level){
+
         SQLiteDatabase term_db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_TERM, term);
         contentValues.put(COLUMN_DEFINITION, definition);
-        contentValues.put(COLUMN_DATE_ADD, date_today);
-        contentValues.put(COLUMN_DATE_LATEST, date_today);
+        contentValues.put(COLUMN_DATE_ADD, date_add);
+        contentValues.put(COLUMN_DATE_LATEST, date_latest);
         contentValues.put(COLUMN_MEMORY_LEVEL, memory_level);
-        long result = term_db.insert(TABLE_TERMS, null, contentValues);
+        long result = term_db.update(TABLE_TERMS, contentValues,"id = ?",
+                new String[]{id} );
 
         if(result == -1) return false;
-
         else return true;
-        */
-        return true;
+
+    }
+
+    public boolean updateTerm(HashMap<String, String> term){
+
+        SQLiteDatabase term_db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_TERM, term.get(DatabaseHandler.COLUMN_TERM));
+        contentValues.put(COLUMN_DEFINITION, term.get(DatabaseHandler.COLUMN_DEFINITION));
+        contentValues.put(COLUMN_DATE_ADD, term.get(DatabaseHandler.COLUMN_DATE_ADD));
+        contentValues.put(COLUMN_DATE_LATEST, term.get(DatabaseHandler.COLUMN_DATE_LATEST));
+        contentValues.put(COLUMN_MEMORY_LEVEL, term.get(DatabaseHandler.COLUMN_MEMORY_LEVEL));
+        long result = term_db.update(TABLE_TERMS, contentValues,"id = ?",
+                new String[]{term.get(DatabaseHandler.COLUMN_ID)} );
+
+        if(result == -1) return false;
+        else return true;
+    }
+
+    public int deleteTerm(String id){
+        SQLiteDatabase term_db = this.getWritableDatabase();
+        return term_db.delete(TABLE_TERMS,"id = ?", new String[]{id} );
     }
 }
