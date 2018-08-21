@@ -1,6 +1,5 @@
 package com.rms.mocket.activities;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
@@ -157,7 +156,7 @@ public class GameActivity extends AppCompatActivity {
         answerPicked = true;
         v.setText("Incorrect");
         v.setTextSize(20);
-        v.setTextColor(Color.RED);
+        v.setTextColor(getResources().getColor(R.color.mocket_red_light));
     }
 
     public void goPreviousActivity(View v) {

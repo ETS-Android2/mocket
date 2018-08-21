@@ -11,12 +11,14 @@
     <color name="mocket_font_dark">#283C4C</color>
     <color name="mocket_font_light">#6596BE</color>
     <color name="mocket_category">#e7e6e1</color>
+    <color name="mocket_game_answer_back">#ffffff</color>
     <color name="mocket_button">#5883A5</color>
     <color name="mocket_background">#ffffff</color>
     <color name="mocket_searchbar">#E2E4E0</color>
     <color name="mocket_cursor">#6596BE</color>
     <color name="mocket_hint">#c1c0b9</color>
     <color name="mocket_red">#aa2a23</color>
+    <color name="mocket_red_light">#cc0000</color>
     <color name="mocket_fragment_background">#efefef</color>
 
     <!--<color name="mocket_category_selected">#6596BE</color>-->

@@ -84,7 +84,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="4"
                         android:background="@android:color/transparent"
-                        android:text="07/04/18"
                         android:textAlignment="textStart"
                         android:textColor="@color/mocket_font"
                         android:textSize="13dp" />
@@ -112,7 +111,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="4"
                         android:background="@android:color/transparent"
-                        android:text="07/15/18"
                         android:textAlignment="textStart"
                         android:textColor="@color/mocket_font"
                         android:textSize="13dp" />
@@ -124,25 +122,32 @@
                         android:background="@android:color/transparent" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/QUIZGAME_textView_definition"
+                <ScrollView
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
                     android:layout_weight="12"
                     android:background="@android:color/transparent"
-                    android:clickable="true"
                     android:gravity="center"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:textAlignment="center"
-                    android:textColor="@color/mocket_font_dark"
-                    android:textSize="15dp"
-                    android:textStyle="bold" />
+                    android:fillViewport="true">
+                    <TextView
+                        android:id="@+id/QUIZGAME_textView_definition"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/mocket_font_dark"
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
+                </ScrollView>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="4"
                     android:background="@android:color/transparent"
                     android:orientation="horizontal"
                     android:weightSum="20">
@@ -162,7 +167,7 @@
                         android:background="@android:color/transparent"
                         android:clickable="true"
                         android:onClick="thumbsDown"
-                        android:src="@drawable/unhappy" />
+                        android:src="@drawable/confused_emoticon" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -175,11 +180,11 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="4"
+                        android:layout_weight="5"
                         android:background="@android:color/transparent"
                         android:clickable="true"
                         android:onClick="thumbsUp"
-                        android:src="@drawable/happy" />
+                        android:src="@drawable/smile_emoticon" />
 
 
                     <LinearLayout
@@ -192,7 +197,7 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:background="@android:color/transparent" />
 
             </LinearLayout>

@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.rms.mocket.R;
 import com.rms.mocket.activities.GameActivity;
@@ -19,6 +18,8 @@ import com.rms.mocket.activities.QuizActivity;
 
 public class QuizFragment extends Fragment {
 
+    public final static String TYPE_TEST = "test";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -26,17 +27,12 @@ public class QuizFragment extends Fragment {
 
         final ImageView imageView_start = (ImageView) rootView.findViewById(R.id.QUIZ_imageView_start);
         final ImageView imageView_playnow = (ImageView) rootView.findViewById(R.id.QUIZ_imageView_playnow);
-        final TextView textView_leftTotal = (TextView) rootView.findViewById(R.id.QUIZ_textView_leftTotal);
-
-        // TODO: Dynamically cahnge the left/total count.
-        // textView_leftTotal.setText();
-
 
         imageView_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: When start QUIZ button is clicked!
                 Intent intent = new Intent(rootView.getContext(), QuizActivity.class);
+                intent.putExtra(QuizActivity.TYPE, TYPE_TEST);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
             }
@@ -48,8 +44,6 @@ public class QuizFragment extends Fragment {
                 Intent intent = new Intent(rootView.getContext(), GameActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
-
-                // TODO: When play GAME button is clicked!
             }
         });
 

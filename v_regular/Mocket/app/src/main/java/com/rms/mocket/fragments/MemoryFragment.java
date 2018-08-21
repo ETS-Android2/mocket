@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +40,8 @@ import java.util.HashMap;
 
 
 public class MemoryFragment extends Fragment {
+
+    public final static String TYPE_QUIZ = "quiz";
 
     boolean visibility_termList = false;
     DatabaseHandler db;
@@ -103,7 +104,6 @@ public class MemoryFragment extends Fragment {
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(rootView.getContext());
                 View mView = getLayoutInflater().inflate(R.layout.lookup_dialogue, null);
 
-
                 /* Initialize the blanks. */
                 EditText editText_term = (EditText) mView.findViewById(R.id.LOOKUP_editText_term);
                 editText_term.setText(term);
@@ -117,9 +117,10 @@ public class MemoryFragment extends Fragment {
                 Button button_lookup = (Button) mView.findViewById(R.id.LOOKUP_button_lookUp);
 
                 dictItems = DictionaryUtils.getTermList(rootView.getContext(), term);
-                if(dictItems.size() > 10) textView_next.setTextColor(getResources().getColor(R.color.mocket_font_light));
 
-                ArrayList<HashMap<String, String>> temp_dictItems = new ArrayList<>();
+                if(dictItems.size() > 10) textView_next.setTextColor(getResources().getColor(R.color.mocket_font_light));
+                                ArrayList<HashMap<String, String>> temp_dictItems = new ArrayList<>();
+
                 for(int i=0; i < dictItems.size() && i < 10; i++){
                     temp_dictItems.add(dictItems.get(i));
                 }
@@ -132,6 +133,7 @@ public class MemoryFragment extends Fragment {
                 mBuilder.setView(mView);
                 lookUp_dialog = mBuilder.create();
 
+
                 button_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -143,9 +145,11 @@ public class MemoryFragment extends Fragment {
                 button_lookup.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                         textView_prev.setTextColor(getResources().getColor(R.color.mocket_hint));
                         textView_next.setTextColor(getResources().getColor(R.color.mocket_hint));
                         dictItems = DictionaryUtils.getTermList(rootView.getContext(), editText_term.getText().toString());
+
                         if(dictItems.size() > 10) textView_next.setTextColor(getResources().getColor(R.color.mocket_font_light));
 
                         ArrayList<HashMap<String, String>> temp_dictItems = new ArrayList<>();
@@ -252,9 +256,8 @@ public class MemoryFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(rootView.getContext(), QuizActivity.class);
-                i.putExtra("type", "quiz");
+                i.putExtra(QuizActivity.TYPE, TYPE_QUIZ);
                 i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                Log.d("Mocket","before startActivity");
                 startActivity(i);
             }
         });
@@ -314,10 +317,10 @@ public class MemoryFragment extends Fragment {
         ArrayList<HashMap<String, String>> terms = new ArrayList<>();
         int today_term_total = 0;
         while(cursor_terms.moveToNext()){
-            String id = cursor_terms.getString(0);
-            String term = cursor_terms.getString(1);
-            String definition = cursor_terms.getString(2);
-            String date_add = cursor_terms.getString(3);
+            String id = cursor_terms.getString(DatabaseHandler.INDEX_ID);
+            String term = cursor_terms.getString(DatabaseHandler.INDEX_TERM);
+            String definition = cursor_terms.getString(DatabaseHandler.INDEX_DEFINITION);
+            String date_add = cursor_terms.getString(DatabaseHandler.INDEX_DATE_ADD);
 
             if(!date_add.equals(DateUtils.getDateToday())) continue;
             today_term_total += 1;
@@ -452,6 +455,7 @@ public class MemoryFragment extends Fragment {
                                 term.put(DatabaseHandler.COLUMN_DEFINITION, editText_definition.getText().toString());
 
                                 db.updateTerm(term);
+                                db.updateToServer();
 
                                 dialog.dismiss();
 
@@ -477,6 +481,7 @@ public class MemoryFragment extends Fragment {
                             }else {
 
                                 db.deleteTerm(term_id);
+                                db.updateToServer();
 
                                 KeyboardUtils.hideKeyboard(getActivity());
                                 dialog.dismiss();

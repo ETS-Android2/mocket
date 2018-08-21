@@ -23,6 +23,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String COLUMN_DATE_LATEST = "date_latest";
     public static final String COLUMN_MEMORY_LEVEL = "memory_level";
 
+    /* Indexes for TERMS table */
+    public static final int INDEX_ID = 0;
+    public static final int INDEX_TERM = 1;
+    public static final int INDEX_DEFINITION = 2;
+    public static final int INDEX_DATE_ADD = 3;
+    public static final int INDEX_DATE_LATEST = 4;
+    public static final int INDEX_MEMORY_LEVEL = 5;
+
 
     public static final String TABLE_USERS = "users";
 
@@ -91,6 +99,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String definition = cursor_terms.getString(2);
             String date_added = cursor_terms.getString(3);
             String date_lastMemorized = cursor_terms.getString(4);
+            String memory_level = cursor_terms.getString(5);
 
             if (id.equals(index)){
                 termHashMap.put(DatabaseHandler.COLUMN_ID, id);
@@ -98,6 +107,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 termHashMap.put(DatabaseHandler.COLUMN_DEFINITION, definition);
                 termHashMap.put(DatabaseHandler.COLUMN_DATE_ADD, date_added);
                 termHashMap.put(DatabaseHandler.COLUMN_DATE_LATEST, date_lastMemorized);
+                termHashMap.put(DatabaseHandler.COLUMN_MEMORY_LEVEL, memory_level);
                 break;
             }
         }
@@ -141,5 +151,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public int deleteTerm(String id){
         SQLiteDatabase term_db = this.getWritableDatabase();
         return term_db.delete(TABLE_TERMS,"id = ?", new String[]{id} );
+    }
+
+    public void updateToServer(){
+
     }
 }

@@ -1,5 +1,7 @@
 package com.rms.mocket.common;
 
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,6 +39,30 @@ public class DateUtils {
         int diff_days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 
         return diff_days;
+    }
+
+    public static String changeDateFormatShort(String date){
+        String[] splitted_date = date.split("/");
+
+        String year = splitted_date[0].substring(2,4);
+        String month = splitted_date[1];
+        String day = splitted_date[2];
+        return month + "/" + day + "/" +year;
+    }
+
+    public static boolean isNotPassed(String string_date){
+        Calendar c = Calendar.getInstance();
+        boolean result = false;
+        try {
+            result = DATE_FORMAT.parse(string_date).after(DATE_FORMAT.parse(DateUtils.getDateToday()));
+            Log.d("Mocket"," string_date: " + string_date);
+            Log.d("Mocket", " today_date: " + DateUtils.getDateToday());
+            Log.d("Mocket"," result: " + Boolean.toString(result));
+        }catch (Exception e){
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return result;
     }
 
 }

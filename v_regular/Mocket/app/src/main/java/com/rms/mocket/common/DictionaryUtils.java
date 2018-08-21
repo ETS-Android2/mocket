@@ -1,7 +1,6 @@
 package com.rms.mocket.common;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.rms.mocket.R;
 import com.rms.mocket.database.DatabaseHandler;
@@ -20,9 +19,9 @@ public class DictionaryUtils {
     public static ArrayList<HashMap<String, String>> getTermList(Context context, String given_term){
 
         ArrayList<HashMap<String, String>> all_terms = new ArrayList<>();
-        Log.d("Mocket", "|"+given_term+"|");
 
         try {
+
             if(given_term.isEmpty()
                     || (!Character.isLetter(given_term.charAt(0)))) return all_terms;
             given_term = given_term.toLowerCase();
@@ -31,8 +30,10 @@ public class DictionaryUtils {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line = null;
 
+
             int count = 0;
             while ((line = reader.readLine()) != null) {
+//                Log.d("Mocket","line: "+line);
                 if(count >= LIMIT && APPLY_LIMIT) break;
 
                 if(line.equals("")) continue;
@@ -40,6 +41,8 @@ public class DictionaryUtils {
                 if(line.charAt(0) == '\"' && line.charAt(line.length()-1) == '\"'){
                     line = line.substring(1, line.length()-1);
                 }
+
+                if(!line.contains("(")) continue;
 
                 String term = line.substring(0, line.indexOf("(")).trim();
                 String definition = line.substring(line.indexOf("("), line.length()).trim();
@@ -49,7 +52,6 @@ public class DictionaryUtils {
                     HashMap<String, String> converted_term = new HashMap<>();
                     converted_term.put(DatabaseHandler.COLUMN_TERM, term);
                     converted_term.put(DatabaseHandler.COLUMN_DEFINITION, definition);
-
                     all_terms.add(converted_term);
                     count++;
                 }

@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import com.rms.mocket.R;
 import com.rms.mocket.common.DateUtils;
+import com.rms.mocket.common.Memory;
 import com.rms.mocket.database.DatabaseHandler;
+import com.rms.mocket.fragments.MemoryFragment;
+import com.rms.mocket.fragments.QuizFragment;
 import com.wajahatkarim3.easyflipview.EasyFlipView;
 
 import java.util.ArrayList;
@@ -21,6 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class QuizActivity extends AppCompatActivity {
 
+    public final static String TYPE = "type";
 
     EasyFlipView cardFlipView;
     LinearLayout card_front;
@@ -29,6 +33,8 @@ public class QuizActivity extends AppCompatActivity {
     Button button_next;
     LinearLayout back_header;
     LinearLayout front_header;
+    TextView textView_added;
+    TextView textView_latest;
 
     boolean thumbSelected = false;
     boolean thumbUp = false;
@@ -53,27 +59,28 @@ public class QuizActivity extends AppCompatActivity {
         front_header = (LinearLayout) findViewById(R.id.QUIZGAME_linearLayout_front_header);
         back_header = (LinearLayout) findViewById(R.id.QUIZGAME_linearLayout_back_header);
 
+        textView_added = (TextView) findViewById(R.id.QUIZGAME_textView_added);
+        textView_latest = (TextView) findViewById(R.id.QUIZGAME_textView_lastMemory);
 
         cardFlipView.setFlipDuration(500);
         db = new DatabaseHandler(this.getBaseContext());
         Intent intent = getIntent();
-        quiz_type = intent.getExtras().getString("type");
+        quiz_type = intent.getExtras().getString(TYPE);
 
-        if(quiz_type.equals("quiz")){
+
+        if(quiz_type.equals(MemoryFragment.TYPE_QUIZ)){
             terms = getTodayTerms();
         }
         else terms = getDailyTest();
-
         this.showNextTerm();
         this.setNextButtonListener();
-
 
         card_front.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(terms.size()==0) return;
 
-                if (quiz_type.equals("quiz")){
+                if (quiz_type.equals(MemoryFragment.TYPE_QUIZ)){
                     back_header.setVisibility(View.INVISIBLE);
                 }else{
                     back_header.setVisibility(View.VISIBLE);
@@ -120,9 +127,9 @@ public class QuizActivity extends AppCompatActivity {
 
         if (thumbSelected) {
             ImageView imageView_thumbDown = (ImageView) findViewById(R.id.QUIZGAME_imageView_thumbsDown);
-            imageView_thumbDown.setImageResource(R.drawable.unhappy);
+            imageView_thumbDown.setImageResource(R.drawable.confused_emoticon);
         }
-        ((ImageView) v).setImageResource(R.drawable.happy_checked);
+        ((ImageView) v).setImageResource(R.drawable.smile_emoticon_checked);
         thumbSelected = true;
         thumbUp = true;
     }
@@ -135,9 +142,9 @@ public class QuizActivity extends AppCompatActivity {
 
         if (thumbSelected) {
             ImageView imageView_thumbUp = (ImageView) findViewById(R.id.QUIZGAME_imageView_thumbsUp);
-            imageView_thumbUp.setImageResource(R.drawable.happy);
+            imageView_thumbUp.setImageResource(R.drawable.smile_emoticon);
         }
-        ((ImageView) v).setImageResource(R.drawable.unhappy_checked);
+        ((ImageView) v).setImageResource(R.drawable.confused_emoticon_checked);
         thumbSelected = true;
         thumbUp = false;
     }
@@ -148,10 +155,11 @@ public class QuizActivity extends AppCompatActivity {
 
         ArrayList<HashMap<String, String>> terms = new ArrayList<>();
         while(cursor_terms.moveToNext()){
-            String id = cursor_terms.getString(0);
-            String term = cursor_terms.getString(1);
-            String definition = cursor_terms.getString(2);
-            String date_add = cursor_terms.getString(3);
+            String id = cursor_terms.getString(DatabaseHandler.INDEX_ID);
+            String term = cursor_terms.getString(DatabaseHandler.INDEX_TERM);
+            String definition = cursor_terms.getString(DatabaseHandler.INDEX_DEFINITION);
+            String date_add = cursor_terms.getString(DatabaseHandler.INDEX_DATE_ADD);
+            String date_latest = cursor_terms.getString(DatabaseHandler.INDEX_DATE_LATEST);
 
             if(!date_add.equals(DateUtils.getDateToday())) continue;
 
@@ -159,6 +167,8 @@ public class QuizActivity extends AppCompatActivity {
             temp_hash.put(DatabaseHandler.COLUMN_ID, id);
             temp_hash.put(DatabaseHandler.COLUMN_TERM, term);
             temp_hash.put(DatabaseHandler.COLUMN_DEFINITION, definition);
+            temp_hash.put(DatabaseHandler.COLUMN_DATE_ADD, date_add);
+            temp_hash.put(DatabaseHandler.COLUMN_DATE_LATEST, date_latest);
 
             terms.add(temp_hash);
         }
@@ -167,7 +177,30 @@ public class QuizActivity extends AppCompatActivity {
 
 
     public ArrayList<HashMap<String, String>> getDailyTest(){
+        Cursor cursor_terms = db.getAllTerms();
+
         ArrayList<HashMap<String, String>> terms = new ArrayList<>();
+        while(cursor_terms.moveToNext()){
+            String id = cursor_terms.getString(DatabaseHandler.INDEX_ID);
+            String term = cursor_terms.getString(DatabaseHandler.INDEX_TERM);
+            String definition = cursor_terms.getString(DatabaseHandler.INDEX_DEFINITION);
+            String date_add = cursor_terms.getString(DatabaseHandler.INDEX_DATE_ADD);
+            String date_latest = cursor_terms.getString(DatabaseHandler.INDEX_DATE_LATEST);
+            String memory_level = cursor_terms.getString(DatabaseHandler.INDEX_MEMORY_LEVEL);
+
+            String date_test = Memory.getNextDateToMemorize(date_latest, memory_level);
+            // Check if date_test date is passed or today. Null means already tested all.
+            if(date_test.equals(null) || DateUtils.isNotPassed(date_test)) continue;
+
+            HashMap<String, String> temp_hash = new HashMap<>();
+            temp_hash.put(DatabaseHandler.COLUMN_ID, id);
+            temp_hash.put(DatabaseHandler.COLUMN_TERM, term);
+            temp_hash.put(DatabaseHandler.COLUMN_DEFINITION, definition);
+            temp_hash.put(DatabaseHandler.COLUMN_DATE_ADD, date_add);
+            temp_hash.put(DatabaseHandler.COLUMN_DATE_LATEST, date_latest);
+
+            terms.add(temp_hash);
+        }
         return terms;
     }
 
@@ -181,9 +214,12 @@ public class QuizActivity extends AppCompatActivity {
 
         /* When there is no term to be tested*/
         if(terms.size() == 0){
+
             card_front.setClickable(false);
             cardFlipView.setFlipEnabled(false);
+
             front_header.setVisibility(View.INVISIBLE);
+            back_header.setVisibility(View.INVISIBLE);
 
             textView_term.setText("");
             textView_term.setBackgroundResource(R.drawable.quiz_completed);
@@ -194,7 +230,10 @@ public class QuizActivity extends AppCompatActivity {
             String term = terms.get(randomNum).get(DatabaseHandler.COLUMN_TERM);
             String definition = terms.get(randomNum).get(DatabaseHandler.COLUMN_DEFINITION);
             String id = terms.get(randomNum).get(DatabaseHandler.COLUMN_ID);
+            String added = terms.get(randomNum).get(DatabaseHandler.COLUMN_DATE_ADD);
+            String latest = terms.get(randomNum).get(DatabaseHandler.COLUMN_DATE_LATEST);
             currentTermId = id;
+
 
             TextView textView_leftTerm = (TextView) findViewById(R.id.QUIZGAME_textView_total);
             textView_leftTerm.setText(Integer.toString(terms.size()));
@@ -204,8 +243,10 @@ public class QuizActivity extends AppCompatActivity {
             textView_term.setText(term);
             card_back.setText(definition);
 
-            front_header.setVisibility(View.VISIBLE);
+            textView_added.setText(DateUtils.changeDateFormatShort(added));
+            textView_latest.setText(DateUtils.changeDateFormatShort(latest));
 
+            front_header.setVisibility(View.VISIBLE);
         }
 
 
@@ -213,8 +254,8 @@ public class QuizActivity extends AppCompatActivity {
         ImageView imageView_thumbDown = (ImageView) findViewById(R.id.QUIZGAME_imageView_thumbsDown);
 
 
-        imageView_thumbUp.setImageResource(R.drawable.happy);
-        imageView_thumbDown.setImageResource(R.drawable.unhappy);
+        imageView_thumbUp.setImageResource(R.drawable.smile_emoticon);
+        imageView_thumbDown.setImageResource(R.drawable.confused_emoticon);
 
 
         card_front.setClickable(true);
@@ -241,8 +282,13 @@ public class QuizActivity extends AppCompatActivity {
                         }
                     }
 
-                    if(!quiz_type.equals("quiz")){
-                        //TODO: Update Daily test on database (server and local).
+                    if(quiz_type.equals(QuizFragment.TYPE_TEST)){
+
+                        HashMap<String, String> updated_term =
+                                Memory.updateMemoryLevel(db.getTermAt(currentTermId));
+
+                        db.updateTerm(updated_term);
+                        db.updateToServer();
                     }
 
                 }
