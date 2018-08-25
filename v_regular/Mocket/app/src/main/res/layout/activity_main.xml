@@ -12,7 +12,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="50dp"
         android:background="@color/mocket_actionBar"
         android:minHeight="?attr/actionBarSize"
         app:titleTextColor="@color/mocket_font_dark">

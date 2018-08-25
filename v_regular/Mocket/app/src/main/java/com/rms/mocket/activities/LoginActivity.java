@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.rms.mocket.R;
 import com.rms.mocket.common.Checker;
-import com.rms.mocket.database.DatabaseHandler;
+import com.rms.mocket.database.DatabaseHandlerTerms;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -63,7 +63,8 @@ public class LoginActivity extends AppCompatActivity {
         if (!Checker.checkEmailValidation(emailAddress) || password.equals("")) {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         } else {
-            if (DatabaseHandler.checkEmailAndPassword(emailAddress, password)) {
+            //TODO: check with server database.
+            if (DatabaseHandlerTerms.checkEmailAndPassword(emailAddress, password)) {
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("email", emailAddress);

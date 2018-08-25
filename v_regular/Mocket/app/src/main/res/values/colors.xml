@@ -21,6 +21,16 @@
     <color name="mocket_red_light">#cc0000</color>
     <color name="mocket_fragment_background">#efefef</color>
 
+    <color name="mocket_graph_term">#f0ee07</color>
+    <color name="mocket_graph_test2">#00FF7F</color>
+    <color name="mocket_graph_test">#A2EAF2</color>
+
+
+    <color name="mocket_graph_gameCorrect">#f0ee07</color>
+    <color name="mocket_graph_gameIncorrect">#f0ee07</color>
+
+
+
     <!--<color name="mocket_category_selected">#6596BE</color>-->
     <color name="mocket_category_selected">#5883A5</color>
 

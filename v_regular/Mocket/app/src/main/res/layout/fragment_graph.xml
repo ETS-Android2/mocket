@@ -45,8 +45,7 @@
                         android:textSize="17dp"
                         android:textStyle="bold" />
 
-
-                    <com.jjoe64.graphview.GraphView
+                    <com.github.mikephil.charting.charts.CombinedChart
                         android:id="@+id/GRAPH_graphView_graph"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
@@ -68,10 +67,11 @@
                             android:layout_weight="3.5" />
 
                         <Button
+                            android:id="@+id/GRAPH_button_week"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="13"
-                            android:text="1 Week"
+                            android:text="Week"
                             android:textSize="12dp"
                             android:textColor="#ffffff"
                             android:backgroundTint="@color/mocket_button"/>
@@ -82,10 +82,11 @@
                             android:layout_weight="2" />
 
                         <Button
+                            android:id="@+id/GRAPH_button_month"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="13"
-                            android:text="1 Month"
+                            android:text="Month"
                             android:textSize="12dp"
                             android:textColor="#ffffff"
                             android:backgroundTint="@color/mocket_button"/>
@@ -96,10 +97,11 @@
                             android:layout_weight="2" />
 
                         <Button
+                            android:id="@+id/GRAPH_button_year"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="13"
-                            android:text="1 Year"
+                            android:text="Year"
                             android:textSize="12dp"
                             android:textColor="#ffffff"
                             android:backgroundTint="@color/mocket_button"/>

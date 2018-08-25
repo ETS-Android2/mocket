@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,22 +35,26 @@ import com.rms.mocket.common.DictionaryUtils;
 import com.rms.mocket.common.KeyboardUtils;
 import com.rms.mocket.common.TermUtils;
 import com.rms.mocket.common.VibratorUtils;
-import com.rms.mocket.database.DatabaseHandler;
+import com.rms.mocket.database.DatabaseHandlerTerms;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 
-public class MemoryFragment extends Fragment {
+public class MemoryFragment extends Fragment{
 
     public final static String TYPE_QUIZ = "quiz";
+    private TextToSpeech tts;
+
 
     boolean visibility_termList = false;
-    DatabaseHandler db;
+    DatabaseHandlerTerms db;
 
     EditText editText_term;
     EditText editText_definition;
     TextView textView_todaysMemoryTitle;
+    ImageView imageView_speak;
     View rootView;
     LinearLayout linearLayout_addMemory;
 
@@ -58,14 +64,12 @@ public class MemoryFragment extends Fragment {
 
     AlertDialog lookUp_dialog;
 
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_memory, container, false);
-        db = new DatabaseHandler(rootView.getContext());
+        db = new DatabaseHandlerTerms(rootView.getContext());
 
         editText_term = (EditText) rootView.findViewById(R.id.MEMORY_editText_term);
         editText_definition = (EditText) rootView.findViewById(R.id.MEMORY_editText_definition);
@@ -73,15 +77,49 @@ public class MemoryFragment extends Fragment {
                 (TextView) rootView.findViewById(R.id.MEMORY_textView_todaysMemoryTitle);
         linearLayout_addMemory = (LinearLayout) rootView.findViewById(R.id.MEMORY_linearLayout_addToMemory);
 
+
+
         this.setClearButtonListener();
         this.setLookUpButtonListener();
         this.setMemorizeButtonListener();
         this.setQuizButtonListener();
+        this.setSpeakButtonListener();
 
         this.updateTermList();
         this.setSearchViewListener();
 
         return rootView;
+    }
+
+    public void setSpeakButtonListener(){
+        imageView_speak = (ImageView) rootView.findViewById(R.id.MEMORY_imageView_speak);
+        imageView_speak.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String text_to_speak = editText_term.getText().toString();
+                tts=new TextToSpeech(rootView.getContext(), new TextToSpeech.OnInitListener() {
+                    @Override
+                    public void onInit(int status) {
+                        // TODO Auto-generated method stub
+                        if(status == TextToSpeech.SUCCESS){
+                            int result=tts.setLanguage(Locale.US);
+                            if(result==TextToSpeech.LANG_MISSING_DATA ||
+                                    result==TextToSpeech.LANG_NOT_SUPPORTED){
+                                Log.e("error", "This Language is not supported");
+                            }
+                            else{
+                                if(text_to_speak==null||"".equals(text_to_speak))
+                                {
+                                    Log.d("Mocket","TextToSpeech: Content not available.");
+                                }else
+                                    tts.speak(text_to_speak, TextToSpeech.QUEUE_FLUSH, null);                    }
+                        }
+                        else
+                            Log.e("error", "Initilization Failed!");
+                    }
+                });
+            }
+        });
     }
 
     public void setClearButtonListener(){
@@ -317,19 +355,19 @@ public class MemoryFragment extends Fragment {
         ArrayList<HashMap<String, String>> terms = new ArrayList<>();
         int today_term_total = 0;
         while(cursor_terms.moveToNext()){
-            String id = cursor_terms.getString(DatabaseHandler.INDEX_ID);
-            String term = cursor_terms.getString(DatabaseHandler.INDEX_TERM);
-            String definition = cursor_terms.getString(DatabaseHandler.INDEX_DEFINITION);
-            String date_add = cursor_terms.getString(DatabaseHandler.INDEX_DATE_ADD);
+            String id = cursor_terms.getString(DatabaseHandlerTerms.INDEX_ID);
+            String term = cursor_terms.getString(DatabaseHandlerTerms.INDEX_TERM);
+            String definition = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DEFINITION);
+            String date_add = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_ADD);
 
             if(!date_add.equals(DateUtils.getDateToday())) continue;
             today_term_total += 1;
             if(!term.toLowerCase().contains(currentFilter.toLowerCase())) continue;
 
             HashMap<String, String> temp_hash = new HashMap<>();
-            temp_hash.put(DatabaseHandler.COLUMN_ID, id);
-            temp_hash.put(DatabaseHandler.COLUMN_TERM, term);
-            temp_hash.put(DatabaseHandler.COLUMN_DEFINITION, definition);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_ID, id);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_TERM, term);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_DEFINITION, definition);
 
             terms.add(temp_hash);
         }
@@ -346,6 +384,10 @@ public class MemoryFragment extends Fragment {
         listView_termList.setAdapter(adapter);
     }
 
+    private void ConvertTextToSpeech() {
+        // TODO Auto-generated method stub
+
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -404,10 +446,10 @@ public class MemoryFragment extends Fragment {
 
             TextView textView_term = (TextView) view.findViewById(R.id.TERMITEM_term);
             TextView textView_definition = (TextView) view.findViewById(R.id.TERMITEM_definition);
-            textView_term.setText(data.get(i).get(DatabaseHandler.COLUMN_TERM));
-            textView_definition.setText(data.get(i).get(DatabaseHandler.COLUMN_DEFINITION));
+            textView_term.setText(data.get(i).get(DatabaseHandlerTerms.COLUMN_TERM));
+            textView_definition.setText(data.get(i).get(DatabaseHandlerTerms.COLUMN_DEFINITION));
 
-            String term_id = data.get(i).get(DatabaseHandler.COLUMN_ID);
+            String term_id = data.get(i).get(DatabaseHandlerTerms.COLUMN_ID);
 
             ImageView imageView_edit = (ImageView) view.findViewById(R.id.TERMITEM_editButton);
 
@@ -431,10 +473,10 @@ public class MemoryFragment extends Fragment {
                     EditText editText_definition = (EditText) mView.findViewById(R.id.EDITTERM_editText_definition);
                     TextView textView_addedDate = (TextView) mView.findViewById(R.id.EDITTERM_textView_addedDate);
                     TextView textView_lastMemorizedDate = (TextView) mView.findViewById(R.id.EDITTERM_textView_lastMemorizedDate);
-                    editText_term.setText(term.get(DatabaseHandler.COLUMN_TERM));
-                    editText_definition.setText(term.get(DatabaseHandler.COLUMN_DEFINITION));
-                    textView_addedDate.setText(term.get(DatabaseHandler.COLUMN_DATE_ADD));
-                    textView_lastMemorizedDate.setText(term.get(DatabaseHandler.COLUMN_DATE_LATEST));
+                    editText_term.setText(term.get(DatabaseHandlerTerms.COLUMN_TERM));
+                    editText_definition.setText(term.get(DatabaseHandlerTerms.COLUMN_DEFINITION));
+                    textView_addedDate.setText(term.get(DatabaseHandlerTerms.COLUMN_DATE_ADD));
+                    textView_lastMemorizedDate.setText(term.get(DatabaseHandlerTerms.COLUMN_DATE_LATEST));
 
                     Button button_save = (Button) mView.findViewById(R.id.EDITTERM_button_save);
                     Button button_cancel = (Button) mView.findViewById(R.id.EDITTERM_button_cancel);
@@ -451,8 +493,8 @@ public class MemoryFragment extends Fragment {
                                     || editText_definition.getText().toString().isEmpty()){
                                 Toast.makeText(getContext(), "Some blank is empty.", Toast.LENGTH_LONG).show();
                             }else{
-                                term.put(DatabaseHandler.COLUMN_TERM, editText_term.getText().toString());
-                                term.put(DatabaseHandler.COLUMN_DEFINITION, editText_definition.getText().toString());
+                                term.put(DatabaseHandlerTerms.COLUMN_TERM, editText_term.getText().toString());
+                                term.put(DatabaseHandlerTerms.COLUMN_DEFINITION, editText_definition.getText().toString());
 
                                 db.updateTerm(term);
                                 db.updateToServer();
@@ -538,8 +580,8 @@ public class MemoryFragment extends Fragment {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             view = inflater.inflate(layoutResourceId, viewGroup, false);
 
-            String dictItem_term = data.get(i).get(DatabaseHandler.COLUMN_TERM);
-            String dictItem_definition = data.get(i).get(DatabaseHandler.COLUMN_DEFINITION);
+            String dictItem_term = data.get(i).get(DatabaseHandlerTerms.COLUMN_TERM);
+            String dictItem_definition = data.get(i).get(DatabaseHandlerTerms.COLUMN_DEFINITION);
 
             TextView textView_term = (TextView) view.findViewById(R.id.DICTITEM_term);
             TextView textView_definition = (TextView) view.findViewById(R.id.DICTITEM_definition);
@@ -562,5 +604,14 @@ public class MemoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        if(tts !=null){
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onPause();
     }
 }

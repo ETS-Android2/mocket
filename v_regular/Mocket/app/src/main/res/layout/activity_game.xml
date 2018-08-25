@@ -49,16 +49,50 @@
                     android:layout_weight="7"
                     android:background="@android:color/transparent" />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:background="@drawable/game_title_bottom_border"
                     android:paddingTop="3dp"
-                    android:text="13/8407"
-                    android:textAlignment="center"
-                    android:textColor="#000000"
-                    android:textSize="11dp" />
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:id="@+id/GAME_textView_todayCorrect"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:background="@android:color/transparent"
+                        android:textAlignment="textEnd"
+                        android:textStyle="bold"
+                        android:text="0"
+                        android:textColor="@color/correct_green"
+                        android:textSize="12dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@android:color/transparent"
+                        android:text="/"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textSize="11dp" />
+
+                    <TextView
+                        android:id="@+id/GAME_textView_todayIncorrect"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:background="@android:color/transparent"
+                        android:text="0"
+                        android:textStyle="bold"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/mocket_red_light"
+                        android:textSize="12dp" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -68,13 +102,13 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/GAME_textView_term"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="12"
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:paddingTop="10dp"
-                android:text="Cumbersome"
                 android:textAlignment="center"
                 android:textColor="#000000"
                 android:textSize="25dp"
@@ -163,15 +197,32 @@
                         android:gravity="center"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/GAME_textView_answer1_front"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/border_shadow_game_answer1"
-                        android:gravity="center"
-                        android:text="adj. too long, slow, or dull"
-                        android:textColor="#ffffff"
-                        android:textSize="15dp" />
+                        android:gravity="center">
+                        <ScrollView
+                            android:id="@+id/GAME_scrollView_answer1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@android:color/transparent"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/GAME_textView_answer1_front"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:background="@android:color/transparent"
+                                android:textColor="#ffffff"
+                                android:textSize="15dp" />
+                        </ScrollView>
+                    </LinearLayout>
 
 
                 </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -181,6 +232,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:background="@android:color/transparent" />
+
 
                 <com.wajahatkarim3.easyflipview.EasyFlipView
                     android:id="@+id/GAME_easyFlipView_answer2"
@@ -192,7 +244,6 @@
                     app:flipEnabled="true"
                     app:flipOnTouch="true">
 
-
                     <TextView
                         android:id="@+id/GAME_textView_answer2_back"
                         android:layout_width="match_parent"
@@ -201,18 +252,35 @@
                         android:gravity="center"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/GAME_textView_answer2_front"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/border_shadow_game_answer2"
-                        android:gravity="center"
-                        android:text="adj. large or heavy and therefore difficult to carry or use"
-                        android:textColor="#ffffff"
-                        android:textSize="15dp" />
-
+                        android:gravity="center">
+                        <ScrollView
+                            android:id="@+id/GAME_scrollView_answer2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/GAME_textView_answer2_front"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                android:gravity="center"
+                                android:textColor="#ffffff"
+                                android:textSize="15dp" />
+                        </ScrollView>
+                    </LinearLayout>
 
                 </com.wajahatkarim3.easyflipview.EasyFlipView>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -238,15 +306,32 @@
                         android:gravity="center"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/GAME_textView_answer3_front"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/border_shadow_game_answer3"
-                        android:gravity="center"
-                        android:text="adj. strong, healthy, and full of energy."
-                        android:textColor="#ffffff"
-                        android:textSize="15dp" />
+                        android:gravity="center">
+                        <ScrollView
+                            android:id="@+id/GAME_scrollView_answer3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:background="@android:color/transparent"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/GAME_textView_answer3_front"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                android:gravity="center"
+                                android:textColor="#ffffff"
+                                android:textSize="15dp" />
+                        </ScrollView>
+                    </LinearLayout>
 
 
                 </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -275,15 +360,32 @@
                         android:gravity="center"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/GAME_textView_answer4_front"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/border_shadow_game_answer4"
-                        android:gravity="center"
-                        android:text="adj. feeling or showing pleasure or contentment"
-                        android:textColor="#ffffff"
-                        android:textSize="15dp" />
+                        android:gravity="center">
+                        <ScrollView
+                            android:id="@+id/GAME_scrollView_answer4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:background="@android:color/transparent"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/GAME_textView_answer4_front"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                android:textColor="#ffffff"
+                                android:gravity="center"
+                                android:textSize="15dp" />
+                        </ScrollView>
+                    </LinearLayout>
 
 
                 </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -341,7 +443,8 @@
                 android:background="@android:color/transparent"
                 android:text="Next"
                 android:textColor="#FDFEFE"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:onClick="clickNextButton"/>
 
             <LinearLayout
                 android:layout_width="0dp"

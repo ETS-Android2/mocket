@@ -3,7 +3,7 @@ package com.rms.mocket.common;
 import android.content.Context;
 
 import com.rms.mocket.R;
-import com.rms.mocket.database.DatabaseHandler;
+import com.rms.mocket.database.DatabaseHandlerTerms;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,8 +50,8 @@ public class DictionaryUtils {
                 if(term.toLowerCase().startsWith(given_term.toLowerCase())
                         || term.toLowerCase().equals(given_term.toLowerCase())) {
                     HashMap<String, String> converted_term = new HashMap<>();
-                    converted_term.put(DatabaseHandler.COLUMN_TERM, term);
-                    converted_term.put(DatabaseHandler.COLUMN_DEFINITION, definition);
+                    converted_term.put(DatabaseHandlerTerms.COLUMN_TERM, term);
+                    converted_term.put(DatabaseHandlerTerms.COLUMN_DEFINITION, definition);
                     all_terms.add(converted_term);
                     count++;
                 }

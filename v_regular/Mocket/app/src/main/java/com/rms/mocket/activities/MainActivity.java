@@ -1,7 +1,5 @@
 package com.rms.mocket.activities;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.rms.mocket.R;
 import com.rms.mocket.fragments.GraphFragment;
 import com.rms.mocket.fragments.MemoryFragment;
@@ -41,16 +40,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* OnClick: when a category is clicked. */
-    public void categoryClicked(View v) {
-        ImageView imageView_memory = (ImageView) findViewById(R.id.MAIN_imageView_memory);
+    public void categoryClicked(View v) { ImageView imageView_memory = (ImageView) findViewById(R.id.MAIN_imageView_memory);
         ImageView imageView_quiz = (ImageView) findViewById(R.id.MAIN_imageView_quiz);
         ImageView imageView_graph = (ImageView) findViewById(R.id.MAIN_imageView_graph);
         ImageView imageView_more = (ImageView) findViewById(R.id.MAIN_imageView_more);
 
-        imageView_memory.setImageResource(R.drawable.memory_icon);
-        imageView_quiz.setImageResource(R.drawable.quiz_icon);
-        imageView_graph.setImageResource(R.drawable.graph_icon);
-        imageView_more.setImageResource(R.drawable.more_icon);
+        /* Image optimizer */
+        Glide.with(this)  // Activity or Fragment
+                .load(R.drawable.memory_icon)
+                .into(imageView_memory);
+        Glide.with(this)  // Activity or Fragment
+                .load(R.drawable.quiz_icon)
+                .into(imageView_quiz);
+        Glide.with(this)  // Activity or Fragment
+                .load(R.drawable.graph_icon)
+                .into(imageView_graph);
+        Glide.with(this)  // Activity or Fragment
+                .load(R.drawable.more_icon)
+                .into(imageView_more);
+
 
         RelativeLayout relativeLayout_memory = (RelativeLayout) findViewById(R.id.MAIN_relativeLayout_memory);
         RelativeLayout relativeLayout_quiz = (RelativeLayout) findViewById(R.id.MAIN_relativeLayout_quiz);
@@ -69,8 +77,12 @@ public class MainActivity extends AppCompatActivity {
 
         switch (v.getId()) {
 
+
             case R.id.MAIN_relativeLayout_memory:
-                imageView_memory.setImageResource(R.drawable.clicked_memory_icon);
+                Glide.with(this)  // Activity or Fragment
+                        .load(R.drawable.clicked_memory_icon)
+                        .into(imageView_memory);
+//                imageView_memory.setImageResource(R.drawable.clicked_memory_icon);
                 selectedFragment = new MemoryFragment();
 
                 switch (previous_fragment) {
@@ -87,7 +99,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.MAIN_relativeLayout_quiz:
-                imageView_quiz.setImageResource(R.drawable.clicked_quiz_icon);
+                Glide.with(this)  // Activity or Fragment
+                        .load(R.drawable.clicked_quiz_icon)
+                        .into(imageView_quiz);
+//                imageView_quiz.setImageResource(R.drawable.clicked_quiz_icon);
                 selectedFragment = new QuizFragment();
 
                 switch (previous_fragment) {
@@ -109,7 +124,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.MAIN_relativeLayout_graph:
-                imageView_graph.setImageResource(R.drawable.clicked_graph_icon);
+                Glide.with(this)  // Activity or Fragment
+                        .load(R.drawable.clicked_graph_icon)
+                        .into(imageView_graph);
+//                imageView_graph.setImageResource(R.drawable.clicked_graph_icon);
                 selectedFragment = new GraphFragment();
 
                 switch (previous_fragment) {
@@ -131,7 +149,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.MAIN_relativeLayout_more:
-                imageView_more.setImageResource(R.drawable.clicked_more_icon);
+                Glide.with(this)  // Activity or Fragment
+                        .load(R.drawable.clicked_more_icon)
+                        .into(imageView_more);
+//                imageView_more.setImageResource(R.drawable.clicked_more_icon);
                 selectedFragment = new MoreFragment();
 
                 switch (previous_fragment) {
@@ -152,22 +173,6 @@ public class MainActivity extends AppCompatActivity {
 
         transaction.replace(R.id.MAIN_frameLayout_content, selectedFragment).commit();
 
-    }
-
-    String getAndroidId(Context ctx) {
-        String[] params = {ID_KEY};
-        Cursor c = ctx.getContentResolver()
-                .query(URI, null, null, params, null);
-
-        if (!c.moveToFirst() || c.getColumnCount() < 2)
-            return null;
-
-        try {
-            return Long.toHexString(Long.parseLong(c.getString(1)));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
 

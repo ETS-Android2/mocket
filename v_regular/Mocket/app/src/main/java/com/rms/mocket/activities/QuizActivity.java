@@ -10,10 +10,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.rms.mocket.R;
 import com.rms.mocket.common.DateUtils;
 import com.rms.mocket.common.Memory;
-import com.rms.mocket.database.DatabaseHandler;
+import com.rms.mocket.database.DatabaseHandlerTerms;
+import com.rms.mocket.database.DatabaseHandlerTest;
 import com.rms.mocket.fragments.MemoryFragment;
 import com.rms.mocket.fragments.QuizFragment;
 import com.wajahatkarim3.easyflipview.EasyFlipView;
@@ -40,7 +42,8 @@ public class QuizActivity extends AppCompatActivity {
     boolean thumbUp = false;
     boolean cardFront = true;
     String quiz_type;
-    DatabaseHandler db;
+    DatabaseHandlerTerms db_term;
+    DatabaseHandlerTest db_test;
     ArrayList<HashMap<String, String>> terms = new ArrayList<>();
 
     String currentTermId;
@@ -63,7 +66,8 @@ public class QuizActivity extends AppCompatActivity {
         textView_latest = (TextView) findViewById(R.id.QUIZGAME_textView_lastMemory);
 
         cardFlipView.setFlipDuration(500);
-        db = new DatabaseHandler(this.getBaseContext());
+        db_term = new DatabaseHandlerTerms(this.getBaseContext());
+        db_test = new DatabaseHandlerTest(this.getBaseContext());
         Intent intent = getIntent();
         quiz_type = intent.getExtras().getString(TYPE);
 
@@ -127,9 +131,13 @@ public class QuizActivity extends AppCompatActivity {
 
         if (thumbSelected) {
             ImageView imageView_thumbDown = (ImageView) findViewById(R.id.QUIZGAME_imageView_thumbsDown);
-            imageView_thumbDown.setImageResource(R.drawable.confused_emoticon);
+            Glide.with(this)  // Activity or Fragment
+                    .load(R.drawable.confused_emoticon)
+                    .into(imageView_thumbDown);
         }
-        ((ImageView) v).setImageResource(R.drawable.smile_emoticon_checked);
+        Glide.with(this)  // Activity or Fragment
+                .load(R.drawable.smile_emoticon_checked)
+                .into((ImageView) v);
         thumbSelected = true;
         thumbUp = true;
     }
@@ -142,33 +150,37 @@ public class QuizActivity extends AppCompatActivity {
 
         if (thumbSelected) {
             ImageView imageView_thumbUp = (ImageView) findViewById(R.id.QUIZGAME_imageView_thumbsUp);
-            imageView_thumbUp.setImageResource(R.drawable.smile_emoticon);
+            Glide.with(this)  // Activity or Fragment
+                    .load(R.drawable.smile_emoticon)
+                    .into(imageView_thumbUp);
         }
-        ((ImageView) v).setImageResource(R.drawable.confused_emoticon_checked);
+        Glide.with(this)  // Activity or Fragment
+                .load(R.drawable.confused_emoticon_checked)
+                .into((ImageView) v);
         thumbSelected = true;
         thumbUp = false;
     }
 
 
     public ArrayList<HashMap<String, String>> getTodayTerms(){
-        Cursor cursor_terms = db.getAllTerms();
+        Cursor cursor_terms = db_term.getAllTerms();
 
         ArrayList<HashMap<String, String>> terms = new ArrayList<>();
         while(cursor_terms.moveToNext()){
-            String id = cursor_terms.getString(DatabaseHandler.INDEX_ID);
-            String term = cursor_terms.getString(DatabaseHandler.INDEX_TERM);
-            String definition = cursor_terms.getString(DatabaseHandler.INDEX_DEFINITION);
-            String date_add = cursor_terms.getString(DatabaseHandler.INDEX_DATE_ADD);
-            String date_latest = cursor_terms.getString(DatabaseHandler.INDEX_DATE_LATEST);
+            String id = cursor_terms.getString(DatabaseHandlerTerms.INDEX_ID);
+            String term = cursor_terms.getString(DatabaseHandlerTerms.INDEX_TERM);
+            String definition = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DEFINITION);
+            String date_add = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_ADD);
+            String date_latest = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_LATEST);
 
             if(!date_add.equals(DateUtils.getDateToday())) continue;
 
             HashMap<String, String> temp_hash = new HashMap<>();
-            temp_hash.put(DatabaseHandler.COLUMN_ID, id);
-            temp_hash.put(DatabaseHandler.COLUMN_TERM, term);
-            temp_hash.put(DatabaseHandler.COLUMN_DEFINITION, definition);
-            temp_hash.put(DatabaseHandler.COLUMN_DATE_ADD, date_add);
-            temp_hash.put(DatabaseHandler.COLUMN_DATE_LATEST, date_latest);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_ID, id);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_TERM, term);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_DEFINITION, definition);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_DATE_ADD, date_add);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_DATE_LATEST, date_latest);
 
             terms.add(temp_hash);
         }
@@ -177,27 +189,27 @@ public class QuizActivity extends AppCompatActivity {
 
 
     public ArrayList<HashMap<String, String>> getDailyTest(){
-        Cursor cursor_terms = db.getAllTerms();
+        Cursor cursor_terms = db_term.getAllTerms();
 
         ArrayList<HashMap<String, String>> terms = new ArrayList<>();
         while(cursor_terms.moveToNext()){
-            String id = cursor_terms.getString(DatabaseHandler.INDEX_ID);
-            String term = cursor_terms.getString(DatabaseHandler.INDEX_TERM);
-            String definition = cursor_terms.getString(DatabaseHandler.INDEX_DEFINITION);
-            String date_add = cursor_terms.getString(DatabaseHandler.INDEX_DATE_ADD);
-            String date_latest = cursor_terms.getString(DatabaseHandler.INDEX_DATE_LATEST);
-            String memory_level = cursor_terms.getString(DatabaseHandler.INDEX_MEMORY_LEVEL);
+            String id = cursor_terms.getString(DatabaseHandlerTerms.INDEX_ID);
+            String term = cursor_terms.getString(DatabaseHandlerTerms.INDEX_TERM);
+            String definition = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DEFINITION);
+            String date_add = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_ADD);
+            String date_latest = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_LATEST);
+            String memory_level = cursor_terms.getString(DatabaseHandlerTerms.INDEX_MEMORY_LEVEL);
 
             String date_test = Memory.getNextDateToMemorize(date_latest, memory_level);
             // Check if date_test date is passed or today. Null means already tested all.
             if(date_test.equals(null) || DateUtils.isNotPassed(date_test)) continue;
 
             HashMap<String, String> temp_hash = new HashMap<>();
-            temp_hash.put(DatabaseHandler.COLUMN_ID, id);
-            temp_hash.put(DatabaseHandler.COLUMN_TERM, term);
-            temp_hash.put(DatabaseHandler.COLUMN_DEFINITION, definition);
-            temp_hash.put(DatabaseHandler.COLUMN_DATE_ADD, date_add);
-            temp_hash.put(DatabaseHandler.COLUMN_DATE_LATEST, date_latest);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_ID, id);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_TERM, term);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_DEFINITION, definition);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_DATE_ADD, date_add);
+            temp_hash.put(DatabaseHandlerTerms.COLUMN_DATE_LATEST, date_latest);
 
             terms.add(temp_hash);
         }
@@ -227,11 +239,11 @@ public class QuizActivity extends AppCompatActivity {
         }else {
 
             int randomNum = ThreadLocalRandom.current().nextInt(0, terms.size());
-            String term = terms.get(randomNum).get(DatabaseHandler.COLUMN_TERM);
-            String definition = terms.get(randomNum).get(DatabaseHandler.COLUMN_DEFINITION);
-            String id = terms.get(randomNum).get(DatabaseHandler.COLUMN_ID);
-            String added = terms.get(randomNum).get(DatabaseHandler.COLUMN_DATE_ADD);
-            String latest = terms.get(randomNum).get(DatabaseHandler.COLUMN_DATE_LATEST);
+            String term = terms.get(randomNum).get(DatabaseHandlerTerms.COLUMN_TERM);
+            String definition = terms.get(randomNum).get(DatabaseHandlerTerms.COLUMN_DEFINITION);
+            String id = terms.get(randomNum).get(DatabaseHandlerTerms.COLUMN_ID);
+            String added = terms.get(randomNum).get(DatabaseHandlerTerms.COLUMN_DATE_ADD);
+            String latest = terms.get(randomNum).get(DatabaseHandlerTerms.COLUMN_DATE_LATEST);
             currentTermId = id;
 
 
@@ -253,9 +265,12 @@ public class QuizActivity extends AppCompatActivity {
         ImageView imageView_thumbUp = (ImageView) findViewById(R.id.QUIZGAME_imageView_thumbsUp);
         ImageView imageView_thumbDown = (ImageView) findViewById(R.id.QUIZGAME_imageView_thumbsDown);
 
-
-        imageView_thumbUp.setImageResource(R.drawable.smile_emoticon);
-        imageView_thumbDown.setImageResource(R.drawable.confused_emoticon);
+        Glide.with(this)  // Activity or Fragment
+                .load(R.drawable.smile_emoticon)
+                .into(imageView_thumbUp);
+        Glide.with(this)  // Activity or Fragment
+                .load(R.drawable.confused_emoticon)
+                .into(imageView_thumbDown);
 
 
         card_front.setClickable(true);
@@ -274,7 +289,7 @@ public class QuizActivity extends AppCompatActivity {
 
                 if(thumbUp){
                     for (int i=0; i<terms.size(); i++){
-                        String id = terms.get(i).get(DatabaseHandler.COLUMN_ID);
+                        String id = terms.get(i).get(DatabaseHandlerTerms.COLUMN_ID);
 
                         if (id.equals(currentTermId)){
                             terms.remove(i);
@@ -285,12 +300,14 @@ public class QuizActivity extends AppCompatActivity {
                     if(quiz_type.equals(QuizFragment.TYPE_TEST)){
 
                         HashMap<String, String> updated_term =
-                                Memory.updateMemoryLevel(db.getTermAt(currentTermId));
+                                Memory.updateMemoryLevel(db_term.getTermAt(currentTermId));
 
-                        db.updateTerm(updated_term);
-                        db.updateToServer();
+                        db_term.updateTerm(updated_term);
+                        db_term.updateToServer();
+                        int count = db_test.getCount(DateUtils.getDateToday());
+                        count++;
+                        db_test.setCount(DateUtils.getDateToday(), count);
                     }
-
                 }
                 showNextTerm();
             }

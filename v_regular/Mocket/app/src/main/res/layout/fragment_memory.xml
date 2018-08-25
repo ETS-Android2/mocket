@@ -51,13 +51,13 @@
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                android:weightSum="10">
+                android:weightSum="20">
 
                 <EditText
                     android:id="@+id/MEMORY_editText_term"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="6.5"
+                    android:layout_weight="11.5"
                     android:hint="Term"
                     android:textSize="17dp"
                     android:textColor="@color/mocket_font"
@@ -68,13 +68,26 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5" />
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/MEMORY_imageView_speak"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/speak"
+                    android:clickable="true"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
 
                 <Button
                     android:id="@+id/MEMORY_button_lookUp"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="3"
+                    android:layout_weight="5"
                     android:text="Find"
                     android:textColor="#ffffff"
                     android:backgroundTint="@color/mocket_button"/>
