@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         Fragment selectedFragment = new MemoryFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.MAIN_frameLayout_content,
                 selectedFragment).commit();
+
+        this.syncLocalDatabaseWithServerDatabase();
     }
 
     /* OnClick: when a category is clicked. */
@@ -175,5 +177,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void syncLocalDatabaseWithServerDatabase(){
+        //TODO: Sync all tables with Server database.
+    }
 
 }

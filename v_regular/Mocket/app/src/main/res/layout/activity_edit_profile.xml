@@ -142,7 +142,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:hint="Email address"
-                                        android:inputType="none"
+                                        android:editable="false"
                                         android:textColor="@color/mocket_font"
                                         android:textCursorDrawable="@drawable/cursor_color"
                                         android:backgroundTint="@color/mocket_cursor"
@@ -339,6 +339,7 @@
                 android:layout_marginRight="10dp"
                 android:text="Log Out"
                 android:textColor="#ffffff"
+                android:onClick="clickLogout"
                 android:backgroundTint="@color/mocket_button"/>
 
             <Button
@@ -349,6 +350,7 @@
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/mocket_red"
                 android:text="Delete Account"
+                android:onClick="clickDelete"
                 android:textColor="#ffffff"/>
 
         </LinearLayout>

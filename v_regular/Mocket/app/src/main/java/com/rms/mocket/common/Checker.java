@@ -24,7 +24,7 @@ public class Checker {
 
     /* Check if the name is correct */
     public static boolean checkName(String name) {
-        return name.matches("-?[a-zA-Z]*");
+        return name.matches("-?[a-zA-Z ]*");
     }
 
 }

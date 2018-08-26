@@ -1,40 +1,52 @@
 package com.rms.mocket.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.rms.mocket.R;
 import com.rms.mocket.common.Checker;
 import com.rms.mocket.common.Utils;
+import com.rms.mocket.database.DatabaseHandlerUser;
 
 public class SignUpActivity extends AppCompatActivity {
+    private final int RESULT_LOAD_IMAGE = 1;
 
     public int verificationNumber = 0;
     public boolean verified = false;
     String email;
     String password;
 
+    ImageView imageView_profile;
+    DatabaseHandlerUser db_user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db_user = new DatabaseHandlerUser(this.getBaseContext());
         setContentView(R.layout.activity_sign_up);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.SIGNUP_toolbar);
         this.setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        imageView_profile = (ImageView) findViewById(R.id.SIGNUP_imageView_profile);
 
     }
 
     /* Load profile image from local device and set on the ImageView. */
     public void addProfileImage(View v) {
-        //TODO: load image from local device and set it on the ImageView.
-        Toast.makeText(this, "Add image clicked!!", Toast.LENGTH_LONG).show();
+        Intent profileIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(profileIntent, RESULT_LOAD_IMAGE);
     }
 
 
@@ -139,17 +151,41 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
 
+
             //TODO: Signup on Database. and upload profile image!!!
-            this.signUp(email, password, firstName, lastName);
+            this.signUp(email, password, firstName, lastName, Utils.getByteImage(imageView_profile));
         }
 
     }
 
-    public boolean signUp(String email, String password, String firstName, String lastName) {
-        //TODO: Signup to Database
-        return true;
+    public void signUp(String email, String password, String firstName, String lastName, byte[] profile) {
+        if(!verified){
+            String message = "Email address has not been verified.";
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        }
+
+        String message = "SignUp completed.";
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+
+        Log.d("Mocket","Initialize User Data.");
+        db_user.initializeUserData(this.getBaseContext(),email, password,profile, firstName, lastName);
+
+        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
     }
     public void goPreviousActivity(View v){
         onBackPressed();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data!=null){
+            Uri selectedImage = data.getData();
+
+//            Glide.with(this).load(new File(String.valueOf(selectedImage))).into(imageView_profile);
+            imageView_profile.setImageURI(selectedImage);
+        }
     }
 }

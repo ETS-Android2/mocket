@@ -1,18 +1,28 @@
 <resources>
     <string name="app_name">Mocket</string>
     <string-array name="notification_duration">
+        <item>None</item>
         <item>3 hours</item>
         <item>6 hours</item>
         <item>12 hours</item>
     </string-array>
 
+    <string-array name="game_daily">
+        <item>0</item>
+        <item>30</item>
+        <item>50</item>
+        <item>100</item>
+    </string-array>
+
     <string-array name="gesture_option">
         <item>None</item>
         <item>Shake</item>
+
     </string-array>
     <string-array name="vibration">
         <item>ON</item>
         <item>OFF</item>
     </string-array>
+
 
 </resources>

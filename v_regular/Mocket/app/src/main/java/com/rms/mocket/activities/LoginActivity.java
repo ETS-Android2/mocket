@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.rms.mocket.R;
 import com.rms.mocket.common.Checker;
 import com.rms.mocket.database.DatabaseHandlerTerms;
+import com.rms.mocket.database.DatabaseHandlerUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -22,6 +23,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView textView_forgot;
     private Button button_signIn;
     private Button button_register;
+
+    DatabaseHandlerUser db_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,9 @@ public class LoginActivity extends AppCompatActivity {
         editText_emailAddress = (EditText) findViewById(R.id.LOGIN_editText_emailAddress);
         editText_password = (EditText) findViewById(R.id.LOGIN_editText_password);
         button_register = (Button) findViewById(R.id.button_signUp);
+
+        db_user = new DatabaseHandlerUser(this);
+        db_user.printDatabase();
 
         new CountDownTimer(2000, 1000) {
             @Override

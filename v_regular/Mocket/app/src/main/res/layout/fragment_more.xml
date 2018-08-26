@@ -146,7 +146,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="6"
                         android:paddingLeft="30dp"
-                        android:text="Quiz notification duration"
+                        android:text="Test notification duration"
                         android:textColor="@color/mocket_font"
                         android:textSize="15dp"
                         android:textStyle="bold" />
@@ -168,6 +168,37 @@
                     android:text="(between 9am-9pm)"
                     android:textColor="@color/mocket_font_light"
                     android:textSize="13dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:paddingLeft="30dp"
+                        android:text="Daily Required GAME"
+                        android:textColor="@color/mocket_font"
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/MORE_spinner_game"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp" />
+
+                </LinearLayout>
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"

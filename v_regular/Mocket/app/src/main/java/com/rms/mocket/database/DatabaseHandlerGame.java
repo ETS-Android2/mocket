@@ -25,9 +25,6 @@ public class DatabaseHandlerGame extends SQLiteOpenHelper {
     public static final int INDEX_CORRECT = 2;
     public static final int INDEX_INCORRECT = 3;
 
-
-    public static final String TABLE_USERS = "users";
-
     public DatabaseHandlerGame(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
@@ -52,6 +49,18 @@ public class DatabaseHandlerGame extends SQLiteOpenHelper {
                 +", " + DatabaseHandlerGame.COLUMN_DATE + " TEXT"
                 +", " + DatabaseHandlerGame.COLUMN_CORRECT + " INTEGER"
                 +", " + DatabaseHandlerGame.COLUMN_INCORRECT + " INTEGER)");
+
+        sqLiteDatabase.execSQL("create table "+DatabaseHandlerUser.TABLE_USER+ " ("
+                + DatabaseHandlerUser.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT"
+                +", " + DatabaseHandlerUser.COLUMN_EMAIL + " TEXT"
+                +", " + DatabaseHandlerUser.COLUMN_PASSWORD + " TEXT"
+                +", " + DatabaseHandlerUser.COLUMN_PROFILE + " blob"
+                +", " + DatabaseHandlerUser.COLUMN_FIRST_NAME + " TEXT"
+                +", " + DatabaseHandlerUser.COLUMN_LAST_NAME + " TEXT"
+                +", " + DatabaseHandlerUser.COLUMN_SETTING_NOTIFICATION + " TEXT"
+                +", " + DatabaseHandlerUser.COLUMN_SETTING_GAME + " TEXT"
+                +", " + DatabaseHandlerUser.COLUMN_SETTING_GESTURE + " TEXT"
+                +", " + DatabaseHandlerUser.COLUMN_SETTING_VIBRATION + " TEXT)");
     }
 
     @Override

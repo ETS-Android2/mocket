@@ -27,6 +27,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.jjoe64:graphview:4.2.2'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:+'
     implementation 'de.hdodenhof:circleimageview:2.2.0'

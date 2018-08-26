@@ -1,15 +1,22 @@
 package com.rms.mocket.common;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Random;
 
 
 public class Utils {
+
+    public static final String TAG = "Mocket";
 
     /* Resize ListView dynamically */
     public static void setListViewHeightBasedOnChildren(ListView listView) {
@@ -42,4 +49,38 @@ public class Utils {
 
     }
 
+    public static void log(String message){
+        Log.d(TAG, message);
+    }
+
+
+    public static byte[] getByteImage(ImageView imageView){
+
+        BitmapDrawable draw = (BitmapDrawable) imageView.getDrawable();
+        Bitmap bitmap = draw.getBitmap();
+        bitmap = getResizedBitmap(bitmap, 1000);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        return byteArray;
+
+    }
+
+    public static Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
 }
