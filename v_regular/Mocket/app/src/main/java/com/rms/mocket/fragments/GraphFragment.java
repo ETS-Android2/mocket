@@ -3,7 +3,7 @@ package com.rms.mocket.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.database.Cursor;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -42,13 +42,24 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rms.mocket.R;
+import com.rms.mocket.activities.LoginActivity;
 import com.rms.mocket.common.DateUtils;
-import com.rms.mocket.common.GraphUtils;
 import com.rms.mocket.common.KeyboardUtils;
 import com.rms.mocket.common.TermUtils;
+import com.rms.mocket.common.Utils;
 import com.rms.mocket.common.VibratorUtils;
-import com.rms.mocket.database.DatabaseHandlerTerms;
+import com.rms.mocket.database.FirebaseHandlerGame;
+import com.rms.mocket.database.FirebaseHandlerTerm;
+import com.rms.mocket.database.FirebaseHandlerTest;
+import com.rms.mocket.object.Term;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,8 +78,7 @@ public class GraphFragment extends Fragment {
     public static final String CATEGORY_GAME = "Game";
 
     private boolean visibility_termList = false;
-    private ArrayList<HashMap<String, String>> exampleTerm = new ArrayList<>();
-    private DatabaseHandlerTerms db;
+
     private TextView textView_allTermTitle;
     private String currentFilter = "";
     private View rootView;
@@ -78,6 +88,11 @@ public class GraphFragment extends Fragment {
 
     String current_graph_type;
 
+    DatabaseReference mTermDatabase;
+    DatabaseReference mTestDatabase;
+    DatabaseReference mGameDatabase;
+    String user_id;
+
 
     @Nullable
     @Override
@@ -85,7 +100,11 @@ public class GraphFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_graph, container, false);
 
-        db = new DatabaseHandlerTerms(rootView.getContext());
+//        db = new DatabaseHandlerTerms(rootView.getContext());
+        mTermDatabase = FirebaseDatabase.getInstance().getReference(Term.REFERENCE_TERMS);
+        mTestDatabase = FirebaseDatabase.getInstance().getReference(FirebaseHandlerTest.REFERENCE_TEST);
+        mGameDatabase = FirebaseDatabase.getInstance().getReference(FirebaseHandlerGame.REFERENCE_GAME);
+        user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         textView_allTermTitle =
                 (TextView) rootView.findViewById(R.id.GRAPH_textView_allTermsTitle);
@@ -93,15 +112,56 @@ public class GraphFragment extends Fragment {
         linearLayout_all_term = (LinearLayout) rootView.findViewById(R.id.GRAPH_linearLayout_allTerms);
         linearLayout_searchView = (LinearLayout) rootView.findViewById(R.id.GRAPH_linearLayout_searchView);
 
-        int all_term_count = db.getAllTerms().getCount();
-        textView_allTermTitle.setText("All Terms in Memory (" + Integer.toString(all_term_count) + ")");
 
-        this.setGraph(TYPE_WEEK);
+        /* Display total term count in database. */
+        mTermDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+                int count = (int) dataSnapshot.getChildrenCount();
+                textView_allTermTitle.setText("All Terms in Memory (" + Integer.toString(count) + ")");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
         this.setTimeButtonListener();
         this.setExpandButtonListener();
         this.setSearchViewListener();
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            if(!user.isEmailVerified()){
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(rootView.getContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        } else{
+            Intent intent = new Intent(rootView.getContext(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
+        Button button_week  = (Button) rootView.findViewById(R.id.GRAPH_button_week);
+        Button button_month  = (Button) rootView.findViewById(R.id.GRAPH_button_month);
+        Button button_year  = (Button) rootView.findViewById(R.id.GRAPH_button_year);
+        button_week.setPaintFlags(0);
+        button_month.setPaintFlags(0);
+        button_year.setPaintFlags(0);
+        button_week.setPaintFlags(button_week.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        this.setGraph(TYPE_WEEK);
+
     }
 
     public void setGraph(String graph_type){
@@ -175,153 +235,301 @@ public class GraphFragment extends Fragment {
 
 
         CombinedData data = new CombinedData();
-
-        LineData mlineData = new LineData(generateTermData(graph_type));
-        mlineData.addDataSet((new LineData(generateTestData(graph_type))).getDataSetByIndex(0));
-        data.setData(mlineData);
-
-        data.setData(generateBarData(graph_type));
-
-        Typeface mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
-        data.setValueTypeface(mTfLight);
-
-        xAxis.setAxisMaximum(data.getXMax() + 0.25f);
-
-        mChart.setData(data);
         mChart.animateXY(1000, 1000);
-        mChart.invalidate();
 
 
-    }
+        /* Update Term data */
+        mTermDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
 
-    private LineDataSet generateTermData(String time_type) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                HashMap<String, Integer> term_count = new HashMap<>();
 
-        ArrayList<Entry> entries = new ArrayList<Entry>();
-
-        LineDataSet set=null;
-
-        switch(time_type){
-            case TYPE_YEAR:
-
-                ArrayList<Integer> term_data_year = GraphUtils.getTermData(getContext(),TYPE_YEAR);
-                for (int index = 0; index < term_data_year.size(); index++)
-                    entries.add(new Entry(index , term_data_year.get(index)));
-                set = new LineDataSet(entries, CATEGORY_TERM);
-                break;
-
-            case TYPE_MONTH:
-                ArrayList<Integer> term_data_month = GraphUtils.getTermData(getContext(),TYPE_MONTH);
-                for (int index = 0; index < term_data_month.size(); index++)
-                    entries.add(new Entry(index , term_data_month.get(index)));
-                set = new LineDataSet(entries, CATEGORY_TERM);
-                break;
-
-            case TYPE_WEEK:
-                ArrayList<Integer> term_data_week = GraphUtils.getTermData(getContext(),TYPE_WEEK);
-                for (int index = 0; index < term_data_week.size(); index++)
-                    entries.add(new Entry(index , term_data_week.get(index)));
-                set = new LineDataSet(entries, CATEGORY_TERM);
-                break;
-        }
-
-        set.setColor(Color.rgb(240,238,7));
-        set.setLineWidth(3f);
-        set.setCircleColor(Color.rgb(240,238,7));
-        set.setCircleSize(4f);
-        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set.setDrawValues(true);
-        set.setValueTextSize(0f);
-        set.setValueTextColor(Color.rgb(240,238,7));
-        set.setHighLightColor(Color.MAGENTA);
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-
-        return set;
-    }
-
-    private LineDataSet generateTestData(String time_type) {
-
-        ArrayList<Entry> entries = new ArrayList<Entry>();
-
-        LineDataSet set=null;
-
-        switch(time_type){
-            case TYPE_YEAR:
-                ArrayList<Integer> test_data_year = GraphUtils.getTestData(getContext(),TYPE_YEAR);
-                for (int index = 0; index < test_data_year.size(); index++)
-                    entries.add(new Entry(index , test_data_year.get(index)));
-                set = new LineDataSet(entries, CATEGORY_TEST);
-                break;
-
-            case TYPE_MONTH:
-                ArrayList<Integer> test_data_month = GraphUtils.getTestData(getContext(),TYPE_MONTH);
-                for (int index = 0; index < test_data_month.size(); index++)
-                    entries.add(new Entry(index , test_data_month.get(index)));
-                set = new LineDataSet(entries, CATEGORY_TEST);
-                break;
-
-            case TYPE_WEEK:
-                ArrayList<Integer> test_data_week = GraphUtils.getTestData(getContext(),TYPE_WEEK);
-                for (int index = 0; index < test_data_week.size(); index++)
-                    entries.add(new Entry(index , test_data_week.get(index)));
-                set = new LineDataSet(entries, CATEGORY_TEST);
-                break;
-        }
-
-        set.setColor(Color.rgb(162,234,242));
-        set.setLineWidth(2f);
-        set.setCircleColor(Color.rgb(162,234,242));
-        set.setCircleSize(3f);
-        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set.setDrawValues(true);
-        set.setValueTextSize(0f);
-        set.setValueTextColor(Color.rgb(162,234,242));
-        set.setHighLightColor(Color.MAGENTA);
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-
-        return set;
-    }
-
-    private BarData generateBarData(String time_type) {
-        ArrayList<BarEntry> entry = new ArrayList<BarEntry>();
-
-        switch(time_type){
-            case TYPE_YEAR:
-                ArrayList<Integer> game_data_correct_year = GraphUtils.getGameDataCorrect(getContext(),TYPE_YEAR);
-                ArrayList<Integer> game_data_incorrect_year = GraphUtils.getGameDataIncorrect(getContext(),TYPE_YEAR);
-                for (int index = 0; index < game_data_correct_year.size(); index++) {
-                    // stacked
-                    entry.add(new BarEntry(index, new float[]{
-                            game_data_correct_year.get(index), game_data_incorrect_year.get(index)}));
+                for(DataSnapshot child: children) {
+                    Term term = child.getValue(Term.class);
+                    if(term_count.containsKey(term.date_add)){
+                        term_count.put(term.date_add, term_count.get(term.date_add)+1);
+                    }else{
+                        term_count.put(term.date_add, 1);
+                    }
                 }
-                break;
-            case TYPE_MONTH:
-                ArrayList<Integer> game_data_correct_month = GraphUtils.getGameDataCorrect(getContext(),TYPE_MONTH);
-                ArrayList<Integer> game_data_incorrect_month = GraphUtils.getGameDataIncorrect(getContext(),TYPE_MONTH);
-                for (int index = 0; index < game_data_correct_month.size(); index++) {
-                    // stacked
-                    entry.add(new BarEntry(index, new float[]{
-                            game_data_correct_month.get(index), game_data_incorrect_month.get(index)}));
-                }
-                break;
-            case TYPE_WEEK:
-                ArrayList<Integer> game_data_correct_week = GraphUtils.getGameDataCorrect(getContext(),TYPE_WEEK);
-                ArrayList<Integer> game_data_incorrect_week = GraphUtils.getGameDataIncorrect(getContext(),TYPE_WEEK);
-                for (int index = 0; index < game_data_correct_week.size(); index++) {
-                    // stacked
-                    entry.add(new BarEntry(index, new float[]{
-                            game_data_correct_week.get(index), game_data_incorrect_week.get(index)}));
-                }
-                break;
-        }
-        BarDataSet set = new BarDataSet(entry, "- Game");
-        set.setStackLabels(new String[]{"Correct", "Incorrect"});
-        set.setColors(new int[]{Color.rgb(211,233,211),Color.rgb(246,214,214)});
-        set.setValueTextSize(0f);
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
 
-        BarData data = new BarData(set);
+                String[] order=null;
+                ArrayList<Integer> term_data = new ArrayList<>();
+                switch(graph_type){
+                    case GraphFragment.TYPE_WEEK:
+                        order = DateUtils.orderDayNumber(DateUtils.getDateToday());
+                        for(int i=0; i<order.length; i++){
+                            String day = order[i];
+                            int count = 0;
+                            for(String date: term_count.keySet()) {
+                                if(date.equals(day)){
+                                    count += term_count.get(date);
+                                }
+                            }
+                            term_data.add(count);
+                        }
+                        break;
 
-        return data;
+                    case GraphFragment.TYPE_MONTH:
+                        order = DateUtils.orderDateNumber(DateUtils.getDateToday());
+                        for(int i=0; i<order.length; i++){
+                            String day = order[i];
+                            int count = 0;
+                            for(String date: term_count.keySet()) {
+                                if(date.equals(day)){
+                                    count += term_count.get(date);
+                                }
+                            }
+                            term_data.add(count);
+                        }
+                        break;
+
+                    case GraphFragment.TYPE_YEAR:
+                        order = DateUtils.orderMonthNumber(DateUtils.getDateToday());
+                        for(int i=0; i<order.length; i++){
+                            String month = order[i];
+                            int count = 0;
+                            for(String date: term_count.keySet()) {
+                                if(date.startsWith(month)){
+                                    count += term_count.get(date);
+                                }
+                            }
+                            term_data.add(count);
+                        }
+                        break;
+                }
+
+                ArrayList<Entry> entries = new ArrayList<Entry>();
+                for (int index = 0; index < term_data.size(); index++)
+                    entries.add(new Entry(index , term_data.get(index)));
+                LineDataSet term_set = new LineDataSet(entries, CATEGORY_TERM);
+
+
+                term_set.setColor(Color.rgb(240,238,7));
+                term_set.setLineWidth(3f);
+                term_set.setCircleColor(Color.rgb(240,238,7));
+                term_set.setCircleSize(4f);
+                term_set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+                term_set.setDrawValues(true);
+                term_set.setValueTextSize(0f);
+                term_set.setValueTextColor(Color.rgb(240,238,7));
+                term_set.setHighLightColor(Color.MAGENTA);
+                term_set.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+                LineData mlineData = new LineData(term_set);
+
+
+                /* Update Test Data */
+                mTestDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+
+                        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+
+                        HashMap<String, Integer> test_count = new HashMap<>();
+
+                        for(DataSnapshot child: children) {
+                            test_count.put(DateUtils.revertDate(child.getKey()), Integer.parseInt(child.getValue(String.class)));
+                        }
+
+                        String[] order=null;
+                        ArrayList<Integer> test_data = new ArrayList<>();
+                        switch(graph_type){
+                            case GraphFragment.TYPE_WEEK:
+                                order = DateUtils.orderDayNumber(DateUtils.getDateToday());
+                                for(int i=0; i<order.length; i++){
+                                    String day = order[i];
+                                    int count = 0;
+                                    for(String date: test_count.keySet()) {
+                                        if(date.equals(day)){
+                                            count += test_count.get(date);
+                                        }
+                                    }
+                                    test_data.add(count);
+                                }
+                                break;
+
+                            case GraphFragment.TYPE_MONTH:
+                                order = DateUtils.orderDateNumber(DateUtils.getDateToday());
+                                for(int i=0; i<order.length; i++){
+                                    String day = order[i];
+                                    int count = 0;
+                                    for(String date: test_count.keySet()) {
+                                        if(date.equals(day)){
+                                            count += test_count.get(date);
+                                        }
+                                    }
+                                    test_data.add(count);
+                                }
+                                break;
+
+                            case GraphFragment.TYPE_YEAR:
+                                order = DateUtils.orderMonthNumber(DateUtils.getDateToday());
+                                for(int i=0; i<order.length; i++){
+                                    String month = order[i];
+                                    int count = 0;
+                                    for(String date: test_count.keySet()) {
+                                        if(date.startsWith(month)){
+                                            count += test_count.get(date);
+                                        }
+                                    }
+                                    test_data.add(count);
+                                }
+                                break;
+                        }
+
+                        ArrayList<Entry> entries = new ArrayList<Entry>();
+
+                        for (int index = 0; index < test_data.size(); index++)
+                            entries.add(new Entry(index , test_data.get(index)));
+                        LineDataSet test_set = new LineDataSet(entries, CATEGORY_TEST);
+
+
+                        test_set.setColor(Color.rgb(162,234,242));
+                        test_set.setLineWidth(2f);
+                        test_set.setCircleColor(Color.rgb(162,234,242));
+                        test_set.setCircleSize(3f);
+                        test_set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+                        test_set.setDrawValues(true);
+                        test_set.setValueTextSize(0f);
+                        test_set.setValueTextColor(Color.rgb(162,234,242));
+                        test_set.setHighLightColor(Color.MAGENTA);
+                        test_set.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+                        mlineData.addDataSet((new LineData(test_set)).getDataSetByIndex(0));
+
+                        /* Update Game Data */
+                        mGameDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+
+                                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+
+                                HashMap<String, Integer> game_count_correct = new HashMap<>();
+                                HashMap<String, Integer> game_count_incorrect = new HashMap<>();
+
+                                for(DataSnapshot child: children) {
+                                    game_count_correct.put(DateUtils.revertDate(child.getKey()),
+                                            Integer.parseInt(child.child(FirebaseHandlerGame.CORRECT).getValue(String.class)));
+                                    game_count_incorrect.put(DateUtils.revertDate(child.getKey()),
+                                            Integer.parseInt(child.child(FirebaseHandlerGame.INCORRECT).getValue(String.class)));
+                                }
+
+                                ArrayList<Integer> game_data_correct = new ArrayList<>();
+                                ArrayList<Integer> game_data_incorrect = new ArrayList<>();
+
+                                String[] order = null;
+                                switch(graph_type){
+                                    case GraphFragment.TYPE_WEEK:
+                                        order = DateUtils.orderDayNumber(DateUtils.getDateToday());
+                                        for(int i=0; i<order.length; i++){
+                                            String day = order[i];
+                                            int correct_count = 0;
+                                            int incorrect_count = 0;
+                                            for(String date: game_count_correct.keySet()) {
+                                                if(date.equals(day)){
+                                                    correct_count += game_count_correct.get(date);
+                                                    incorrect_count += game_count_incorrect.get(date);
+                                                }
+                                            }
+                                            game_data_correct.add(correct_count);
+                                            game_data_incorrect.add(incorrect_count);
+                                        }
+                                        break;
+
+                                    case GraphFragment.TYPE_MONTH:
+                                        order = DateUtils.orderDateNumber(DateUtils.getDateToday());
+                                        for(int i=0; i<order.length; i++){
+                                            String day = order[i];
+                                            int correct_count = 0;
+                                            int incorrect_count = 0;
+                                            for(String date: game_count_correct.keySet()) {
+                                                if(date.equals(day)){
+                                                    correct_count += game_count_correct.get(date);
+                                                    incorrect_count += game_count_incorrect.get(date);
+                                                }
+                                            }
+                                            game_data_correct.add(correct_count);
+                                            game_data_incorrect.add(incorrect_count);
+                                        }
+                                        break;
+
+                                    case GraphFragment.TYPE_YEAR:
+                                        order = DateUtils.orderMonthNumber(DateUtils.getDateToday());
+                                        for(int i=0; i<order.length; i++){
+                                            String month = order[i];
+                                            int correct_count = 0;
+                                            int incorrect_count = 0;
+                                            for(String date: game_count_correct.keySet()) {
+                                                if(date.startsWith(month)){
+                                                    correct_count += game_count_correct.get(date);
+                                                    incorrect_count += game_count_incorrect.get(date);
+                                                }
+                                            }
+                                            game_data_correct.add(correct_count);
+                                            game_data_incorrect.add(incorrect_count);
+                                        }
+                                        break;
+                                }
+
+                                ArrayList<BarEntry> entry = new ArrayList<BarEntry>();
+
+                                for (int index = 0; index < game_data_correct.size(); index++) {
+                                    // stacked
+                                    entry.add(new BarEntry(index, new float[]{
+                                            game_data_correct.get(index), game_data_incorrect.get(index)}));
+                                }
+
+                                BarDataSet game_set = new BarDataSet(entry, "- Game");
+                                game_set.setStackLabels(new String[]{"Correct", "Incorrect"});
+                                game_set.setColors(new int[]{Color.rgb(211,233,211),Color.rgb(246,214,214)});
+                                game_set.setValueTextSize(0f);
+                                game_set.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+                                BarData bar_data = new BarData(game_set);
+
+                                data.setData(mlineData);
+                                data.setData(bar_data);
+
+                                Typeface mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
+                                data.setValueTypeface(mTfLight);
+
+                                xAxis.setAxisMaximum(data.getXMax() + 0.25f);
+
+                                mChart.setData(data);
+                                mChart.invalidate();
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -389,7 +597,6 @@ public class GraphFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 final ListView listView_termList = (ListView) rootView.findViewById(R.id.GRAPH_listView_termList);
-                TermListAdapter adapter = new TermListAdapter(getActivity(), R.layout.term_item, exampleTerm, rootView);
                 if (visibility_termList) {
                     /* Reset the terms */;
 
@@ -456,46 +663,36 @@ public class GraphFragment extends Fragment {
 
     public void updateTermList(){
 
-        Cursor cursor_terms = db.getAllTerms();
-        if(cursor_terms.getCount() == 0){
-            textView_allTermTitle.setText("All Terms in Memory (0)");
-            return;
-        }
+        mTermDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-        ArrayList<HashMap<String, String>> terms = new ArrayList<>();
-        int all_term_total = 0;
-        while(cursor_terms.moveToNext()){
-            String id = cursor_terms.getString(DatabaseHandlerTerms.INDEX_ID);
-            String term = cursor_terms.getString(DatabaseHandlerTerms.INDEX_TERM);
-            String definition = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DEFINITION);
-            String date_add = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_ADD);
-            String date_latest = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_LATEST);
-            String memory_level = cursor_terms.getString(DatabaseHandlerTerms.INDEX_MEMORY_LEVEL);
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
 
-            all_term_total += 1;
-            if(!term.toLowerCase().contains(currentFilter.toLowerCase())) continue;
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                ArrayList<Term> terms = new ArrayList<>();
 
-            HashMap<String, String> temp_hash = new HashMap<>();
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_ID, id);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_TERM, term);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DEFINITION, definition);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DATE_ADD,date_add);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DATE_LATEST,date_latest);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_MEMORY_LEVEL,memory_level);
+                for(DataSnapshot child: children) {
+                    Term term = child.getValue(Term.class);
 
-            terms.add(temp_hash);
-        }
+                    if(!term.term.toLowerCase().contains(currentFilter.toLowerCase())) continue;
 
+                    terms.add(term);
+                }
 
-        ArrayList<HashMap<String, String>> sorted_terms = TermUtils.sortTerms(terms);
+                ArrayList<Term> sorted_terms = TermUtils.sortTerms(terms);
+                textView_allTermTitle.setText("All Terms in Memory (" + sorted_terms.size() + ")");
 
-        /* Update the title name */
-        textView_allTermTitle.setText("All Terms in Memory (" + all_term_total + ")");
+                /* Display Today's terms */
+                ListView listView_termList = (ListView) rootView.findViewById(R.id.GRAPH_listView_termList);
+                ListAdapter adapter = new GraphFragment.TermListAdapter(getActivity(), R.layout.term_item, sorted_terms, rootView);
+                listView_termList.setAdapter(adapter);
+            }
 
-        /* Display Today's terms */
-        ListView listView_termList = (ListView) rootView.findViewById(R.id.GRAPH_listView_termList);
-        ListAdapter adapter = new GraphFragment.TermListAdapter(getActivity(), R.layout.term_item, sorted_terms, rootView);
-        listView_termList.setAdapter(adapter);
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
 
@@ -505,12 +702,12 @@ public class GraphFragment extends Fragment {
     class TermListAdapter extends ArrayAdapter {
         Context context;
         int layoutResourceId;
-        ArrayList<HashMap<String, String>> data = null;
+        ArrayList<Term> data = null;
         View rootView;
 
         public TermListAdapter(Context context,
                                int layoutResourceId,
-                               ArrayList<HashMap<String, String>> data, View rootView) {
+                               ArrayList<Term> data, View rootView) {
             super(context, layoutResourceId, data);
             this.layoutResourceId = layoutResourceId;
             this.context = context;
@@ -540,18 +737,13 @@ public class GraphFragment extends Fragment {
 
             TextView textView_term = (TextView) view.findViewById(R.id.TERMITEM_term);
             TextView textView_definition = (TextView) view.findViewById(R.id.TERMITEM_definition);
-            textView_term.setText(data.get(i).get(DatabaseHandlerTerms.COLUMN_TERM));
-            textView_definition.setText(data.get(i).get(DatabaseHandlerTerms.COLUMN_DEFINITION));
+            textView_term.setText(data.get(i).term);
+            textView_definition.setText(data.get(i).definition);
 
-            String term_id = data.get(i).get(DatabaseHandlerTerms.COLUMN_ID);
-            String memory_level = data.get(i).get(DatabaseHandlerTerms.COLUMN_MEMORY_LEVEL);
+            Term term = data.get(i);
+            String term_id = data.get(i).id;
 
             ImageView imageView_edit = (ImageView) view.findViewById(R.id.TERMITEM_editButton);
-            ImageView imageView_crown = (ImageView) view.findViewById(R.id.TERMITEM_imageView_crown);
-
-            if(memory_level.equals("0")){
-                imageView_crown.setVisibility(View.VISIBLE);
-            }
 
             /* Image optimizer */
             Glide.with(rootView.getContext())  // Activity or Fragment
@@ -566,17 +758,15 @@ public class GraphFragment extends Fragment {
                     AlertDialog.Builder mBuilder = new AlertDialog.Builder(rootView.getContext());
                     View mView = getLayoutInflater().inflate(R.layout.edit_term_dialogue, null);
 
-                    HashMap<String, String> term = db.getTermAt(term_id);
-
                     /* Initialize the blanks. */
                     EditText editText_term = (EditText) mView.findViewById(R.id.EDITTERM_editText_term);
                     EditText editText_definition = (EditText) mView.findViewById(R.id.EDITTERM_editText_definition);
                     TextView textView_addedDate = (TextView) mView.findViewById(R.id.EDITTERM_textView_addedDate);
                     TextView textView_lastMemorizedDate = (TextView) mView.findViewById(R.id.EDITTERM_textView_lastMemorizedDate);
-                    editText_term.setText(term.get(DatabaseHandlerTerms.COLUMN_TERM));
-                    editText_definition.setText(term.get(DatabaseHandlerTerms.COLUMN_DEFINITION));
-                    textView_addedDate.setText(term.get(DatabaseHandlerTerms.COLUMN_DATE_ADD));
-                    textView_lastMemorizedDate.setText(term.get(DatabaseHandlerTerms.COLUMN_DATE_LATEST));
+                    editText_term.setText(term.term);
+                    editText_definition.setText(term.definition);
+                    textView_addedDate.setText(term.date_add);
+                    textView_lastMemorizedDate.setText(term.date_latest);
 
                     Button button_save = (Button) mView.findViewById(R.id.EDITTERM_button_save);
                     Button button_cancel = (Button) mView.findViewById(R.id.EDITTERM_button_cancel);
@@ -589,20 +779,22 @@ public class GraphFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             /* When one of the blanks is empty. */
-                            if(editText_term.getText().toString().isEmpty()
-                                    || editText_definition.getText().toString().isEmpty()){
+                            if (editText_term.getText().toString().isEmpty()
+                                    || editText_definition.getText().toString().isEmpty()) {
                                 Toast.makeText(getContext(), "Some blank is empty.", Toast.LENGTH_LONG).show();
-                            }else{
-                                term.put(DatabaseHandlerTerms.COLUMN_TERM, editText_term.getText().toString());
-                                term.put(DatabaseHandlerTerms.COLUMN_DEFINITION, editText_definition.getText().toString());
+                            } else {
+                                term.term = editText_term.getText().toString();
+                                term.definition = editText_definition.getText().toString();
 
-                                db.updateTerm(term);
-                                db.updateToServer();
+                                Utils.log("Before FirebaseHandlerTerm.updateTerm()");
+                                FirebaseHandlerTerm.updateTerm(term_id, term);
+                                Utils.log("After FirebaseHandlerTerm.updateTerm()");
 
                                 dialog.dismiss();
 
-                                VibratorUtils.vibrateAlert(rootView.getContext());
                                 updateTermList();
+
+                                VibratorUtils.vibrateAlert(rootView.getContext());
                                 Toast.makeText(getContext(), "Saved.", Toast.LENGTH_LONG).show();
                             }
                         }
@@ -618,26 +810,23 @@ public class GraphFragment extends Fragment {
                     button_delete.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if(button_delete.getText().toString().equals("Delete")){
+                            if (button_delete.getText().toString().equals("Delete")) {
                                 button_delete.setText("Confirm");
-                            }else {
+                            } else {
 
-                                db.deleteTerm(term_id);
-                                db.updateToServer();
+                                FirebaseHandlerTerm.deleteTerm(term_id);
 
                                 KeyboardUtils.hideKeyboard(getActivity());
                                 dialog.dismiss();
-                                VibratorUtils.vibrateAlert(rootView.getContext());
                                 updateTermList();
+                                VibratorUtils.vibrateAlert(rootView.getContext());
                                 Toast.makeText(getContext(), "Deleted.", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
-
-
                     dialog.show();
-
                 }
+
             });
 
             return view;

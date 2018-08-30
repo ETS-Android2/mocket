@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/mocket_actionBar"
-        android:minHeight="?attr/actionBarSize"
         app:titleTextColor="@color/mocket_font_dark">
 
         <ImageView
@@ -200,44 +199,6 @@
                                 android:layout_marginLeft="20dp"
                                 android:layout_marginRight="20dp"
                                 android:orientation="vertical">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="50dp"
-                                    android:orientation="horizontal"
-                                    android:weightSum="10">
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:orientation="horizontal"
-                                        android:weightSum="10">
-
-                                        <LinearLayout
-                                            android:layout_width="0dp"
-                                            android:layout_height="match_parent"
-                                            android:layout_weight="0.5" />
-
-                                        <EditText
-                                            android:id="@+id/EDITPROFILE_editText_currentPassword"
-                                            android:layout_width="0dp"
-                                            android:layout_height="match_parent"
-                                            android:layout_weight="9"
-                                            android:hint="Current Password"
-                                            android:inputType="textPassword"
-                                            android:textColor="@color/mocket_font"
-                                            android:textCursorDrawable="@drawable/cursor_color"
-                                            android:backgroundTint="@color/mocket_cursor"
-                                            android:paddingLeft="20dp" />
-
-                                        <LinearLayout
-                                            android:layout_width="0dp"
-                                            android:layout_height="match_parent"
-                                            android:layout_weight="0.5" />
-
-                                    </LinearLayout>
-
-                                </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="match_parent"

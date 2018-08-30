@@ -11,8 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.rms.mocket.R;
 import com.rms.mocket.activities.GameActivity;
+import com.rms.mocket.activities.LoginActivity;
 import com.rms.mocket.activities.QuizActivity;
 
 
@@ -20,10 +23,11 @@ public class QuizFragment extends Fragment {
 
     public final static String TYPE_TEST = "test";
 
+    View rootView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_quiz, container, false);
+        rootView = inflater.inflate(R.layout.fragment_quiz, container, false);
 
         final ImageView imageView_start = (ImageView) rootView.findViewById(R.id.QUIZ_imageView_start);
         final ImageView imageView_playnow = (ImageView) rootView.findViewById(R.id.QUIZ_imageView_playnow);
@@ -49,6 +53,25 @@ public class QuizFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            if(!user.isEmailVerified()){
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(rootView.getContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        } else{
+            Intent intent = new Intent(rootView.getContext(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 
     /**

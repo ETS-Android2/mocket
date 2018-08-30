@@ -1,7 +1,7 @@
 package com.rms.mocket.activities;
 
-import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,25 +11,33 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rms.mocket.R;
 import com.rms.mocket.common.DateUtils;
 import com.rms.mocket.common.VibratorUtils;
-import com.rms.mocket.database.DatabaseHandlerGame;
-import com.rms.mocket.database.DatabaseHandlerTerms;
+import com.rms.mocket.database.FirebaseHandlerGame;
+import com.rms.mocket.object.Term;
 import com.wajahatkarim3.easyflipview.EasyFlipView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameActivity extends AppCompatActivity {
 
     boolean answerPicked = false;
 
-    DatabaseHandlerTerms db_term;
-    DatabaseHandlerGame db_game;
-    ArrayList<HashMap<String, String>> terms = new ArrayList<>();
+//    DatabaseHandlerTerms db_term;
+//    DatabaseHandlerGame db_game;
+    DatabaseReference mTermDatabase;
+    String user_id;
+
+    ArrayList<Term> terms = new ArrayList<>();
 
     EasyFlipView easyFlipView1;
     EasyFlipView easyFlipView2;
@@ -65,16 +73,22 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        db_term = new DatabaseHandlerTerms(this.getBaseContext());
-        db_game = new DatabaseHandlerGame(this.getBaseContext());
-        terms = getAllTerms();
+//        db_term = new DatabaseHandlerTerms(this.getBaseContext());
+//        db_game = new DatabaseHandlerGame(this.getBaseContext());
+        mTermDatabase = FirebaseDatabase.getInstance().getReference(Term.REFERENCE_TERMS);
+        user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         this.init();
+        this.setCorrectIncorrectCount();
+        this.getAllTerms();
         this.setAnswerClickListeners();
-        this.showNextTerm();
-
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 
     public void init(){
         textView_term = (TextView) findViewById(R.id.GAME_textView_term);
@@ -110,31 +124,29 @@ public class GameActivity extends AppCompatActivity {
         answer4_back = (TextView) findViewById(R.id.GAME_textView_answer4_back);
     }
 
+    public void getAllTerms(){
+        mTermDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-    public ArrayList<HashMap<String, String>> getAllTerms(){
-        Cursor cursor_terms = db_term.getAllTerms();
-        ArrayList<HashMap<String, String>> terms = new ArrayList<>();
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
 
-        while(cursor_terms.moveToNext()){
-            String id = cursor_terms.getString(DatabaseHandlerTerms.INDEX_ID);
-            String term = cursor_terms.getString(DatabaseHandlerTerms.INDEX_TERM);
-            String definition = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DEFINITION);
-            String date_add = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_ADD);
-            String date_latest = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_LATEST);
-            String memory_level = cursor_terms.getString(DatabaseHandlerTerms.INDEX_MEMORY_LEVEL);
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 
-            HashMap<String, String> temp_hash = new HashMap<>();
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_ID, id);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_TERM, term);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DEFINITION, definition);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DATE_ADD, date_add);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DATE_LATEST, date_latest);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_MEMORY_LEVEL, memory_level);
+                for (DataSnapshot child : children) {
+                    Term term = child.getValue(Term.class);
+                    terms.add(term);
+                }
+                showNextTerm();
+            }
 
-            terms.add(temp_hash);
-        }
-        return terms;
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
+
 
 
     public void setAnswerClickListeners(){
@@ -211,6 +223,43 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
+    public void setCorrectIncorrectCount(){
+        textView_today_correct.setText(Integer.toString(0));
+        textView_today_incorrect.setText(Integer.toString(0));
+
+        DatabaseReference mGameDatabase = FirebaseDatabase.getInstance().getReference(FirebaseHandlerGame.REFERENCE_GAME);
+        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        final String converted_date = DateUtils.getDateToday().replaceAll("/","");
+
+        mGameDatabase.child(user_id).child(converted_date).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+
+                int correct_count =0;
+                int incorrect_count =0;
+                for(DataSnapshot child: children) {
+                    if(child.getKey().equals(FirebaseHandlerGame.CORRECT)){
+                        correct_count = Integer.parseInt(child.getValue(String.class));
+                    }
+                    else if(child.getKey().equals(FirebaseHandlerGame.INCORRECT)){
+                        incorrect_count =Integer.parseInt(child.getValue(String.class));
+                    }
+                }
+                textView_today_correct.setText(Integer.toString(correct_count));
+                textView_today_incorrect.setText(Integer.toString(incorrect_count));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
 
     public void showNextTerm(){
         easyFlipView1.setVisibility(View.GONE);
@@ -226,14 +275,9 @@ public class GameActivity extends AppCompatActivity {
         }else {
 
             int randomNum = ThreadLocalRandom.current().nextInt(0, terms.size());
-            String term = terms.get(randomNum).get(DatabaseHandlerTerms.COLUMN_TERM);
-            String real_definition = terms.get(randomNum).get(DatabaseHandlerTerms.COLUMN_DEFINITION);
+            String term = terms.get(randomNum).term;
+            String real_definition = terms.get(randomNum).definition;
 
-            correct_count = db_game.getCorrectCount(DateUtils.getDateToday());
-            incorrect_count = db_game.getIncorrectCount(DateUtils.getDateToday());
-
-            textView_today_correct.setText(Integer.toString(correct_count));
-            textView_today_incorrect.setText(Integer.toString(incorrect_count));
             textView_term.setText(term);
 
             /* Add real answer to the array list. */
@@ -247,7 +291,7 @@ public class GameActivity extends AppCompatActivity {
                 int temp_randomNum = ThreadLocalRandom.current().nextInt(0, terms.size());
                 if(indexes.contains(temp_randomNum)) continue;
 
-                String temp_definition = terms.get(temp_randomNum).get(DatabaseHandlerTerms.COLUMN_DEFINITION);
+                String temp_definition = terms.get(temp_randomNum).definition;
                 answers.add(temp_definition);
                 indexes.add(temp_randomNum);
             }
@@ -294,10 +338,7 @@ public class GameActivity extends AppCompatActivity {
                     .into(imageView_correctIncorrect);
             imageView_correctIncorrect.setVisibility(View.VISIBLE);
             VibratorUtils.vibrateCorrect(this);
-            int new_correct_count = db_game.getCorrectCount(DateUtils.getDateToday()) + 1;
-            int new_incorrect_count = db_game.getIncorrectCount(DateUtils.getDateToday());
-            db_game.setCount(DateUtils.getDateToday(), new_correct_count, new_incorrect_count);
-            textView_today_correct.setText(Integer.toString(new_correct_count));
+            FirebaseHandlerGame.increaseCorrectCount(DateUtils.getDateToday());
             //TODO: Update with database server.
         }
 
@@ -319,10 +360,7 @@ public class GameActivity extends AppCompatActivity {
                     .into(imageView_correctIncorrect);
             imageView_correctIncorrect.setVisibility(View.VISIBLE);
             VibratorUtils.vibrateIncorrect(this);
-            int new_correct_count = db_game.getCorrectCount(DateUtils.getDateToday());
-            int new_incorrect_count = db_game.getIncorrectCount(DateUtils.getDateToday()) + 1;
-            db_game.setCount(DateUtils.getDateToday(), new_correct_count, new_incorrect_count);
-            textView_today_incorrect.setText(Integer.toString(new_incorrect_count));
+            FirebaseHandlerGame.increaseIncorrectCount(DateUtils.getDateToday());
             //TODO: Update with database server.
         }
 

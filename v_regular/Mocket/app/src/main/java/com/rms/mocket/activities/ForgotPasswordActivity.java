@@ -1,29 +1,24 @@
 package com.rms.mocket.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.rms.mocket.R;
 import com.rms.mocket.common.Checker;
-import com.rms.mocket.common.Utils;
 
 
 public class ForgotPasswordActivity extends AppCompatActivity {
-
-    public int verificationNumber = 0;
-    public CountDownTimer timer;
-    public int timerCount;
-    String email;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,43 +29,56 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         this.setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-
-        final TextView textView_verify = (TextView) findViewById(R.id.FORGOTPASSWORD_textView_timeLeft);
-
-        timer = new CountDownTimer(300000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                timerCount = (int) (millisUntilFinished / 1000);
-                textView_verify.setText("Time remaining: " + millisUntilFinished / 1000 + " sec");
-            }
-
-            public void onFinish() {
-                timerCount = 0;
-                textView_verify.setText("Verification code has been expired.");
-            }
-        };
-
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            FirebaseAuth.getInstance().signOut();
+        }
+    }
 
     /* OnClick: Send button is clicked. */
-    public void sendVerificationCode(View v) {
-        EditText editText_verifyEmail = (EditText) findViewById(R.id.FORGOTPASSWORD_editText_verifyEmail);
-        EditText editText_verify = (EditText) findViewById(R.id.FORGOTPASSWORD_editText_verificationCode);
-        Button button_verify = (Button) findViewById(R.id.FORGOTPASSWORD_button_verificationCode);
-        email = editText_verifyEmail.getText().toString();
-        final TextView textView_verify = (TextView) findViewById(R.id.FORGOTPASSWORD_textView_timeLeft);
+    public void sendResetLink(View v) {
+        EditText editText_resetEmail = (EditText) findViewById(R.id.FORGOTPASSWORD_editText_resetEmail);
+        String email = editText_resetEmail.getText().toString();
+
+        ProgressDialog progressDialog = new ProgressDialog(v.getContext());
+        progressDialog.setMessage("Checking email address...");
+        progressDialog.show();
 
         if (Checker.checkEmailValidation(email)) {
-            LinearLayout sendLayout = (LinearLayout) findViewById(R.id.FORGOTPASSWORD_verifyLayout);
-            sendLayout.setVisibility(LinearLayout.VISIBLE);
 
-            this.sendVerficationCodeToEmail(email);
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                progressDialog.dismiss();
+                                String message = "Reset link has been sent.";
+                                Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
 
-            /* Start countdown for 30 seconds */
-            timer.cancel();
-            timer.start();
+                                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(i);
+                            }
+                            else{
+                                progressDialog.dismiss();
+                                String err_message = task.getException().toString();
+                                if(err_message.contains("There is no user record")){
+                                    String message = "A user with the email address does not exist.";
+                                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                    });
 
         } else {
+            progressDialog.dismiss();
             String message = "Invalid Email address.";
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
@@ -78,56 +86,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
 
-    /* Send the verification code to email */
-    public void sendVerficationCodeToEmail(String email) {
-        /* Generate random 6 digits number */
-        verificationNumber = Utils.generateVerificationCode();
-
-        //TODO: Hide verification code after debugging.
-        String message = "Verification code has been sent." + verificationNumber;
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-
-        //TODO: Set what to send on the mail.
-        String messageToEmail = "";
-
-        Utils.sendEmail(email, messageToEmail);
-
-    }
-
-
-    /* OnClick: Verify button is clicked.  */
-    public void verifyCode(View v) {
-        /* When timer is over, invalid. */
-        if (!(timerCount > 0)) {
-            String message = "Expired verification code.";
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        } else {
-
-            EditText editText_verify = (EditText) findViewById(R.id.FORGOTPASSWORD_editText_verificationCode);
-            String str_verificationNumberGiven = editText_verify.getText().toString();
-
-            if (!Checker.checkIfNumber(str_verificationNumberGiven)) {
-                String message = "Invalid verification code.";
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            int verificationNumberGiven = Integer.parseInt(str_verificationNumberGiven);
-
-            if (verificationNumberGiven != verificationNumber) {
-                String message = "Invalid verification code.";
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-                return;
-            } else {
-                /* Move to ChangePasswordActivity */
-                Intent intent = new Intent(getApplicationContext(), ChangePasswordActivity.class);
-                intent.putExtra("email", email);
-                startActivity(intent);
-
-            }
-
-        }
-    }
     public void goPreviousActivity(View v){
         onBackPressed();
     }

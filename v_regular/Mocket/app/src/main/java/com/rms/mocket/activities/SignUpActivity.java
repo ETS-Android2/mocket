@@ -1,45 +1,52 @@
 package com.rms.mocket.activities;
 
-import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.app.AlertDialog;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.ProviderQueryResult;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.rms.mocket.R;
 import com.rms.mocket.common.Checker;
 import com.rms.mocket.common.Utils;
-import com.rms.mocket.database.DatabaseHandlerUser;
+import com.rms.mocket.object.User;
 
 public class SignUpActivity extends AppCompatActivity {
     private final int RESULT_LOAD_IMAGE = 1;
 
-    public int verificationNumber = 0;
     public boolean verified = false;
-    String email;
     String password;
 
     ImageView imageView_profile;
-    DatabaseHandlerUser db_user;
+
+    DatabaseReference mDatabase;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db_user = new DatabaseHandlerUser(this.getBaseContext());
         setContentView(R.layout.activity_sign_up);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.SIGNUP_toolbar);
         this.setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         imageView_profile = (ImageView) findViewById(R.id.SIGNUP_imageView_profile);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
 
     }
 
@@ -50,73 +57,39 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-    /* Send verification code. */
-    public void send(View v) {
+    public void check(View v) {
         /* Generate random 6 digits number */
-        verificationNumber = Utils.generateVerificationCode();
-        email = ((EditText) findViewById(R.id.SIGNUP_editText_email)).getText().toString();
+        String email = ((EditText) findViewById(R.id.SIGNUP_editText_email)).getText().toString();
+        ProgressDialog progressDialog = new ProgressDialog(v.getContext());
+        progressDialog.setMessage("Checking email address...");
+        progressDialog.show();
 
         if (Checker.checkEmailValidation(email)) {
-            //TODO: Hide verification code after debugging.
-            String message = "Verification code has been sent." + verificationNumber;
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            Utils.sendEmail(email, message);
-        } else {
-            String temp_message = "Invalid Email address.";
-            Toast.makeText(this, temp_message, Toast.LENGTH_LONG).show();
-        }
-    }
-
-
-    /* Verify if the given code is correct. */
-    public void verify(View v) {
-
-        EditText editText_verify = (EditText) findViewById(R.id.SIGNUP_editText_verificationCode);
-        String str_verificationNumberGiven = editText_verify.getText().toString();
-
-        if (!Checker.checkIfNumber(str_verificationNumberGiven)) {
-            String message = "Invalid verification code.";
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        int verificationNumberGiven = Integer.parseInt(str_verificationNumberGiven);
-
-        if (verificationNumberGiven != verificationNumber) {
-            String message = "Invalid verification code.";
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            return;
-        } else {
-            /* Code has been verified */
-            verified = true;
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this);
-            builder.setTitle("Verification");
-            builder.setMessage("The Email has been verified.");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            //TODO: Hide verification code after debugging.
+//            String message = "Verification code has been sent." + verificationNumber;
+//            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+//            Utils.sendEmail(email, message);
+            mAuth.fetchProvidersForEmail(email).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    return;
+                public void onComplete(@NonNull Task<ProviderQueryResult> task) {
+                    boolean check = !task.getResult().getProviders().isEmpty();
+                    if(!check){
+                        Toast.makeText(SignUpActivity.this, "You can use this email.", Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(SignUpActivity.this, "The email is already registered.", Toast.LENGTH_LONG).show();
+                    }
+                    progressDialog.dismiss();
                 }
             });
 
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-            /* Set Email address and verification code not editable.  */
-            EditText editText_email = (EditText) findViewById(R.id.SIGNUP_editText_email);
-            Button button_send = (Button) findViewById(R.id.SIGNUP_button_send);
-            Button button_verify = (Button) findViewById(R.id.SIGNUP_button_verify);
-            editText_email.setEnabled(false);
-            editText_verify.setEnabled(false);
-            button_send.setText("Sent");
-            button_verify.setText("Verified");
-            button_send.setClickable(false);
-            button_verify.setClickable(false);
-
+        } else {
+            String temp_message = "Invalid Email address.";
+            Toast.makeText(this, temp_message, Toast.LENGTH_LONG).show();
+            progressDialog.dismiss();
         }
-    }
 
+
+    }
 
     /* SignUp with the given information and update to database. */
     public void signUp(View v) {
@@ -150,29 +123,60 @@ public class SignUpActivity extends AppCompatActivity {
                 return;
             }
 
-
-
             //TODO: Signup on Database. and upload profile image!!!
-            this.signUp(email, password, firstName, lastName, Utils.getByteImage(imageView_profile));
+            String email = ((EditText) findViewById(R.id.SIGNUP_editText_email)).getText().toString();
+            this.signUp(email, password, firstName, lastName, Utils.getEncodedImage(imageView_profile));
         }
 
     }
 
-    public void signUp(String email, String password, String firstName, String lastName, byte[] profile) {
-        if(!verified){
-            String message = "Email address has not been verified.";
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        }
+    public void signUp(String email, String password, String first_name, String last_name, String profile_image) {
+        /* Signup on Firebase */
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Registering, please Wait...");
+        progressDialog.show();
 
-        String message = "SignUp completed.";
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
-        Log.d("Mocket","Initialize User Data.");
-        db_user.initializeUserData(this.getBaseContext(),email, password,profile, firstName, lastName);
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
 
-        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(i);
+                            String user_id = mAuth.getCurrentUser().getUid();
+
+                            User user = new User(first_name, last_name, profile_image);
+                            mDatabase.child(User.REFERENCE_USERS).child(user_id).setValue(user);
+
+                            Toast.makeText(getApplicationContext(), "Welcome to Mocket!",
+                                    Toast.LENGTH_LONG).show();
+
+                            progressDialog.dismiss();
+
+                            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(i);
+
+                        } else {
+                            progressDialog.dismiss();
+
+                            Utils.log(task.getException().toString());
+                            String err_message = task.getException().toString();
+                            String message = "";
+                            if(err_message.contains("The email address is already in use")){
+                                message = "The email is already registered.";
+                            }else if(err_message.contains("The email address is badly formatted")){
+                                message = "The email address is badly formatted.";
+
+                            }
+                            Toast.makeText(getApplicationContext(), message,
+                                    Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+
+
     }
     public void goPreviousActivity(View v){
         onBackPressed();

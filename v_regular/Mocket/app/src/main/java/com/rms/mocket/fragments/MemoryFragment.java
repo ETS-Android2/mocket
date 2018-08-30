@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -28,14 +27,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rms.mocket.R;
+import com.rms.mocket.activities.LoginActivity;
 import com.rms.mocket.activities.QuizActivity;
 import com.rms.mocket.common.DateUtils;
 import com.rms.mocket.common.DictionaryUtils;
 import com.rms.mocket.common.KeyboardUtils;
 import com.rms.mocket.common.TermUtils;
+import com.rms.mocket.common.Utils;
 import com.rms.mocket.common.VibratorUtils;
-import com.rms.mocket.database.DatabaseHandlerTerms;
+
+import com.rms.mocket.database.FirebaseHandlerTerm;
+import com.rms.mocket.object.Term;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,9 +57,7 @@ public class MemoryFragment extends Fragment{
     public final static String TYPE_QUIZ = "quiz";
     private TextToSpeech tts;
 
-
-    boolean visibility_termList = false;
-    DatabaseHandlerTerms db;
+    DatabaseReference mTermDatabase;
 
     EditText editText_term;
     EditText editText_definition;
@@ -64,12 +72,13 @@ public class MemoryFragment extends Fragment{
 
     AlertDialog lookUp_dialog;
 
+    String user_id;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_memory, container, false);
-        db = new DatabaseHandlerTerms(rootView.getContext());
 
         editText_term = (EditText) rootView.findViewById(R.id.MEMORY_editText_term);
         editText_definition = (EditText) rootView.findViewById(R.id.MEMORY_editText_definition);
@@ -77,6 +86,8 @@ public class MemoryFragment extends Fragment{
                 (TextView) rootView.findViewById(R.id.MEMORY_textView_todaysMemoryTitle);
         linearLayout_addMemory = (LinearLayout) rootView.findViewById(R.id.MEMORY_linearLayout_addToMemory);
 
+        user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mTermDatabase = FirebaseDatabase.getInstance().getReference(Term.REFERENCE_TERMS);
 
 
         this.setClearButtonListener();
@@ -85,11 +96,13 @@ public class MemoryFragment extends Fragment{
         this.setQuizButtonListener();
         this.setSpeakButtonListener();
 
-        this.updateTermList();
         this.setSearchViewListener();
 
         return rootView;
     }
+
+
+
 
     public void setSpeakButtonListener(){
         imageView_speak = (ImageView) rootView.findViewById(R.id.MEMORY_imageView_speak);
@@ -276,14 +289,12 @@ public class MemoryFragment extends Fragment{
                 /* Add it to database */
                 String term = editText_term.getText().toString();
                 String definition = editText_definition.getText().toString();
-                if (!db.addTerm(term, definition))
-                    Toast.makeText(getContext(), "Failed to add into database.", Toast.LENGTH_LONG).show();
-                else {
-                    VibratorUtils.vibrateAlert(rootView.getContext());
-                }
+
+                FirebaseHandlerTerm.addTerm(term, definition);
+
+                updateTermList();
 
                 clearTexts();
-                updateTermList();
             }
         });
     }
@@ -346,42 +357,38 @@ public class MemoryFragment extends Fragment{
 
     public void updateTermList(){
 
-        Cursor cursor_terms = db.getAllTerms();
-        if(cursor_terms.getCount() == 0){
-            textView_todaysMemoryTitle.setText("Today's Memory (0)");
-            return;
-        }
+        mTermDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-        ArrayList<HashMap<String, String>> terms = new ArrayList<>();
-        int today_term_total = 0;
-        while(cursor_terms.moveToNext()){
-            String id = cursor_terms.getString(DatabaseHandlerTerms.INDEX_ID);
-            String term = cursor_terms.getString(DatabaseHandlerTerms.INDEX_TERM);
-            String definition = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DEFINITION);
-            String date_add = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_ADD);
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
 
-            if(!date_add.equals(DateUtils.getDateToday())) continue;
-            today_term_total += 1;
-            if(!term.toLowerCase().contains(currentFilter.toLowerCase())) continue;
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                ArrayList<Term> terms = new ArrayList<>();
+                for(DataSnapshot child: children) {
+                    Term term = child.getValue(Term.class);
 
-            HashMap<String, String> temp_hash = new HashMap<>();
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_ID, id);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_TERM, term);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DEFINITION, definition);
+                    if(!term.term.toLowerCase().contains(currentFilter.toLowerCase())) continue;
 
-            terms.add(temp_hash);
-        }
+                    if(term.date_add.equals(DateUtils.getDateToday())){
+                        terms.add(term);
+                    }
+                }
 
+                ArrayList<Term> sorted_terms = TermUtils.sortTerms(terms);
+                textView_todaysMemoryTitle.setText("Today's Memory (" + sorted_terms.size() + ")");
 
-        ArrayList<HashMap<String, String>> sorted_terms = TermUtils.sortTerms(terms);
+                /* Display Today's terms */
+                ListView listView_termList = (ListView) rootView.findViewById(R.id.MEMORY_listView_termList);
+                ListAdapter adapter = new TermListAdapter(getActivity(), R.layout.term_item, sorted_terms, rootView);
+                listView_termList.setAdapter(adapter);
+            }
 
-        /* Update the title name */
-        textView_todaysMemoryTitle.setText("Today's Memory (" + today_term_total + ")");
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        /* Display Today's terms */
-        ListView listView_termList = (ListView) rootView.findViewById(R.id.MEMORY_listView_termList);
-        ListAdapter adapter = new TermListAdapter(getActivity(), R.layout.term_item, sorted_terms, rootView);
-        listView_termList.setAdapter(adapter);
+            }
+        });
     }
 
     private void ConvertTextToSpeech() {
@@ -411,12 +418,12 @@ public class MemoryFragment extends Fragment{
     class TermListAdapter extends ArrayAdapter {
         Context context;
         int layoutResourceId;
-        ArrayList<HashMap<String, String>> data = null;
+        ArrayList<Term> data = null;
         View rootView;
 
         public TermListAdapter(Context context,
                                int layoutResourceId,
-                               ArrayList<HashMap<String, String>> data, View rootView) {
+                               ArrayList<Term> data, View rootView) {
             super(context, layoutResourceId, data);
             this.layoutResourceId = layoutResourceId;
             this.context = context;
@@ -446,10 +453,11 @@ public class MemoryFragment extends Fragment{
 
             TextView textView_term = (TextView) view.findViewById(R.id.TERMITEM_term);
             TextView textView_definition = (TextView) view.findViewById(R.id.TERMITEM_definition);
-            textView_term.setText(data.get(i).get(DatabaseHandlerTerms.COLUMN_TERM));
-            textView_definition.setText(data.get(i).get(DatabaseHandlerTerms.COLUMN_DEFINITION));
+            textView_term.setText(data.get(i).term);
+            textView_definition.setText(data.get(i).definition);
 
-            String term_id = data.get(i).get(DatabaseHandlerTerms.COLUMN_ID);
+            Term term = data.get(i);
+            String term_id = data.get(i).id;
 
             ImageView imageView_edit = (ImageView) view.findViewById(R.id.TERMITEM_editButton);
 
@@ -466,17 +474,15 @@ public class MemoryFragment extends Fragment{
                     AlertDialog.Builder mBuilder = new AlertDialog.Builder(rootView.getContext());
                     View mView = getLayoutInflater().inflate(R.layout.edit_term_dialogue, null);
 
-                    HashMap<String, String> term = db.getTermAt(term_id);
-
                     /* Initialize the blanks. */
                     EditText editText_term = (EditText) mView.findViewById(R.id.EDITTERM_editText_term);
                     EditText editText_definition = (EditText) mView.findViewById(R.id.EDITTERM_editText_definition);
                     TextView textView_addedDate = (TextView) mView.findViewById(R.id.EDITTERM_textView_addedDate);
                     TextView textView_lastMemorizedDate = (TextView) mView.findViewById(R.id.EDITTERM_textView_lastMemorizedDate);
-                    editText_term.setText(term.get(DatabaseHandlerTerms.COLUMN_TERM));
-                    editText_definition.setText(term.get(DatabaseHandlerTerms.COLUMN_DEFINITION));
-                    textView_addedDate.setText(term.get(DatabaseHandlerTerms.COLUMN_DATE_ADD));
-                    textView_lastMemorizedDate.setText(term.get(DatabaseHandlerTerms.COLUMN_DATE_LATEST));
+                    editText_term.setText(term.term);
+                    editText_definition.setText(term.definition);
+                    textView_addedDate.setText(term.date_add);
+                    textView_lastMemorizedDate.setText(term.date_latest);
 
                     Button button_save = (Button) mView.findViewById(R.id.EDITTERM_button_save);
                     Button button_cancel = (Button) mView.findViewById(R.id.EDITTERM_button_cancel);
@@ -489,20 +495,22 @@ public class MemoryFragment extends Fragment{
                         @Override
                         public void onClick(View view) {
                             /* When one of the blanks is empty. */
-                            if(editText_term.getText().toString().isEmpty()
-                                    || editText_definition.getText().toString().isEmpty()){
+                            if (editText_term.getText().toString().isEmpty()
+                                    || editText_definition.getText().toString().isEmpty()) {
                                 Toast.makeText(getContext(), "Some blank is empty.", Toast.LENGTH_LONG).show();
-                            }else{
-                                term.put(DatabaseHandlerTerms.COLUMN_TERM, editText_term.getText().toString());
-                                term.put(DatabaseHandlerTerms.COLUMN_DEFINITION, editText_definition.getText().toString());
+                            } else {
+                                term.term = editText_term.getText().toString();
+                                term.definition = editText_definition.getText().toString();
 
-                                db.updateTerm(term);
-                                db.updateToServer();
+                                Utils.log("Before FirebaseHandlerTerm.updateTerm()");
+                                FirebaseHandlerTerm.updateTerm(term_id, term);
+                                Utils.log("After FirebaseHandlerTerm.updateTerm()");
 
                                 dialog.dismiss();
 
-                                VibratorUtils.vibrateAlert(rootView.getContext());
                                 updateTermList();
+
+                                VibratorUtils.vibrateAlert(rootView.getContext());
                                 Toast.makeText(getContext(), "Saved.", Toast.LENGTH_LONG).show();
                             }
                         }
@@ -518,26 +526,23 @@ public class MemoryFragment extends Fragment{
                     button_delete.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if(button_delete.getText().toString().equals("Delete")){
+                            if (button_delete.getText().toString().equals("Delete")) {
                                 button_delete.setText("Confirm");
-                            }else {
+                            } else {
 
-                                db.deleteTerm(term_id);
-                                db.updateToServer();
+                                FirebaseHandlerTerm.deleteTerm(term_id);
 
                                 KeyboardUtils.hideKeyboard(getActivity());
                                 dialog.dismiss();
-                                VibratorUtils.vibrateAlert(rootView.getContext());
                                 updateTermList();
+                                VibratorUtils.vibrateAlert(rootView.getContext());
                                 Toast.makeText(getContext(), "Deleted.", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
-
-
                     dialog.show();
-
                 }
+
             });
 
             return view;
@@ -580,8 +585,8 @@ public class MemoryFragment extends Fragment{
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             view = inflater.inflate(layoutResourceId, viewGroup, false);
 
-            String dictItem_term = data.get(i).get(DatabaseHandlerTerms.COLUMN_TERM);
-            String dictItem_definition = data.get(i).get(DatabaseHandlerTerms.COLUMN_DEFINITION);
+            String dictItem_term = data.get(i).get("term");
+            String dictItem_definition = data.get(i).get("definition");
 
             TextView textView_term = (TextView) view.findViewById(R.id.DICTITEM_term);
             TextView textView_definition = (TextView) view.findViewById(R.id.DICTITEM_definition);
@@ -604,6 +609,25 @@ public class MemoryFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+            if(!user.isEmailVerified()){
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(rootView.getContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        } else{
+            Intent intent = new Intent(rootView.getContext(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
+
+        this.updateTermList();
+
     }
 
     @Override

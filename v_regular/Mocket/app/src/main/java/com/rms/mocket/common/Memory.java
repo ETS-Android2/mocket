@@ -1,8 +1,6 @@
 package com.rms.mocket.common;
 
-import com.rms.mocket.database.DatabaseHandlerTerms;
-
-import java.util.HashMap;
+import com.rms.mocket.object.Term;
 
 public class Memory {
 
@@ -43,12 +41,10 @@ public class Memory {
         }
     }
 
-    public static HashMap<String, String> updateMemoryLevel(HashMap<String, String> term){
-        String temp_memory_level = term.get(DatabaseHandlerTerms.COLUMN_MEMORY_LEVEL);
+    public static Term updateMemoryLevel(Term term){
+        String temp_memory_level = term.memory_level;
 
-        String date_to_memorize = Memory.getNextDateToMemorize(
-                term.get(DatabaseHandlerTerms.COLUMN_DATE_LATEST),
-                term.get(DatabaseHandlerTerms.COLUMN_MEMORY_LEVEL));
+        String date_to_memorize = Memory.getNextDateToMemorize(term.date_latest, term.memory_level);
 
         if(DateUtils.getDateToday().equals(date_to_memorize)){
             String new_temp_memory_level;
@@ -59,11 +55,11 @@ public class Memory {
                 int_temp_memory_level++;
                 new_temp_memory_level = Integer.toString(int_temp_memory_level);
             }
-            term.put(DatabaseHandlerTerms.COLUMN_MEMORY_LEVEL, new_temp_memory_level);
+            term.memory_level = new_temp_memory_level;
         }
 
         // Update last memorized date to today.
-        term.put(DatabaseHandlerTerms.COLUMN_DATE_LATEST, DateUtils.getDateToday());
+        term.date_latest = DateUtils.getDateToday();
 
         return term;
 

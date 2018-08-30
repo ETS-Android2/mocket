@@ -1,7 +1,11 @@
 package com.rms.mocket.activities;
 
-import android.net.Uri;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -11,19 +15,29 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rms.mocket.R;
+import com.rms.mocket.common.AlarmReceiver;
 import com.rms.mocket.fragments.GraphFragment;
 import com.rms.mocket.fragments.MemoryFragment;
 import com.rms.mocket.fragments.MoreFragment;
 import com.rms.mocket.fragments.QuizFragment;
+import com.rms.mocket.object.User;
+
+import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final Uri URI = Uri
-            .parse("content://com.google.android.gsf.gservices");
     private static final String ID_KEY = "android_id";
     String previous_fragment = "memory";
+
+
 
 
     @Override
@@ -39,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment).commit();
 
         this.syncLocalDatabaseWithServerDatabase();
+
+        startAlarm(this);
+
     }
 
     /* OnClick: when a category is clicked. */
@@ -179,6 +196,97 @@ public class MainActivity extends AppCompatActivity {
 
     private void syncLocalDatabaseWithServerDatabase(){
         //TODO: Sync all tables with Server database.
+    }
+
+
+    public static void startAlarm(Context context) {
+        /* Retrieve a PendingIntent that will perform a broadcast */
+        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+        mDatabase.child(User.REFERENCE_USERS).child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(mAuth.getCurrentUser() == null) return;
+
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+
+                String setting_game = "";
+                String setting_notification = "";
+                String setting_vibration = "";
+                String setting_gesture = "";
+
+
+                for(DataSnapshot child: children) {
+                    String key = child.getKey();
+                    String value = child.getValue(String.class);
+                    switch (key) {
+                        case "setting_game":
+                            setting_game = value;
+                            break;
+
+                        case "setting_gesture":
+                            setting_gesture = value;
+                            break;
+
+                        case "setting_notification":
+                            setting_notification = value;
+                            break;
+
+                        case "setting_vibration":
+                            setting_vibration = value;
+                            break;
+
+                    }
+                }
+
+
+                // TESTING
+
+                AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                int hour = 1000 * 60 * 60;
+                Calendar calendar = Calendar.getInstance();
+
+                /* Set the alarm to start at 10:30 AM */
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.HOUR_OF_DAY, 9);
+                calendar.set(Calendar.MINUTE, 00);
+
+                switch(setting_notification){
+                    case "None":
+                        manager.cancel(pendingIntent);
+
+                        break;
+                    case "3 hours":
+                        manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                                hour * 3, pendingIntent);
+                        break;
+                    case "6 hours":
+                        manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                                hour * 6, pendingIntent);
+                        break;
+                    case "12 hours":
+                        manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                                hour * 12, pendingIntent);
+                        break;
+                }
+
+                //TODO: when Setting_vibration is changed.
+                //TODO: when Setting_gesture is changed.
+                //TODO: when Setting_game is changed.
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
 }

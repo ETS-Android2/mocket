@@ -1,7 +1,9 @@
 package com.rms.mocket.common;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -54,7 +56,7 @@ public class Utils {
     }
 
 
-    public static byte[] getByteImage(ImageView imageView){
+    public static String getEncodedImage(ImageView imageView){
 
         BitmapDrawable draw = (BitmapDrawable) imageView.getDrawable();
         Bitmap bitmap = draw.getBitmap();
@@ -63,9 +65,16 @@ public class Utils {
 
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
+        String encodedImage = Base64.encodeToString(byteArray, Base64.NO_WRAP);
 
-        return byteArray;
+        return encodedImage;
 
+    }
+
+    public static void setEncodedImage(ImageView view, String encoded_image){
+        byte[] decodedString = Base64.decode(encoded_image, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        view.setImageBitmap(decodedByte);
     }
 
     public static Bitmap getResizedBitmap(Bitmap image, int maxSize) {

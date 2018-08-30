@@ -1,8 +1,8 @@
 package com.rms.mocket.activities;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -11,17 +11,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rms.mocket.R;
 import com.rms.mocket.common.DateUtils;
 import com.rms.mocket.common.Memory;
-import com.rms.mocket.database.DatabaseHandlerTerms;
-import com.rms.mocket.database.DatabaseHandlerTest;
+import com.rms.mocket.database.FirebaseHandlerTerm;
+import com.rms.mocket.database.FirebaseHandlerTest;
 import com.rms.mocket.fragments.MemoryFragment;
 import com.rms.mocket.fragments.QuizFragment;
+import com.rms.mocket.object.Term;
 import com.wajahatkarim3.easyflipview.EasyFlipView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class QuizActivity extends AppCompatActivity {
@@ -42,11 +48,14 @@ public class QuizActivity extends AppCompatActivity {
     boolean thumbUp = false;
     boolean cardFront = true;
     String quiz_type;
-    DatabaseHandlerTerms db_term;
-    DatabaseHandlerTest db_test;
-    ArrayList<HashMap<String, String>> terms = new ArrayList<>();
+
+
+    DatabaseReference mTermDatabase;
+    String user_id;
 
     String currentTermId;
+
+    ArrayList<Term> terms = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,19 +74,29 @@ public class QuizActivity extends AppCompatActivity {
         textView_added = (TextView) findViewById(R.id.QUIZGAME_textView_added);
         textView_latest = (TextView) findViewById(R.id.QUIZGAME_textView_lastMemory);
 
+        mTermDatabase = FirebaseDatabase.getInstance().getReference(Term.REFERENCE_TERMS);
+        user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         cardFlipView.setFlipDuration(500);
-        db_term = new DatabaseHandlerTerms(this.getBaseContext());
-        db_test = new DatabaseHandlerTest(this.getBaseContext());
+
+        this.setCardLisneners();
+
         Intent intent = getIntent();
         quiz_type = intent.getExtras().getString(TYPE);
 
 
+
+
         if(quiz_type.equals(MemoryFragment.TYPE_QUIZ)){
-            terms = getTodayTerms();
+            this.getTodayTerms();
+
         }
-        else terms = getDailyTest();
-        this.showNextTerm();
+        else this.getDailyTest();
+
         this.setNextButtonListener();
+    }
+
+    public void setCardLisneners(){
 
         card_front.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,9 +134,7 @@ public class QuizActivity extends AppCompatActivity {
 
             }
         });
-
     }
-
 
     public void goPreviousActivity(View v) {
         this.finish();
@@ -162,58 +179,60 @@ public class QuizActivity extends AppCompatActivity {
     }
 
 
-    public ArrayList<HashMap<String, String>> getTodayTerms(){
-        Cursor cursor_terms = db_term.getAllTerms();
+    public void getTodayTerms(){
+        mTermDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-        ArrayList<HashMap<String, String>> terms = new ArrayList<>();
-        while(cursor_terms.moveToNext()){
-            String id = cursor_terms.getString(DatabaseHandlerTerms.INDEX_ID);
-            String term = cursor_terms.getString(DatabaseHandlerTerms.INDEX_TERM);
-            String definition = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DEFINITION);
-            String date_add = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_ADD);
-            String date_latest = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_LATEST);
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
 
-            if(!date_add.equals(DateUtils.getDateToday())) continue;
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 
-            HashMap<String, String> temp_hash = new HashMap<>();
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_ID, id);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_TERM, term);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DEFINITION, definition);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DATE_ADD, date_add);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DATE_LATEST, date_latest);
+                for (DataSnapshot child : children) {
 
-            terms.add(temp_hash);
-        }
-        return terms;
+                    Term term = child.getValue(Term.class);
+                    if (term.date_add.equals(DateUtils.getDateToday())) {
+                        terms.add(term);
+                    }
+                }
+
+                showNextTerm();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
-    public ArrayList<HashMap<String, String>> getDailyTest(){
-        Cursor cursor_terms = db_term.getAllTerms();
+    public void getDailyTest(){
+        mTermDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-        ArrayList<HashMap<String, String>> terms = new ArrayList<>();
-        while(cursor_terms.moveToNext()){
-            String id = cursor_terms.getString(DatabaseHandlerTerms.INDEX_ID);
-            String term = cursor_terms.getString(DatabaseHandlerTerms.INDEX_TERM);
-            String definition = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DEFINITION);
-            String date_add = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_ADD);
-            String date_latest = cursor_terms.getString(DatabaseHandlerTerms.INDEX_DATE_LATEST);
-            String memory_level = cursor_terms.getString(DatabaseHandlerTerms.INDEX_MEMORY_LEVEL);
 
-            String date_test = Memory.getNextDateToMemorize(date_latest, memory_level);
-            // Check if date_test date is passed or today. Null means already tested all.
-            if(date_test.equals(null) || DateUtils.isNotPassed(date_test)) continue;
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 
-            HashMap<String, String> temp_hash = new HashMap<>();
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_ID, id);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_TERM, term);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DEFINITION, definition);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DATE_ADD, date_add);
-            temp_hash.put(DatabaseHandlerTerms.COLUMN_DATE_LATEST, date_latest);
+                for (DataSnapshot child : children) {
+                    Term term = child.getValue(Term.class);
 
-            terms.add(temp_hash);
-        }
-        return terms;
+                    String date_test = Memory.getNextDateToMemorize(term.date_latest, term.memory_level);
+                    if(date_test.equals(null) || DateUtils.isNotPassed(date_test)) continue;
+
+                    terms.add(term);
+
+                }
+
+                showNextTerm();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
@@ -224,12 +243,13 @@ public class QuizActivity extends AppCompatActivity {
             cardFront = true;
         }
 
+
+
         /* When there is no term to be tested*/
         if(terms.size() == 0){
 
             card_front.setClickable(false);
             cardFlipView.setFlipEnabled(false);
-
             front_header.setVisibility(View.INVISIBLE);
             back_header.setVisibility(View.INVISIBLE);
 
@@ -239,11 +259,11 @@ public class QuizActivity extends AppCompatActivity {
         }else {
 
             int randomNum = ThreadLocalRandom.current().nextInt(0, terms.size());
-            String term = terms.get(randomNum).get(DatabaseHandlerTerms.COLUMN_TERM);
-            String definition = terms.get(randomNum).get(DatabaseHandlerTerms.COLUMN_DEFINITION);
-            String id = terms.get(randomNum).get(DatabaseHandlerTerms.COLUMN_ID);
-            String added = terms.get(randomNum).get(DatabaseHandlerTerms.COLUMN_DATE_ADD);
-            String latest = terms.get(randomNum).get(DatabaseHandlerTerms.COLUMN_DATE_LATEST);
+            String term = terms.get(randomNum).term;
+            String definition = terms.get(randomNum).definition;
+            String id = terms.get(randomNum).id;
+            String added = terms.get(randomNum).date_add;
+            String latest = terms.get(randomNum).date_latest;
             currentTermId = id;
 
 
@@ -288,10 +308,13 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if(thumbUp){
+                    Term currentTerm = null;
+
                     for (int i=0; i<terms.size(); i++){
-                        String id = terms.get(i).get(DatabaseHandlerTerms.COLUMN_ID);
+                        String id = terms.get(i).id;
 
                         if (id.equals(currentTermId)){
+                            currentTerm = terms.get(i);
                             terms.remove(i);
                             break;
                         }
@@ -299,14 +322,12 @@ public class QuizActivity extends AppCompatActivity {
 
                     if(quiz_type.equals(QuizFragment.TYPE_TEST)){
 
-                        HashMap<String, String> updated_term =
-                                Memory.updateMemoryLevel(db_term.getTermAt(currentTermId));
+                        Term updated_term = Memory.updateMemoryLevel(currentTerm);
 
-                        db_term.updateTerm(updated_term);
-                        db_term.updateToServer();
-                        int count = db_test.getCount(DateUtils.getDateToday());
-                        count++;
-                        db_test.setCount(DateUtils.getDateToday(), count);
+                        FirebaseHandlerTerm.updateTerm(currentTermId, updated_term);
+
+                        FirebaseHandlerTest.increaseCount(DateUtils.getDateToday());
+
                     }
                 }
                 showNextTerm();

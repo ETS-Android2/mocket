@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/mocket_actionBar"
-        android:minHeight="?attr/actionBarSize"
+
         app:titleTextColor="@color/mocket_font">
 
         <ImageView
@@ -122,7 +122,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="150dp"
+                            android:layout_height="90dp"
                             android:orientation="vertical">
 
                             <LinearLayout
@@ -149,12 +149,12 @@
                                     android:layout_weight="0.5" />
 
                                 <Button
-                                    android:id="@+id/SIGNUP_button_send"
+                                    android:id="@+id/SIGNUP_button_check"
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="3"
-                                    android:onClick="send"
-                                    android:text="Send"
+                                    android:onClick="check"
+                                    android:text="Check"
                                     android:textColor="#ffffff"
                                     android:backgroundTint="@color/mocket_button" />
 
@@ -164,55 +164,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="30dp"
                                 android:paddingLeft="10dp"
-                                android:text="Verification code will be sent to this Email address."
+                                android:text="Check if the email address is not in use."
                                 android:textColor="@color/mocket_font_dark" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="50dp"
-                                android:orientation="horizontal"
-                                android:weightSum="10">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="50dp"
-                                    android:orientation="horizontal"
-                                    android:weightSum="10">
-
-                                    <LinearLayout
-                                        android:layout_width="0dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="1" />
-
-                                    <EditText
-                                        android:id="@+id/SIGNUP_editText_verificationCode"
-                                        android:layout_width="0dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="5"
-                                        android:hint="Verification Code"
-                                        android:textColor="@color/mocket_font"
-                                        android:textCursorDrawable="@drawable/cursor_color"
-                                        android:backgroundTint="@color/mocket_cursor"
-                                        android:textAlignment="center" />
-
-                                    <LinearLayout
-                                        android:layout_width="0dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="1" />
-
-                                    <Button
-                                        android:id="@+id/SIGNUP_button_verify"
-                                        android:layout_width="0dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="3"
-                                        android:onClick="verify"
-                                        android:text="Verify"
-                                        android:textColor="#ffffff"
-                                        android:backgroundTint="@color/mocket_button"/>
-
-                                </LinearLayout>
-
-                            </LinearLayout>
 
                         </LinearLayout>
 

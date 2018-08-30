@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "697303657023",
+    "firebase_url": "https://mocket-cp.firebaseio.com",
+    "project_id": "mocket-cp",
+    "storage_bucket": "mocket-cp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:697303657023:android:affea5872f01fbb1",
+        "android_client_info": {
+          "package_name": "com.rms.mocket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "697303657023-9sa7f2ft5gk2gb0aaiuonhj2gn85crgj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXsiPVci2WbBQdDb6GcmwJkH44syp5nbE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
