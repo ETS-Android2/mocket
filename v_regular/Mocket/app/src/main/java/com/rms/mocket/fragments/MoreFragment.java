@@ -82,7 +82,7 @@ public class MoreFragment extends Fragment {
         this.setSaveButtonListener();
         this.initialSetting();
 
-
+        Utils.log("More.onCreate()");
 
         return rootView;
     }
@@ -104,7 +104,7 @@ public class MoreFragment extends Fragment {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
-
+        Utils.log("More.onResume()");
 
     }
 

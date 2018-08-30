@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rms.mocket.R;
 import com.rms.mocket.common.AlarmReceiver;
+import com.rms.mocket.common.Utils;
 import com.rms.mocket.fragments.GraphFragment;
 import com.rms.mocket.fragments.MemoryFragment;
 import com.rms.mocket.fragments.MoreFragment;
@@ -35,10 +37,20 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private static final String ID_KEY = "android_id";
-    String previous_fragment = "memory";
 
+    final String MEMORY_FRAGMENT_TAG = "memory";
+    final String QUIZ_FRAGMENT_TAG = "quiz";
+    final String GRAPH_FRAGMENT_TAG = "graph";
+    final String MORE_FRAGMENT_TAG = "more";
 
+    String previous_fragment = MEMORY_FRAGMENT_TAG;
+    Fragment memory_fragment;
+    Fragment quiz_fragment;
+    Fragment graph_fragment;
+    Fragment more_fragment;
 
+    FragmentTransaction fragment_transaction;
+    FragmentManager fragment_manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,18 +60,35 @@ public class MainActivity extends AppCompatActivity {
         this.setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        Fragment selectedFragment = new MemoryFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.MAIN_frameLayout_content,
-                selectedFragment).commit();
+        memory_fragment = new MemoryFragment();
+        quiz_fragment = new QuizFragment();
+        graph_fragment = new GraphFragment();
+        more_fragment = new MoreFragment();
 
+        memory_fragment.onCreate(savedInstanceState);
+        quiz_fragment.onCreate(savedInstanceState);
+        graph_fragment.onCreate(savedInstanceState);
+        more_fragment.onCreate(savedInstanceState);
+
+        fragment_transaction = getSupportFragmentManager().beginTransaction();
+        fragment_manager = getSupportFragmentManager();
+
+        this.setFragments();
         this.syncLocalDatabaseWithServerDatabase();
 
         startAlarm(this);
 
     }
 
+    public void setFragments(){
+        fragment_manager.beginTransaction().add(R.id.MAIN_frameLayout_content,
+                memory_fragment,MEMORY_FRAGMENT_TAG).commit();
+        fragment_transaction.addToBackStack(MEMORY_FRAGMENT_TAG);
+    }
+
     /* OnClick: when a category is clicked. */
-    public void categoryClicked(View v) { ImageView imageView_memory = (ImageView) findViewById(R.id.MAIN_imageView_memory);
+    public void categoryClicked(View v) {
+        ImageView imageView_memory = (ImageView) findViewById(R.id.MAIN_imageView_memory);
         ImageView imageView_quiz = (ImageView) findViewById(R.id.MAIN_imageView_quiz);
         ImageView imageView_graph = (ImageView) findViewById(R.id.MAIN_imageView_graph);
         ImageView imageView_more = (ImageView) findViewById(R.id.MAIN_imageView_more);
@@ -91,9 +120,6 @@ public class MainActivity extends AppCompatActivity {
 
         v.setBackgroundResource(R.drawable.bottom_border);
 
-        Fragment selectedFragment = null;
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
         switch (v.getId()) {
 
 
@@ -101,18 +127,30 @@ public class MainActivity extends AppCompatActivity {
                 Glide.with(this)  // Activity or Fragment
                         .load(R.drawable.clicked_memory_icon)
                         .into(imageView_memory);
-//                imageView_memory.setImageResource(R.drawable.clicked_memory_icon);
-                selectedFragment = new MemoryFragment();
+
+                if(previous_fragment.equals(MEMORY_FRAGMENT_TAG)) return;
 
                 switch (previous_fragment) {
-                    case "memory":
+                    case MEMORY_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(MEMORY_FRAGMENT_TAG)).commit();
                         break;
-                    default:
-                        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+                    case QUIZ_FRAGMENT_TAG:
+                        Utils.log(fragment_manager.getFragments().toString());
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(QUIZ_FRAGMENT_TAG)).commit();
+                        fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+                        break;
+                    case GRAPH_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(GRAPH_FRAGMENT_TAG)).commit();
+                        fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+                        break;
+                    case MORE_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(MORE_FRAGMENT_TAG)).commit();
+                        fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
                         break;
 
+
                 }
-                previous_fragment = "memory";
+                previous_fragment = MEMORY_FRAGMENT_TAG;
 
 
                 break;
@@ -121,24 +159,28 @@ public class MainActivity extends AppCompatActivity {
                 Glide.with(this)  // Activity or Fragment
                         .load(R.drawable.clicked_quiz_icon)
                         .into(imageView_quiz);
-//                imageView_quiz.setImageResource(R.drawable.clicked_quiz_icon);
-                selectedFragment = new QuizFragment();
+
+                if(previous_fragment.equals(QUIZ_FRAGMENT_TAG)) return;
 
                 switch (previous_fragment) {
-                    case "memory":
-                        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+                    case MEMORY_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(MEMORY_FRAGMENT_TAG)).commit();
+                        fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
                         break;
-                    case "quiz":
+                    case QUIZ_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(QUIZ_FRAGMENT_TAG)).commit();
                         break;
-                    case "graph":
-                        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+                    case GRAPH_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(GRAPH_FRAGMENT_TAG)).commit();
+                        fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
                         break;
-                    case "more":
-                        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+                    case MORE_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(MORE_FRAGMENT_TAG)).commit();
+                        fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
                         break;
 
                 }
-                previous_fragment = "quiz";
+                previous_fragment = QUIZ_FRAGMENT_TAG;
 
                 break;
 
@@ -146,51 +188,91 @@ public class MainActivity extends AppCompatActivity {
                 Glide.with(this)  // Activity or Fragment
                         .load(R.drawable.clicked_graph_icon)
                         .into(imageView_graph);
-//                imageView_graph.setImageResource(R.drawable.clicked_graph_icon);
-                selectedFragment = new GraphFragment();
+                if(previous_fragment.equals(GRAPH_FRAGMENT_TAG)) return;
 
                 switch (previous_fragment) {
-                    case "memory":
-                        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+                    case MEMORY_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(MEMORY_FRAGMENT_TAG)).commit();
+                        fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
                         break;
-                    case "quiz":
-                        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+                    case QUIZ_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(QUIZ_FRAGMENT_TAG)).commit();
+                        fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
                         break;
-                    case "graph":
+                    case GRAPH_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(GRAPH_FRAGMENT_TAG)).commit();
                         break;
-                    case "more":
-                        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+                    case MORE_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(MORE_FRAGMENT_TAG)).commit();
+                        fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
                         break;
 
                 }
-                previous_fragment = "graph";
+                previous_fragment = GRAPH_FRAGMENT_TAG;
 
                 break;
 
             case R.id.MAIN_relativeLayout_more:
+
                 Glide.with(this)  // Activity or Fragment
                         .load(R.drawable.clicked_more_icon)
                         .into(imageView_more);
-//                imageView_more.setImageResource(R.drawable.clicked_more_icon);
-                selectedFragment = new MoreFragment();
+                if(previous_fragment.equals(MORE_FRAGMENT_TAG)) return;
 
                 switch (previous_fragment) {
 
-                    case "more":
+                    case MEMORY_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(MEMORY_FRAGMENT_TAG)).commit();
+                        fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
                         break;
-                    default:
-                        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+                    case QUIZ_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(QUIZ_FRAGMENT_TAG)).commit();
+                        fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+                        break;
+                    case GRAPH_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(GRAPH_FRAGMENT_TAG)).commit();
+                        fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+                        break;
+                    case MORE_FRAGMENT_TAG:
+                        fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(MORE_FRAGMENT_TAG)).commit();
                         break;
 
                 }
-                previous_fragment = "more";
+                previous_fragment = MORE_FRAGMENT_TAG;
 
                 break;
 
 
         }
 
-        transaction.replace(R.id.MAIN_frameLayout_content, selectedFragment).commit();
+        Fragment fragment = fragment_manager.findFragmentByTag(previous_fragment);
+        if(fragment == null){
+            switch(previous_fragment){
+                case MEMORY_FRAGMENT_TAG:
+                    fragment_manager.beginTransaction().add(R.id.MAIN_frameLayout_content,
+                            memory_fragment,previous_fragment).commit();
+                    fragment_manager.beginTransaction().addToBackStack(MEMORY_FRAGMENT_TAG);
+                    break;
+                case QUIZ_FRAGMENT_TAG:
+                    fragment_manager.beginTransaction().add(R.id.MAIN_frameLayout_content,
+                            quiz_fragment,previous_fragment).commit();
+                    fragment_manager.beginTransaction().addToBackStack(QUIZ_FRAGMENT_TAG);
+                    break;
+                case GRAPH_FRAGMENT_TAG:
+                    fragment_manager.beginTransaction().add(R.id.MAIN_frameLayout_content,
+                            graph_fragment,previous_fragment).commit();
+                    fragment_manager.beginTransaction().addToBackStack(GRAPH_FRAGMENT_TAG);
+                    break;
+                case MORE_FRAGMENT_TAG:
+                    fragment_manager.beginTransaction().add(R.id.MAIN_frameLayout_content,
+                            more_fragment,previous_fragment).commit();
+                    fragment_manager.beginTransaction().addToBackStack(MORE_FRAGMENT_TAG);
+                    break;
+            }
+
+        }else{
+            fragment_manager.beginTransaction().show(fragment).commit();
+        }
 
     }
 

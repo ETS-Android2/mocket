@@ -114,7 +114,7 @@ public class GraphFragment extends Fragment {
 
 
         /* Display total term count in database. */
-        mTermDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+        mTermDatabase.child(user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -131,6 +131,8 @@ public class GraphFragment extends Fragment {
         this.setTimeButtonListener();
         this.setExpandButtonListener();
         this.setSearchViewListener();
+        this.setGraph(TYPE_WEEK);
+        Utils.log("Graph.onCreate()");
 
         return rootView;
     }
@@ -160,7 +162,7 @@ public class GraphFragment extends Fragment {
         button_year.setPaintFlags(0);
         button_week.setPaintFlags(button_week.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        this.setGraph(TYPE_WEEK);
+        Utils.log("Graph.onResume()");
 
     }
 
@@ -239,7 +241,7 @@ public class GraphFragment extends Fragment {
 
 
         /* Update Term data */
-        mTermDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+        mTermDatabase.child(user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (FirebaseAuth.getInstance().getCurrentUser() == null) return;

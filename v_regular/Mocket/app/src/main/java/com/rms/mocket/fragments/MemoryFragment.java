@@ -97,7 +97,8 @@ public class MemoryFragment extends Fragment{
         this.setSpeakButtonListener();
 
         this.setSearchViewListener();
-
+        this.updateTermList();
+        Utils.log("Memory.onCreate()");
         return rootView;
     }
 
@@ -292,7 +293,7 @@ public class MemoryFragment extends Fragment{
 
                 FirebaseHandlerTerm.addTerm(term, definition);
 
-                updateTermList();
+//                updateTermList();
 
                 clearTexts();
             }
@@ -357,7 +358,7 @@ public class MemoryFragment extends Fragment{
 
     public void updateTermList(){
 
-        mTermDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+        mTermDatabase.child(user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -508,7 +509,7 @@ public class MemoryFragment extends Fragment{
 
                                 dialog.dismiss();
 
-                                updateTermList();
+//                                updateTermList();
 
                                 VibratorUtils.vibrateAlert(rootView.getContext());
                                 Toast.makeText(getContext(), "Saved.", Toast.LENGTH_LONG).show();
@@ -534,7 +535,7 @@ public class MemoryFragment extends Fragment{
 
                                 KeyboardUtils.hideKeyboard(getActivity());
                                 dialog.dismiss();
-                                updateTermList();
+//                                updateTermList();
                                 VibratorUtils.vibrateAlert(rootView.getContext());
                                 Toast.makeText(getContext(), "Deleted.", Toast.LENGTH_LONG).show();
                             }
@@ -625,8 +626,7 @@ public class MemoryFragment extends Fragment{
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
-
-        this.updateTermList();
+        Utils.log("Memory.onResume()");
 
     }
 
@@ -637,5 +637,6 @@ public class MemoryFragment extends Fragment{
             tts.shutdown();
         }
         super.onPause();
+        Utils.log("Memory.onPause()");
     }
 }

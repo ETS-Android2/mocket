@@ -17,6 +17,7 @@ import com.rms.mocket.R;
 import com.rms.mocket.activities.GameActivity;
 import com.rms.mocket.activities.LoginActivity;
 import com.rms.mocket.activities.QuizActivity;
+import com.rms.mocket.common.Utils;
 
 
 public class QuizFragment extends Fragment {
@@ -51,6 +52,7 @@ public class QuizFragment extends Fragment {
             }
         });
 
+        Utils.log("Quiz.onCreate()");
 
         return rootView;
     }
@@ -72,6 +74,7 @@ public class QuizFragment extends Fragment {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
+        Utils.log("Quiz.onResume()");
     }
 
     /**
