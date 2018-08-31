@@ -24,7 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rms.mocket.R;
 import com.rms.mocket.common.AlarmReceiver;
-import com.rms.mocket.common.Utils;
 import com.rms.mocket.fragments.GraphFragment;
 import com.rms.mocket.fragments.MemoryFragment;
 import com.rms.mocket.fragments.MoreFragment;
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     public void setFragments(){
         fragment_manager.beginTransaction().add(R.id.MAIN_frameLayout_content,
                 memory_fragment,MEMORY_FRAGMENT_TAG).commit();
-        fragment_transaction.addToBackStack(MEMORY_FRAGMENT_TAG);
+        fragment_manager.beginTransaction().addToBackStack(MEMORY_FRAGMENT_TAG).commit();
     }
 
     /* OnClick: when a category is clicked. */
@@ -135,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
                         fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(MEMORY_FRAGMENT_TAG)).commit();
                         break;
                     case QUIZ_FRAGMENT_TAG:
-                        Utils.log(fragment_manager.getFragments().toString());
                         fragment_manager.beginTransaction().hide(fragment_manager.findFragmentByTag(QUIZ_FRAGMENT_TAG)).commit();
                         fragment_manager.beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
                         break;

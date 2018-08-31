@@ -325,7 +325,7 @@ public class GraphFragment extends Fragment {
 
 
                 /* Update Test Data */
-                mTestDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                mTestDatabase.child(user_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
@@ -405,7 +405,7 @@ public class GraphFragment extends Fragment {
                         mlineData.addDataSet((new LineData(test_set)).getDataSetByIndex(0));
 
                         /* Update Game Data */
-                        mGameDatabase.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        mGameDatabase.child(user_id).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
