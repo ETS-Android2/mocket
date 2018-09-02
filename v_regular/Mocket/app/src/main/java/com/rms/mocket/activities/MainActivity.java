@@ -64,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
         graph_fragment = new GraphFragment();
         more_fragment = new MoreFragment();
 
-        memory_fragment.onCreate(savedInstanceState);
-        quiz_fragment.onCreate(savedInstanceState);
-        graph_fragment.onCreate(savedInstanceState);
-        more_fragment.onCreate(savedInstanceState);
+//        memory_fragment.onCreate(savedInstanceState);
+//        quiz_fragment.onCreate(savedInstanceState);
+//        graph_fragment.onCreate(savedInstanceState);
+//        more_fragment.onCreate(savedInstanceState);
 
         fragment_transaction = getSupportFragmentManager().beginTransaction();
         fragment_manager = getSupportFragmentManager();
