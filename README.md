@@ -21,6 +21,12 @@ So, Mocket gives tests in certain periods.
 
 As shown on above picture, it gives tests everyday for first three days. After that, the period gets longer, and this helps users to memorize words for lifetime.
 
+3rd Party Libraries Used
+---
+ - [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart) in graph feature.
+ - [Glide](https://github.com/bumptech/glide) to optimize images.
+ - [EasyFlipView](https://github.com/wajahatkarim3/EasyFlipView) for card flipping animation.
+
 
 Table of Layout Contents
 ------------------------
