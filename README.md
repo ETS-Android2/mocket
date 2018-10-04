@@ -41,12 +41,12 @@ Daily Test & Game Feature
 
 ### Daily Test
 
-<img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_gameCorrect.png?token=AYaVqNtx9Lsd_zOyG8hRT8NommTim4Xnks5bvtJ-wA%3D%3D" height="350" /> <img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_gameCorrect.png?token=AYaVqNtx9Lsd_zOyG8hRT8NommTim4Xnks5bvtJ-wA%3D%3D" height="350"/>
+<img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_test.png?token=AYaVqFZ-GfMzcHK15SyuSCEPcZV7sy3Vks5bvtPQwA%3D%3D" height="350" /> <img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_testBack.png?token=AYaVqLRuISM1kpK6Lasp6LzhR_oie8aCks5bvtPdwA%3D%3D" height="350"/>
 
 
 ### Game
 
-<img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_gameCorrect.png?token=AYaVqNtx9Lsd_zOyG8hRT8NommTim4Xnks5bvtJ-wA%3D%3D" height="350"/> <img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_gameCorrect.png?token=AYaVqNtx9Lsd_zOyG8hRT8NommTim4Xnks5bvtJ-wA%3D%3D" height="350"/>
+<img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_gameCorrect.png?token=AYaVqNtx9Lsd_zOyG8hRT8NommTim4Xnks5bvtJ-wA%3D%3D" height="350"/> <img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_gameIncorrect.png?token=AYaVqE6VcFi1lHxHRgPBZCmRtR0yimQFks5bvtO0wA%3D%3D" height="350"/>
 
 Graph Feature
 ---
@@ -58,5 +58,4 @@ Graph Feature
 Profile Feature
 ---
 
-<img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_moreActivity.png?token=AYaVqEq3bpoRMH0iGE8RituUFi3LG07qks5bvtMswA%3D%3D" height="350"/> <img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_editProfile.png?token=AYaVqAwI4imFBYStnya4fTY6se3dRBE7ks5bvtMkwA%3D%3D" />
-<img src="" height="350"/>
+<img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_moreActivity.png?token=AYaVqEq3bpoRMH0iGE8RituUFi3LG07qks5bvtMswA%3D%3D" height="350"/> <img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_editProfile.png?token=AYaVqAwI4imFBYStnya4fTY6se3dRBE7ks5bvtMkwA%3D%3D" height="350"/>
