@@ -26,7 +26,7 @@ Table of Layout Contents
 ------------------------
    * [Login](#login-feature)
    * [Memory](#memory-feature)
-   * [Daily Test & Game](#daily-test-&-game-feature)
+   * [Daily Test & Game](#daily-test-and-game-feature)
    * [Graph](#graph-feature)
    * [Profile](#profile-feature)
 
@@ -43,7 +43,7 @@ Memory Feature
 <img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_memoryActivity.png?token=AYaVqOKIdIJW56uz4E8G8QLVFAdigYblks5bvtGzwA%3D%3D" height="350"/> <img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_lookup.png?token=AYaVqA9RC2_-7akZqHFFKAL_Kz0BIR87ks5bvtHJwA%3D%3D" height="350"/>
 
 
-Daily Test & Game Feature
+Daily Test and Game Feature
 ---
 
 <img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/screenshot_gameActivity.png?token=AYaVqOGUXpiKjhUlxQlp64jemN5EsyDbks5bvtJzwA%3D%3D" height="350"/>
