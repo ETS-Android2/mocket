@@ -15,6 +15,7 @@ Lifetime memory
 ---
 
 According to [Ebbinghaus's forget curve](https://en.wikipedia.org/wiki/Forgetting_curve), people get a stronger memory when they are able to recall it longer period of time.
-So, Mocket gives tests in certain periods.
 
+So, Mocket gives tests in certain periods.
+<img src="https://raw.githubusercontent.com/ChangMinPark/mocket/develop/images/memory_duration.png?token=AYaVqFo_xMe7a8gAXsGhN3tjKNhkY27eks5bvs4dwA%3D%3D" />
 As shown on above picture, it gives tests everyday for first three days. After that, the period gets longer, and this helps users to memorize words for lifetime.
